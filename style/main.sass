@@ -16,3 +16,101 @@
 	padding: 0px
 	margin: 0px
 	font-family: 'Roboto-Regular', sans-serif
+
+.screen
+	position: fixed
+	width: 100%
+	height: 100%
+	background-color: #fff
+
+#blocked
+	display: none
+	z-index: 15
+
+header
+	position: relative
+	width: 100%
+	height: 50px
+	top: 0px
+	background-color: #34515f
+	display: flex
+	justify-content: space-between
+	z-index: 10
+
+	div#headerTitle
+		position: relative
+		width: auto
+		height: 100%
+		display: flex
+		padding-right: 50px
+
+		#headerLogo
+			position: relative
+			width: 40px
+			height: 40px
+			top: 5px
+			left: 20px
+
+		h1
+			color: #fff
+			padding: 4px 0px
+			margin-left: 30px
+			cursor: default
+			font-family: 'Roboto-Light', sans-serif
+
+	nav
+		position: relative
+		width: 100%
+		height: 100%
+		display: flex
+
+		.navItem
+			position: relative
+			height: 34px
+			color: #fff
+			margin: 8px 0px
+			padding: 7px 10px
+			box-sizing: border-box
+			cursor: pointer
+
+			&:hover
+				background-color: rgba(255, 255, 255, .1)
+
+		.navSeparator
+			position: relative
+			margin: 8px 0px
+			padding: 8px 6px
+			font-size: 11pt
+			color: #fff
+			cursor: default
+
+	div#options
+		position: relative
+		width: 200px
+		height: 100%
+		padding-left: 50px
+
+main
+	position: absolute
+	width: 100%
+	height: 100%
+	top: 0px
+	padding-top: 50px
+	box-sizing: border-box
+
+	#mainCenter
+		position: relative
+		width: 100%
+		height: 100%
+		display: flex
+
+		aside
+			position: relative
+			width: 320px
+			height: 100%
+			background-color: #8eacbc
+
+		section
+			position: relative
+			width: 100%
+			height: 100%
