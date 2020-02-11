@@ -238,11 +238,90 @@ main #mainCenter aside {
   width: 320px;
   height: 100%;
   background-color: #8eacbc;
+  display: flex;
+  flex-direction: column;
+}
+main #mainCenter aside hr {
+  border: 0px;
+  border-bottom: 1px solid #34515f;
+}
+main #mainCenter aside #asideFavorites {
+  position: relative;
+  width: 100%;
+  height: auto;
+  max-height: 150px;
+}
+main #mainCenter aside #asideTree {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+main #mainCenter aside .asideTitle {
+  position: relative;
+  width: 100%;
+  height: 30px;
+  display: flex;
+  flex-direction: row;
+}
+main #mainCenter aside .asideTitle svg {
+  width: 25px;
+  height: 25px;
+  fill: #222;
+  margin: 2px 8px;
+}
+main #mainCenter aside .asideTitle p {
+  margin: 4px 0px;
 }
 main #mainCenter section {
   position: relative;
   width: 100%;
   height: 100%;
+}
+main #mainCenter section #itemArea {
+  position: relative;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-wrap: wrap;
+}
+main #mainCenter section #itemArea .item {
+  position: relative;
+  padding: 0px 12px;
+  overflow: hidden;
+}
+main #mainCenter section #itemArea .itemMosaic {
+  width: 25%;
+  height: 60px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  box-sizing: border-box;
+  display: flex;
+}
+main #mainCenter section #itemArea .itemMosaic .itemLogo {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  padding: 9px;
+  margin-right: 15px;
+}
+main #mainCenter section #itemArea .itemMosaic .itemLogo img {
+  max-width: 42px;
+  max-height: 42px;
+}
+main #mainCenter section #itemArea .itemMosaic .itemText {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+main #mainCenter section #itemArea .itemMosaic .itemText p {
+  font-size: 13pt;
+  margin: 8px 0px;
+  word-wrap: break-word;
+  cursor: default;
+}
+main #mainCenter section #itemArea .itemMosaic .itemText p[split-lines] {
+  white-space: pre-wrap;
 }
 
 /*# sourceMappingURL=main.css.map */
