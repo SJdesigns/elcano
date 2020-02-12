@@ -24,99 +24,104 @@
 	background-color: #fff
 
 #startUp
-	display: none
+	display: block
 
 #blocked
-	display: flex
-	justify-content: center
-	align-items: center
-	z-index: 15
 	display: none
+	z-index: 15
 
-	#signIn
-		position: relative
-		width: 340px
-		height: auto
-		box-shadow: 2px 2px 8px rgba(#000,.1)
+	#blockedBack
+		position: absolute
+		width: 100%
+		height: 100%
+		display: flex
+		justify-content: center
+		align-items: center
 
-		#signInTitle
+		#signIn
 			position: relative
-			width: 100%
+			width: 340px
 			height: auto
-			padding: 25px 0px
-			text-align: center
-			color: #fff
-			background-color: #34515f
+			box-shadow: 2px 2px 8px rgba(#000,.1)
 
-			h1
-				font-family: 'Roboto-Light'
-
-		#signInBody
-			position: relative
-			width: 100%
-			height: auto
-
-			#signInError
+			#signInTitle
 				position: relative
 				width: 100%
-				min-height: 30px
-				padding: 15px 0px
+				height: auto
+				padding: 25px 0px
+				text-align: center
+				color: #fff
+				background-color: #34515f
 
-			.signInBodyItem
+				h1
+					font-family: 'Roboto-Light'
+
+			#signInBody
 				position: relative
-				margin: 0px 40px 28px
+				width: 100%
+				height: auto
 
-				#signInUser, #signInPass
+				#signInError
+					position: relative
 					width: 100%
-					height: 40px
-					font-size: 13pt
-					padding-left: 40px
-					border: 0px
-					outline: 0
-					box-sizing: border-box
+					min-height: 30px
+					padding: 15px 0px
 
-					&:hover ~ .signInInputEffect
+				.signInBodyItem
+					position: relative
+					margin: 0px 40px 28px
+
+					#signInUser, #signInPass
 						width: 100%
-						left: 0%
-						border-color: #ccc
+						height: 40px
+						font-size: 13pt
+						padding-left: 40px
+						border: 0px
+						outline: 0
+						box-sizing: border-box
 
-					&:focus ~ .signInInputEffect
+						&:hover ~ .signInInputEffect
+							width: 100%
+							left: 0%
+							border-color: #ccc
+
+						&:focus ~ .signInInputEffect
+							width: 100%
+							left: 0%
+							border-color: #34515f
+
+						&:focus ~ .signInIcons
+							fill: #444
+
+					.signInIcons
+						position: absolute
+						width: 25px
+						height: 25px
+						left: 6px
+						top: 8px
+						fill: #777
+
+					.signInInputEffect
+						position: absolute
+						width: 0%
+						left: 50%
+						bottom: 0px
+						border-bottom: 2px solid
+						transition: all .2s
+
+					#signInSubmit
 						width: 100%
-						left: 0%
-						border-color: #34515f
+						height: 50px
+						color: #34515f
+						font-size: 13pt
+						margin-top: 15px
+						text-align: center
+						border: 0px
+						outline: 0
+						background-color: #fff
 
-					&:focus ~ .signInIcons
-						fill: #444
-
-				.signInIcons
-					position: absolute
-					width: 25px
-					height: 25px
-					left: 6px
-					top: 8px
-					fill: #777
-
-				.signInInputEffect
-					position: absolute
-					width: 0%
-					left: 50%
-					bottom: 0px
-					border-bottom: 2px solid
-					transition: all .2s
-
-				#signInSubmit
-					width: 100%
-					height: 50px
-					color: #34515f
-					font-size: 13pt
-					margin-top: 15px
-					text-align: center
-					border: 0px
-					outline: 0
-					background-color: #fff
-
-					&:hover, &:focus
-						background-color: #f4f4f4
+						&:hover, &:focus
+							background-color: #f4f4f4
 
 header
 	position: relative

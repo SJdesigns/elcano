@@ -26,23 +26,28 @@
 }
 
 #startUp {
-  display: none;
+  display: block;
 }
 
 #blocked {
+  display: none;
+  z-index: 15;
+}
+#blocked #blockedBack {
+  position: absolute;
+  width: 100%;
+  height: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 15;
-  display: none;
 }
-#blocked #signIn {
+#blocked #blockedBack #signIn {
   position: relative;
   width: 340px;
   height: auto;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
 }
-#blocked #signIn #signInTitle {
+#blocked #blockedBack #signIn #signInTitle {
   position: relative;
   width: 100%;
   height: auto;
@@ -51,25 +56,25 @@
   color: #fff;
   background-color: #34515f;
 }
-#blocked #signIn #signInTitle h1 {
+#blocked #blockedBack #signIn #signInTitle h1 {
   font-family: "Roboto-Light";
 }
-#blocked #signIn #signInBody {
+#blocked #blockedBack #signIn #signInBody {
   position: relative;
   width: 100%;
   height: auto;
 }
-#blocked #signIn #signInBody #signInError {
+#blocked #blockedBack #signIn #signInBody #signInError {
   position: relative;
   width: 100%;
   min-height: 30px;
   padding: 15px 0px;
 }
-#blocked #signIn #signInBody .signInBodyItem {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem {
   position: relative;
   margin: 0px 40px 28px;
 }
-#blocked #signIn #signInBody .signInBodyItem #signInUser, #blocked #signIn #signInBody .signInBodyItem #signInPass {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass {
   width: 100%;
   height: 40px;
   font-size: 13pt;
@@ -78,20 +83,20 @@
   outline: 0;
   box-sizing: border-box;
 }
-#blocked #signIn #signInBody .signInBodyItem #signInUser:hover ~ .signInInputEffect, #blocked #signIn #signInBody .signInBodyItem #signInPass:hover ~ .signInInputEffect {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:hover ~ .signInInputEffect, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:hover ~ .signInInputEffect {
   width: 100%;
   left: 0%;
   border-color: #ccc;
 }
-#blocked #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInInputEffect, #blocked #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInInputEffect {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInInputEffect, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInInputEffect {
   width: 100%;
   left: 0%;
   border-color: #34515f;
 }
-#blocked #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInIcons, #blocked #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInIcons {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInIcons, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInIcons {
   fill: #444;
 }
-#blocked #signIn #signInBody .signInBodyItem .signInIcons {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem .signInIcons {
   position: absolute;
   width: 25px;
   height: 25px;
@@ -99,7 +104,7 @@
   top: 8px;
   fill: #777;
 }
-#blocked #signIn #signInBody .signInBodyItem .signInInputEffect {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem .signInInputEffect {
   position: absolute;
   width: 0%;
   left: 50%;
@@ -107,7 +112,7 @@
   border-bottom: 2px solid;
   transition: all 0.2s;
 }
-#blocked #signIn #signInBody .signInBodyItem #signInSubmit {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit {
   width: 100%;
   height: 50px;
   color: #34515f;
@@ -118,7 +123,7 @@
   outline: 0;
   background-color: #fff;
 }
-#blocked #signIn #signInBody .signInBodyItem #signInSubmit:hover, #blocked #signIn #signInBody .signInBodyItem #signInSubmit:focus {
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:hover, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:focus {
   background-color: #f4f4f4;
 }
 
