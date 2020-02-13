@@ -1,3 +1,17 @@
+<?php
+// listDirectory.php
+
+if (isset($_GET['ruta'])) {
+    echo 'hola';
+    $hola = 'hola javascripthdfh';
+    if (strpos($hola, '.') == null) {
+        echo 'funciona';
+    }
+    echo strlen($hola);
+} else {
+
+?>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -100,23 +114,14 @@
                 </aside>
                 <section>
                     <div id="itemArea">
-                        <div class="item itemMosaic">
+                        <!--<div class="item itemMosaic">
                             <div class="itemLogo">
                                 <img src="img/typePDF.png" />
                             </div>
                             <div class="itemText">
                                 <p split-lines>Fichero1</p>
                             </div>
-                        </div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
-                        <div class="item itemMosaic"></div>
+                        </div>-->
                     </div>
                 </section>
             </div>
@@ -124,3 +129,7 @@
     </div>
 </body>
 </html>
+
+<?php
+}
+?>
