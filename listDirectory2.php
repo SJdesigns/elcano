@@ -20,6 +20,7 @@ function listDirectory($path) {
                 $content = [];
                 $content['fileName'] = $archivo;
                 $content['filePath'] = $path . $archivo;
+				$content['fileType'] = 'folder';
 
                 array_push($directories, $content);
             }

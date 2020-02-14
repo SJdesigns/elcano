@@ -30,7 +30,10 @@ $(function() { // init
     checkAccess();
 
 
-
+    // options functionalities
+    $('#optDatabase').on('click', function() {
+		window.open('http://localhost/phpmyadmin/','_blank');
+	});
 });
 
 function authorize() {
@@ -81,8 +84,11 @@ function getFolder(path) {
             explodePath(path); // actualiza los directorios del nav
             $('#itemArea').html('');
 
+            if (response.dir.length == 0 && response.files.length == 0) {
+                $('#itemArea').html('<p>Esta carpeta está vacia</p>');
+            }
             for (i in response.dir) {
-                setFolderItems(response.dir[i].fileName,response.dir[i].filePath);
+                setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
             }
             for (i in response.files) {
                 setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize);
@@ -92,7 +98,12 @@ function getFolder(path) {
 
 function setFolderItems(name,path,type,size) {
     var html = '';
-    html += '<div class="item item'+settings.view+'">';
+    console.log(type);
+    if (type=='folder') {
+        html += '<div class="item item'+settings.view+'" onclick="changePath(\'' + path + '/\')">';
+    } else {
+        html += '<div class="item item'+settings.view+'" onclick="readFich(\'' + path + '\')">';
+    }
     html += '<div class="itemLogo">';
     html += '<img src="img/typePDF.png" />';
     html += '</div>';
@@ -104,7 +115,7 @@ function setFolderItems(name,path,type,size) {
 }
 
 function changePath(url) { // cambia la ruta actual
-
+    console.log('changePath to: '+url);
     if (url.substring(0,2) == './' && url.indexOf('../') == -1) {
     	//console.log('list --- ' + url);
     	getFolder(url);
@@ -117,6 +128,11 @@ function changePath(url) { // cambia la ruta actual
     } else {
         console.log('forbiden access to path '+url);
     }
+}
+
+function readFich(url) {
+	//console.log('reading ' + url);
+	window.open(url,'_blank');
 }
 
 function explodePath(url) {
@@ -140,7 +156,7 @@ function explodePath(url) {
 
 			}
             if ($('nav').html() == '') {
-                $('nav').append('<div class="navItem"><p>'+explode[i]+'</p></div>');
+                $('nav').append('<div class="navItem" onclick="changePath(\'' + implode + '\')"><p>'+explode[i]+'</p></div>');
             } else {
                 $('nav').append('<div class="navSeparator"><p>/</p></div><div class="navItem"><p>'+explode[i]+'</p></div>');
             }

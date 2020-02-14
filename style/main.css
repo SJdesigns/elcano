@@ -328,5 +328,13 @@ main #mainCenter section #itemArea .itemMosaic .itemText p {
 main #mainCenter section #itemArea .itemMosaic .itemText p[split-lines] {
   white-space: pre-wrap;
 }
+main #mainCenter section #folderInfo {
+  position: fixed;
+  right: 0px;
+  bottom: 0px;
+  font-size: 11pt;
+  padding: 3px 7px 4px;
+  background-color: rgba(0, 0, 0, 0.1);
+}
 
 /*# sourceMappingURL=main.css.map */
