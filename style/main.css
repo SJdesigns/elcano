@@ -232,6 +232,14 @@ main {
   padding-top: 50px;
   box-sizing: border-box;
 }
+main #shadow {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.1);
+  display: none;
+  z-index: 1;
+}
 main #mainCenter {
   position: relative;
   width: 100%;
@@ -255,6 +263,24 @@ main #mainCenter aside #asideFavorites {
   width: 100%;
   height: auto;
   max-height: 150px;
+}
+main #mainCenter aside #asideFavorites #asideFavBody {
+  padding: 5px 0px 8px;
+}
+main #mainCenter aside #asideFavorites #asideFavBody .favFolder {
+  padding: 3px 10px;
+  box-sizing: border-box;
+  cursor: pointer;
+}
+main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover {
+  background-color: #fff;
+}
+main #mainCenter aside #asideFavorites #asideFavBody .favFolder small {
+  font-size: 10pt;
+  font-weight: 300;
+  font-style: italic;
+  margin-left: 12px;
+  color: #444;
 }
 main #mainCenter aside #asideTree {
   position: relative;
@@ -293,6 +319,9 @@ main #mainCenter section #itemArea .item {
   position: relative;
   padding: 0px 12px;
   overflow: hidden;
+}
+main #mainCenter section #itemArea .item:hover {
+  background-color: rgba(0, 0, 0, 0.1);
 }
 main #mainCenter section #itemArea .itemMosaic {
   width: 25%;

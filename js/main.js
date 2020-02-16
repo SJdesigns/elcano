@@ -1,18 +1,24 @@
 /* ---- elcano Explorer v3.0 - alpha 0.3. ---- */
 
-
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
 var allowedPass = '097100109105110'; // contraseña aceptada encriptada
 
+var path = './';
+var favorites = [];
+
 if (localStorage.getItem('elcano-settings') == null) {
-    var settings = {'aside':true,'view':'Mosaic'};
+    var settings = {'sideTree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
 } else {
     var settings = JSON.parse(localStorage.getItem('elcano-settings'));
 }
 
-var path = './';
-
+if (localStorage.getItem('elcano-favorites') == null) {
+    localStorage.setItem('elcano-favorites','[]');
+    favorites = JSON.parse(localStorage.getItem('elcano-favorites'));
+} else {
+    favorites = JSON.parse(localStorage.getItem('elcano-favorites'));
+}
 
 $(function() { // init
     if (sessionStorage.getItem('elcano-access') === allowedPass) {
@@ -31,8 +37,59 @@ $(function() { // init
 
 
     // options functionalities
+    $('#optLaunch').on('click', function() {
+		window.open(path,'_blank');
+	});
+
     $('#optDatabase').on('click', function() {
 		window.open('http://localhost/phpmyadmin/','_blank');
+	});
+
+    $('#optFavorite').on('click', function() {
+        if (favorites.length>0) {
+            for (x in favorites) {
+				if (favorites[x].path == path) {
+					favorites.splice(x,1);
+					localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
+				}
+			}
+			$('#optFavorite').hide();$('#optNotFavorite').show();
+            showFavorites();
+        }
+    });
+
+    $('#optNotFavorite').on('click', function() {
+        var titFav = prompt('Título del favorito: ','');
+        favorites.push({'path':path,'title':titFav});
+        localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
+        console.log(favorites);
+
+        $('#optFavorite').show();$('#optNotFavorite').hide();
+        showFavorites();
+    });
+
+    $('#optView').on('click', function() {
+        if (settings.optViewDespl) {
+            $('#optMoreDespl').slideUp(200);
+            $('#shadow').fadeOut(200);
+            settings.optViewDespl = false;
+        } else {
+            $('#desplOptView').slideDown(200);
+			$('#shadow').fadeIn(200);
+			settings.optViewDespl = true;
+        }
+    });
+
+    $('#optMore, #shadow').on('click', function() {
+		/*if (optionsMore) {
+			$('#desplOptionsMore').slideUp(200);
+			$('#shadow').fadeOut(200);
+			optionsMore = false;
+		} else {
+			$('#desplOptionsMore').slideDown(200);
+			$('#shadow').fadeIn(200);
+			optionsMore = true;
+		}*/
 	});
 });
 
@@ -52,6 +109,7 @@ function enableExplorer() {
     console.log('explorer enabled');
     allowedAccess = true;
     changePath('./');
+    showFavorites();
     $('.screen').hide();
     $('#explorer').show();
 }
@@ -74,14 +132,32 @@ function checkAccess() {
 }
 
 function getFolder(path) {
-    // introducir funcion descomponer ruta en el nav
+    explodePath(path); // actualiza los directorios del nav
+
+    var coincidencia = false;
+	if (favorites.length>0) {
+		for (x in favorites) {
+			if (favorites[x].path == path) {
+				coincidencia = true;
+			}
+		}
+	}
+
+	if (coincidencia) {
+        console.log('coincide');
+		$('#optFavorite').show();
+		$('#optNotFavorite').hide();
+	} else {
+        console.log('no coincide');
+		$('#optFavorite').hide();
+		$('#optNotFavorite').show();
+	}
 
     $.get( "listDirectory2.php", { ruta: path } )
 		.done(function( data ) {
             console.log(data);
             var response = JSON.parse(data);
 
-            explodePath(path); // actualiza los directorios del nav
             $('#itemArea').html('');
 
             if (response.dir.length == 0 && response.files.length == 0) {
@@ -117,7 +193,6 @@ function setFolderItems(name,path,type,size) {
 function changePath(url) { // cambia la ruta actual
     console.log('changePath to: '+url);
     if (url.substring(0,2) == './' && url.indexOf('../') == -1) {
-    	//console.log('list --- ' + url);
     	getFolder(url);
     	document.title = 'elcano ' + url;
     	/*if (historyPaths.length>=10) {
@@ -160,8 +235,19 @@ function explodePath(url) {
             } else {
                 $('nav').append('<div class="navSeparator"><p>/</p></div><div class="navItem"><p>'+explode[i]+'</p></div>');
             }
-			//$('#pathFolders').append('<div class="pathFolder" onclick="changePath(\'' + implode + '\')">' + explode[i] + '</div>');
 		}
+	}
+}
+
+function showFavorites() {
+	if (favorites.length>0) {
+		var favs = '';
+		for (x in favorites) {
+			favs += '<div class="favFolder" onclick="changePath(\'' + favorites[x].path + '\')"><p>' + favorites[x].title + '<small>' + favorites[x].path + '</small></p></div>';
+		}
+		$('#asideFavBody').html(favs);
+	} else {
+		$('#asideFavBody').html('<p style="text-align:center;color:#555">No hay favoritos</p>');
 	}
 }
 
