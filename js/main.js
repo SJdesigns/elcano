@@ -4,8 +4,10 @@
 var allowedAccess = false; // indica si el usuario esta autenticado
 var allowedPass = '097100109105110'; // contraseña aceptada encriptada
 
-var path = './';
-var favorites = [];
+var path = './'; // ruta actual del eplorador
+var favorites = []; // almacena las rutas favoritas
+var optMoreDespl = false; // estado del desplegable de más opciones
+var optViewDespl = false; // estado del desplegable de las vistas
 
 if (localStorage.getItem('elcano-settings') == null) {
     var settings = {'sideTree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
@@ -69,28 +71,41 @@ $(function() { // init
     });
 
     $('#optView').on('click', function() {
-        if (settings.optViewDespl) {
-            $('#optMoreDespl').slideUp(200);
+        if (optViewDespl) {
+            $('#optViewDespl').slideUp(200);
             $('#shadow').fadeOut(200);
-            settings.optViewDespl = false;
+            optViewDespl = false;
         } else {
-            $('#desplOptView').slideDown(200);
+            $('#optViewDespl').slideDown(200);
 			$('#shadow').fadeIn(200);
-			settings.optViewDespl = true;
+			optViewDespl = true;
+            $('#optMoreDespl').slideUp(200);
+			optMoreDespl = false;
         }
     });
 
-    $('#optMore, #shadow').on('click', function() {
-		/*if (optionsMore) {
-			$('#desplOptionsMore').slideUp(200);
+    $('#optMore').on('click', function() {
+		if (optMoreDespl) {
+			$('#optMoreDespl').slideUp(200);
 			$('#shadow').fadeOut(200);
-			optionsMore = false;
+			optMoreDespl = false;
 		} else {
-			$('#desplOptionsMore').slideDown(200);
+			$('#optMoreDespl').slideDown(200);
 			$('#shadow').fadeIn(200);
-			optionsMore = true;
-		}*/
+			optMoreDespl = true;
+            $('#optViewDespl').slideUp(200);
+            optViewDespl = false;
+		}
 	});
+
+    $('#shadow').on('click', function() {
+        $('#optViewDespl').slideUp(200);
+        $('#shadow').fadeOut(200);
+        optViewDespl = false;
+        $('#optMoreDespl').slideUp(200);
+        $('#shadow').fadeOut(200);
+        optMoreDespl = false;
+    })
 });
 
 function authorize() {
@@ -160,15 +175,22 @@ function getFolder(path) {
 
             $('#itemArea').html('');
 
+            var files = 0;
+            var directories = 0;
+
             if (response.dir.length == 0 && response.files.length == 0) {
                 $('#itemArea').html('<p>Esta carpeta está vacia</p>');
             }
             for (i in response.dir) {
                 setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
+                directories++;
             }
             for (i in response.files) {
                 setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize);
+                files++;
             }
+
+            $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
     });
 }
 
@@ -249,6 +271,32 @@ function showFavorites() {
 	} else {
 		$('#asideFavBody').html('<p style="text-align:center;color:#555">No hay favoritos</p>');
 	}
+}
+
+function changeView(view) {
+    if (view != settings.view && (view=='Mosaic' || view=='List' || view=='Icons')) {
+        $('.item').removeClass('itemMosaic');
+        $('.item').removeClass('itemList');
+        $('.item').removeClass('itemIcons');
+
+        if (view == 'Mosaic') {
+            $('.item').addClass('itemMosaic');
+            settings.view = 'Mosaic';
+            localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        } else if (view == 'List') {
+            $('.item').addClass('itemList');
+            settings.view = 'List';
+            localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        } else if (view == 'Icons') {
+            $('.item').addClass('itemIcons');
+            settings.view = 'Icons';
+            localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        }
+        $('#optViewDespl').slideUp(200);
+        $('#shadow').fadeOut(200);
+        optViewDespl = false;
+    }
+    console.log(settings);
 }
 
 /* ---- app utils ---- */

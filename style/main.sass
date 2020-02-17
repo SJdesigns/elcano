@@ -219,6 +219,37 @@ header
 					top: 0%
 					border-radius: 0%
 
+		.optDropDown
+			position: absolute
+			width: 260px
+			height: auto
+			right: 0px
+			top: 50px
+			padding: 8px 0px
+			background-color: #fff
+			box-shadow: -2px 2px 8px rgba(#000,.15)
+			cursor: pointer
+			display: none
+
+			div
+				position: relative
+				width: 100%
+				padding: 12px 20px
+				text-align: center
+				box-sizing: border-box
+				display: flex
+
+				&:hover
+					background-color: rgba(#000,.1)
+
+				svg
+					width: 25px
+					height: 25px
+					margin-right: 12px
+
+				p
+					margin-top: 2px
+
 main
 	position: absolute
 	width: 100%
@@ -314,16 +345,19 @@ main
 					position: relative
 					padding: 0px 12px
 					overflow: hidden
+					box-sizing: border-box
+					box-shadow: 2px 2px 8px rgba(#000,.1)
+					display: flex
 
 					&:hover
 						background-color: rgba(#000,.1)
 
+				/* estilos para las distintas vistas */
+
+				// mosaic
 				.itemMosaic
 					width: 25%
 					height: 60px
-					box-shadow: 2px 2px 8px rgba(#000,.1)
-					box-sizing: border-box
-					display: flex
 
 					.itemLogo
 						position: relative
@@ -346,6 +380,72 @@ main
 						p
 							font-size: 13pt
 							margin: 8px 0px
+							word-wrap: break-word
+							cursor: default
+
+						p[split-lines]
+							white-space: pre-wrap
+
+				// list
+				.itemList
+					width: 100%
+					height: 60px
+
+					.itemLogo
+						position: relative
+						width: 42px
+						height: 42px
+						padding: 9px
+						margin-left: 4px
+						margin-right: 18px
+
+						img
+							max-width: 42px
+							max-height: 42px
+
+					.itemText
+						position: relative
+						width: 100%
+						height: 100%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							word-wrap: break-word
+							cursor: default
+
+						p[split-lines]
+							white-space: pre-wrap
+
+				// icons
+				.itemIcons
+					width: 10%
+					height: auto
+					flex-direction: column
+
+					.itemLogo
+						position: relative
+						width: 50px
+						height: 50px
+						padding: 9px
+
+						img
+							max-width: 50px
+							max-height: 50px
+
+					.itemText
+						position: relative
+						width: 100%
+						height: 100%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							text-align: center
 							word-wrap: break-word
 							cursor: default
 

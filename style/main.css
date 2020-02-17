@@ -223,6 +223,37 @@ header div#options .option svg:hover ~ .optionArea {
   top: 0%;
   border-radius: 0%;
 }
+header div#options .optDropDown {
+  position: absolute;
+  width: 260px;
+  height: auto;
+  right: 0px;
+  top: 50px;
+  padding: 8px 0px;
+  background-color: #fff;
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  display: none;
+}
+header div#options .optDropDown div {
+  position: relative;
+  width: 100%;
+  padding: 12px 20px;
+  text-align: center;
+  box-sizing: border-box;
+  display: flex;
+}
+header div#options .optDropDown div:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+header div#options .optDropDown div svg {
+  width: 25px;
+  height: 25px;
+  margin-right: 12px;
+}
+header div#options .optDropDown div p {
+  margin-top: 2px;
+}
 
 main {
   position: absolute;
@@ -314,11 +345,15 @@ main #mainCenter section #itemArea {
   height: auto;
   display: flex;
   flex-wrap: wrap;
+  /* estilos para las distintas vistas */
 }
 main #mainCenter section #itemArea .item {
   position: relative;
   padding: 0px 12px;
   overflow: hidden;
+  box-sizing: border-box;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
 }
 main #mainCenter section #itemArea .item:hover {
   background-color: rgba(0, 0, 0, 0.1);
@@ -326,9 +361,6 @@ main #mainCenter section #itemArea .item:hover {
 main #mainCenter section #itemArea .itemMosaic {
   width: 25%;
   height: 60px;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-  box-sizing: border-box;
-  display: flex;
 }
 main #mainCenter section #itemArea .itemMosaic .itemLogo {
   position: relative;
@@ -355,6 +387,70 @@ main #mainCenter section #itemArea .itemMosaic .itemText p {
   cursor: default;
 }
 main #mainCenter section #itemArea .itemMosaic .itemText p[split-lines] {
+  white-space: pre-wrap;
+}
+main #mainCenter section #itemArea .itemList {
+  width: 100%;
+  height: 60px;
+}
+main #mainCenter section #itemArea .itemList .itemLogo {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  padding: 9px;
+  margin-left: 4px;
+  margin-right: 18px;
+}
+main #mainCenter section #itemArea .itemList .itemLogo img {
+  max-width: 42px;
+  max-height: 42px;
+}
+main #mainCenter section #itemArea .itemList .itemText {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+main #mainCenter section #itemArea .itemList .itemText p {
+  font-size: 13pt;
+  margin: 8px 0px;
+  word-wrap: break-word;
+  cursor: default;
+}
+main #mainCenter section #itemArea .itemList .itemText p[split-lines] {
+  white-space: pre-wrap;
+}
+main #mainCenter section #itemArea .itemIcons {
+  width: 10%;
+  height: auto;
+  flex-direction: column;
+}
+main #mainCenter section #itemArea .itemIcons .itemLogo {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  padding: 9px;
+}
+main #mainCenter section #itemArea .itemIcons .itemLogo img {
+  max-width: 50px;
+  max-height: 50px;
+}
+main #mainCenter section #itemArea .itemIcons .itemText {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+main #mainCenter section #itemArea .itemIcons .itemText p {
+  font-size: 13pt;
+  margin: 8px 0px;
+  text-align: center;
+  word-wrap: break-word;
+  cursor: default;
+}
+main #mainCenter section #itemArea .itemIcons .itemText p[split-lines] {
   white-space: pre-wrap;
 }
 main #mainCenter section #folderInfo {
