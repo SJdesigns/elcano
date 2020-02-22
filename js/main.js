@@ -10,7 +10,8 @@ var optMoreDespl = false; // estado del desplegable de más opciones
 var optViewDespl = false; // estado del desplegable de las vistas
 
 if (localStorage.getItem('elcano-settings') == null) {
-    var settings = {'sideTree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
+    var settings = {'tree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
+    localStorage.setItem('elcano-settings',JSON.stringify(settings));
 } else {
     var settings = JSON.parse(localStorage.getItem('elcano-settings'));
 }
@@ -159,11 +160,9 @@ function getFolder(path) {
 	}
 
 	if (coincidencia) {
-        console.log('coincide');
 		$('#optFavorite').show();
 		$('#optNotFavorite').hide();
 	} else {
-        console.log('no coincide');
 		$('#optFavorite').hide();
 		$('#optNotFavorite').show();
 	}
@@ -179,7 +178,7 @@ function getFolder(path) {
             var directories = 0;
 
             if (response.dir.length == 0 && response.files.length == 0) {
-                $('#itemArea').html('<p>Esta carpeta está vacia</p>');
+                $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
             }
             for (i in response.dir) {
                 setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
@@ -203,11 +202,19 @@ function setFolderItems(name,path,type,size) {
         html += '<div class="item item'+settings.view+'" onclick="readFich(\'' + path + '\')">';
     }
     html += '<div class="itemLogo">';
-    html += '<img src="img/typePDF.png" />';
+    html += setItemIcon(type);
     html += '</div>';
     html += '<div class="itemText">';
     html += '<p split-lines>'+name+'</p>';
     html += '</div>';
+    if (type!='folder') {
+        html += '<div class="itemFiletype">';
+        html += '<p>'+type+'</p>';
+        html += '</div>';
+        html += '<div class="itemFilesize">';
+        html += '<p>'+size+'</p>';
+        html += '</div>';
+    }
     html += '</div>';
     $('#itemArea').append(html);
 }
@@ -243,19 +250,23 @@ function explodePath(url) {
 			if (explode[i]=='.') {
 				explode[i] = 'paginas';
 			}
-			var implode = '';
-			for (j=0;j<=i;j++) {
-				if (explode[j] == 'paginas') {
-					implode += './';
-				} else {
-					implode += explode[j] + '/';
-				}
 
-			}
-            if ($('nav').html() == '') {
+            var implode = ''; // permite asignar la url a cada item del nav
+            for (j=0;j<=i;j++) {
+                if (explode[j] == 'paginas') {
+                    implode += './';
+                } else {
+                    implode += explode[j] + '/';
+                }
+            }
+
+            if (i != explode.length-1 && i != explode.length-2) {
                 $('nav').append('<div class="navItem" onclick="changePath(\'' + implode + '\')"><p>'+explode[i]+'</p></div>');
-            } else {
-                $('nav').append('<div class="navSeparator"><p>/</p></div><div class="navItem"><p>'+explode[i]+'</p></div>');
+                if (i != explode.length -1) {
+                    $('nav').append('<div class="navSeparator"><p>/</p></div>');
+                }
+            } else if (explode[i] != '') {
+                $('nav').append('<div class="navItem"><p>'+explode[i]+'</p></div>');
             }
 		}
 	}
@@ -274,10 +285,10 @@ function showFavorites() {
 }
 
 function changeView(view) {
-    if (view != settings.view && (view=='Mosaic' || view=='List' || view=='Icons')) {
+    if (view != settings.view && (view=='Mosaic' || view=='List' || view=='Wall')) {
         $('.item').removeClass('itemMosaic');
         $('.item').removeClass('itemList');
-        $('.item').removeClass('itemIcons');
+        $('.item').removeClass('itemWall');
 
         if (view == 'Mosaic') {
             $('.item').addClass('itemMosaic');
@@ -287,9 +298,9 @@ function changeView(view) {
             $('.item').addClass('itemList');
             settings.view = 'List';
             localStorage.setItem('elcano-settings',JSON.stringify(settings));
-        } else if (view == 'Icons') {
-            $('.item').addClass('itemIcons');
-            settings.view = 'Icons';
+        } else if (view == 'Wall') {
+            $('.item').addClass('itemWall');
+            settings.view = 'Wall';
             localStorage.setItem('elcano-settings',JSON.stringify(settings));
         }
         $('#optViewDespl').slideUp(200);
@@ -297,6 +308,49 @@ function changeView(view) {
         optViewDespl = false;
     }
     console.log(settings);
+}
+
+function setItemIcon(type) {
+    var image = 'default';
+    if (type=='folder') {
+        image = '<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" enable-background="new 0 0 48 48"><path fill="#FFA000" d="M40,12H22l-4-4H8c-2.2,0-4,1.8-4,4v8h40v-4C44,13.8,42.2,12,40,12z"/><path fill="#FFCA28" d="M40,12H8c-2.2,0-4,1.8-4,4v20c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V16C44,13.8,42.2,12,40,12z"/></svg>';
+    } else if (type=='zip' || type=='rar' || type=='7z') {
+    } else if (type=='txt') {
+    } else if (type=='pdf') {
+        image = '';
+    } else if (type=='html') {
+    } else if (type=='css') {
+    } else if (type=='sass' || type=='scss') {
+    } else if (type=='js') {
+    } else if (type=='php') {
+    } else if (type=='py') {
+    } else if (type=='c' || type=='cpp') {
+    } else if (type=='doc' || type=='docx') {
+    } else if (type=='xsl' || type=='xslx') {
+    } else if (type=='ppt' || type=='pptx') {
+    } else if (type=='accbd') {
+    } else if (type=='jpg' || type=='png' || type=='gif' || type=='svg' || type=='bmp') {
+    } else if (type=='ps') {
+    } else if (type=='ai') {
+    } else {
+        image = 'default';
+    }
+
+    //return image;
+    return '<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" enable-background="new 0 0 48 48"><path fill="#FFA000" d="M40,12H22l-4-4H8c-2.2,0-4,1.8-4,4v8h40v-4C44,13.8,42.2,12,40,12z"/><path fill="#FFCA28" d="M40,12H8c-2.2,0-4,1.8-4,4v20c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V16C44,13.8,42.2,12,40,12z"/></svg>';
+}
+
+function showTree() {
+    console.log('showTree');
+    if (settings.tree) {
+        $('aside').css('margin-left','-330px');
+        settings.tree = false;
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+    } else {
+        $('aside').css('margin-left','0px');
+        settings.tree = true;
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+    }
 }
 
 /* ---- app utils ---- */

@@ -280,10 +280,12 @@ main #mainCenter {
 main #mainCenter aside {
   position: relative;
   width: 320px;
+  margin-left: 0px;
   height: 100%;
   background-color: #8eacbc;
   display: flex;
   flex-direction: column;
+  transition: margin-left 0.4s;
 }
 main #mainCenter aside hr {
   border: 0px;
@@ -347,6 +349,9 @@ main #mainCenter section #itemArea {
   flex-wrap: wrap;
   /* estilos para las distintas vistas */
 }
+main #mainCenter section #itemArea #emptyFolder {
+  padding: 25px 50px;
+}
 main #mainCenter section #itemArea .item {
   position: relative;
   padding: 0px 12px;
@@ -364,14 +369,15 @@ main #mainCenter section #itemArea .itemMosaic {
 }
 main #mainCenter section #itemArea .itemMosaic .itemLogo {
   position: relative;
-  width: 42px;
-  height: 42px;
-  padding: 9px;
-  margin-right: 15px;
+  width: 60px;
+  height: 100%;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-main #mainCenter section #itemArea .itemMosaic .itemLogo img {
-  max-width: 42px;
-  max-height: 42px;
+main #mainCenter section #itemArea .itemMosaic .itemLogo svg {
+  height: 42px;
 }
 main #mainCenter section #itemArea .itemMosaic .itemText {
   position: relative;
@@ -379,6 +385,7 @@ main #mainCenter section #itemArea .itemMosaic .itemText {
   height: 100%;
   display: flex;
   align-items: center;
+  margin-left: 12px;
 }
 main #mainCenter section #itemArea .itemMosaic .itemText p {
   font-size: 13pt;
@@ -389,26 +396,30 @@ main #mainCenter section #itemArea .itemMosaic .itemText p {
 main #mainCenter section #itemArea .itemMosaic .itemText p[split-lines] {
   white-space: pre-wrap;
 }
+main #mainCenter section #itemArea .itemMosaic .itemFiletype, main #mainCenter section #itemArea .itemMosaic .itemFilesize {
+  display: none;
+}
 main #mainCenter section #itemArea .itemList {
   width: 100%;
   height: 60px;
 }
 main #mainCenter section #itemArea .itemList .itemLogo {
   position: relative;
-  width: 42px;
-  height: 42px;
-  padding: 9px;
+  width: 60px;
+  height: 60px;
   margin-left: 4px;
-  margin-right: 18px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-main #mainCenter section #itemArea .itemList .itemLogo img {
-  max-width: 42px;
-  max-height: 42px;
+main #mainCenter section #itemArea .itemList .itemLogo svg {
+  height: 42px;
 }
 main #mainCenter section #itemArea .itemList .itemText {
   position: relative;
   width: 100%;
   height: 100%;
+  margin-left: 18px;
   display: flex;
   align-items: center;
 }
@@ -421,37 +432,68 @@ main #mainCenter section #itemArea .itemList .itemText p {
 main #mainCenter section #itemArea .itemList .itemText p[split-lines] {
   white-space: pre-wrap;
 }
-main #mainCenter section #itemArea .itemIcons {
-  width: 10%;
+main #mainCenter section #itemArea .itemList .itemFiletype {
+  position: relative;
+  width: 200px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+main #mainCenter section #itemArea .itemList .itemFiletype p {
+  font-size: 13pt;
+  margin: 8px 0px;
+  cursor: default;
+}
+main #mainCenter section #itemArea .itemList .itemFilesize {
+  position: relative;
+  width: 200px;
+  height: 100%;
+  margin-right: 20%;
+  display: flex;
+  align-items: center;
+}
+main #mainCenter section #itemArea .itemList .itemFilesize p {
+  font-size: 13pt;
+  margin: 8px 0px;
+  cursor: default;
+}
+main #mainCenter section #itemArea .itemWall {
+  width: auto;
   height: auto;
   flex-direction: column;
 }
-main #mainCenter section #itemArea .itemIcons .itemLogo {
+main #mainCenter section #itemArea .itemWall .itemLogo {
   position: relative;
   width: 50px;
   height: 50px;
   padding: 9px;
+  display: flex;
+  justify-content: center;
+  margin: 0 auto;
 }
-main #mainCenter section #itemArea .itemIcons .itemLogo img {
-  max-width: 50px;
-  max-height: 50px;
+main #mainCenter section #itemArea .itemWall .itemLogo svg {
+  width: 50px;
+  height: 50px;
 }
-main #mainCenter section #itemArea .itemIcons .itemText {
+main #mainCenter section #itemArea .itemWall .itemText {
   position: relative;
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
 }
-main #mainCenter section #itemArea .itemIcons .itemText p {
+main #mainCenter section #itemArea .itemWall .itemText p {
   font-size: 13pt;
   margin: 8px 0px;
-  text-align: center;
+  margin: 8px auto;
   word-wrap: break-word;
   cursor: default;
 }
-main #mainCenter section #itemArea .itemIcons .itemText p[split-lines] {
+main #mainCenter section #itemArea .itemWall .itemText p[split-lines] {
   white-space: pre-wrap;
+}
+main #mainCenter section #itemArea .itemWall .itemFiletype, main #mainCenter section #itemArea .itemWall .itemFilesize {
+  display: none;
 }
 main #mainCenter section #folderInfo {
   position: fixed;

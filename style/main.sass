@@ -275,10 +275,12 @@ main
 		aside
 			position: relative
 			width: 320px
+			margin-left: 0px
 			height: 100%
 			background-color: #8eacbc
 			display: flex
 			flex-direction: column
+			transition: margin-left .4s
 
 			hr
 				border: 0px
@@ -341,6 +343,9 @@ main
 				display: flex
 				flex-wrap: wrap
 
+				#emptyFolder
+					padding: 25px 50px
+
 				.item
 					position: relative
 					padding: 0px 12px
@@ -361,14 +366,15 @@ main
 
 					.itemLogo
 						position: relative
-						width: 42px
-						height: 42px
-						padding: 9px
-						margin-right: 15px
+						width: 60px
+						height: 100%
+						padding: 0px
+						display: flex
+						justify-content: center
+						align-items: center
 
-						img
-							max-width: 42px
-							max-height: 42px
+						svg
+							height: 42px
 
 					.itemText
 						position: relative
@@ -376,6 +382,7 @@ main
 						height: 100%
 						display: flex
 						align-items: center
+						margin-left: 12px
 
 						p
 							font-size: 13pt
@@ -385,6 +392,9 @@ main
 
 						p[split-lines]
 							white-space: pre-wrap
+
+					.itemFiletype, .itemFilesize
+						display: none
 
 				// list
 				.itemList
@@ -393,20 +403,21 @@ main
 
 					.itemLogo
 						position: relative
-						width: 42px
-						height: 42px
-						padding: 9px
+						width: 60px
+						height: 60px
 						margin-left: 4px
-						margin-right: 18px
+						display: flex
+						justify-content: center
+						align-items: center
 
-						img
-							max-width: 42px
-							max-height: 42px
+						svg
+							height: 42px
 
 					.itemText
 						position: relative
 						width: 100%
 						height: 100%
+						margin-left: 18px
 						display: flex
 						align-items: center
 
@@ -419,9 +430,34 @@ main
 						p[split-lines]
 							white-space: pre-wrap
 
-				// icons
-				.itemIcons
-					width: 10%
+					.itemFiletype
+						position: relative
+						width: 200px
+						height: 100%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							cursor: default
+
+					.itemFilesize
+						position: relative
+						width: 200px
+						height: 100%
+						margin-right: 20%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							cursor: default
+
+				// wall
+				.itemWall
+					width: auto
 					height: auto
 					flex-direction: column
 
@@ -430,10 +466,13 @@ main
 						width: 50px
 						height: 50px
 						padding: 9px
+						display: flex
+						justify-content: center
+						margin: 0 auto
 
-						img
-							max-width: 50px
-							max-height: 50px
+						svg
+							width: 50px
+							height: 50px
 
 					.itemText
 						position: relative
@@ -445,12 +484,15 @@ main
 						p
 							font-size: 13pt
 							margin: 8px 0px
-							text-align: center
+							margin: 8px auto
 							word-wrap: break-word
 							cursor: default
 
 						p[split-lines]
 							white-space: pre-wrap
+
+					.itemFiletype, .itemFilesize
+						display: none
 
 			#folderInfo
 				position: fixed
