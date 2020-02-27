@@ -58,7 +58,7 @@ if (isset($_GET['ruta'])) {
     <div class="screen" id="explorer">
         <header>
             <div id="headerTitle">
-                <svg id="headerLogo" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1117.5 1117.5"><defs><style>.cls-1{opacity:0.8;}.cls-2{fill:none;stroke:#ffc107;stroke-miterlimit:10;stroke-width:80px;}.cls-3{fill:#ffc107;}</style></defs><title>logo</title><g class="cls-1"><circle class="cls-2" cx="558.75" cy="558.75" r="518.75"/></g><circle class="cls-3" cx="563.54" cy="563.54" r="372"/></svg>
+                <svg id="headerLogo" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1117.5 1117.5"><defs><style>.headerLogo-1{opacity:0.8;}.headerLogo-2{fill:none;stroke:#ffc107;stroke-miterlimit:10;stroke-width:80px;}.headerLogo-3{fill:#ffc107;}</style></defs><title>logo</title><g class="headerLogo-1"><circle class="headerLogo-2" cx="558.75" cy="558.75" r="518.75"/></g><circle class="headerLogo-3" cx="563.54" cy="563.54" r="372"/></svg>
                 <h1>elcano</h1>
             </div>
             <nav>

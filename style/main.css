@@ -363,6 +363,9 @@ main #mainCenter section #itemArea .item {
 main #mainCenter section #itemArea .item:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
+main #mainCenter section #itemArea .itemHidden {
+  opacity: 0.4;
+}
 main #mainCenter section #itemArea .itemMosaic {
   width: 25%;
   height: 60px;
@@ -376,7 +379,7 @@ main #mainCenter section #itemArea .itemMosaic .itemLogo {
   justify-content: center;
   align-items: center;
 }
-main #mainCenter section #itemArea .itemMosaic .itemLogo svg {
+main #mainCenter section #itemArea .itemMosaic .itemLogo svg, main #mainCenter section #itemArea .itemMosaic .itemLogo img {
   height: 42px;
 }
 main #mainCenter section #itemArea .itemMosaic .itemText {
@@ -412,7 +415,7 @@ main #mainCenter section #itemArea .itemList .itemLogo {
   justify-content: center;
   align-items: center;
 }
-main #mainCenter section #itemArea .itemList .itemLogo svg {
+main #mainCenter section #itemArea .itemList .itemLogo svg, main #mainCenter section #itemArea .itemList .itemLogo img {
   height: 42px;
 }
 main #mainCenter section #itemArea .itemList .itemText {
@@ -471,7 +474,7 @@ main #mainCenter section #itemArea .itemWall .itemLogo {
   justify-content: center;
   margin: 0 auto;
 }
-main #mainCenter section #itemArea .itemWall .itemLogo svg {
+main #mainCenter section #itemArea .itemWall .itemLogo svg, main #mainCenter section #itemArea .itemWall .itemLogo img {
   width: 50px;
   height: 50px;
 }
