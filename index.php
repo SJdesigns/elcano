@@ -62,13 +62,13 @@ if (isset($_GET['ruta'])) {
                 <h1>elcano</h1>
             </div>
             <nav>
-                <div class="navItem"><p>folder1</p></div>
+                <!--<div class="navItem"><p>folder1</p></div>
                 <div class="navSeparator"><p>/</p></div>
                 <div class="navItem"><p>folder2</p></div>
                 <div class="navSeparator"><p>/</p></div>
                 <div class="navItem"><p>folder3</p></div>
                 <div class="navSeparator"><p>/</p></div>
-                <div class="navItem"><p>folder4</p></div>
+                <div class="navItem"><p>folder4</p></div>-->
             </nav>
             <div id="options">
                 <div class="option" id="optMore">
@@ -76,7 +76,7 @@ if (isset($_GET['ruta'])) {
                     <div class="optionArea"></div>
                 </div>
                 <div class="optDropDown" id="optMoreDespl">
-                    <div>
+                    <div class="optMoreDesplBack" onclick="prevPath()">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L3.71 8.71C3.08 8.08 2 8.52 2 9.41V15c0 .55.45 1 1 1h5.59c.89 0 1.34-1.08.71-1.71l-1.91-1.91c1.39-1.16 3.16-1.88 5.12-1.88 3.16 0 5.89 1.84 7.19 4.5.27.56.91.84 1.5.64.71-.23 1.07-1.04.75-1.72C20.23 10.42 16.65 8 12.5 8z"/></svg>
                         <p>Atrás</p>
                     </div>
@@ -84,7 +84,11 @@ if (isset($_GET['ruta'])) {
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg>
                         <p>Mostrar Explorador</p>
                     </div>
-                    <div>
+                    <div class="optMoreSettings" onclick="showSettings()">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
+                        <p>Configuración</p>
+                    </div>
+                    <div class="optMoreNewfolder">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M20 6h-8l-1.41-1.41C10.21 4.21 9.7 4 9.17 4H4c-1.11 0-1.99.89-1.99 2L2 18c0 1.11.89 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-2 8h-2v2c0 .55-.45 1-1 1s-1-.45-1-1v-2h-2c-.55 0-1-.45-1-1s.45-1 1-1h2v-2c0-.55.45-1 1-1s1 .45 1 1v2h2c.55 0 1 .45 1 1s-.45 1-1 1z"/></svg>
                         <p>Crear Carpeta</p>
                     </div>
@@ -142,7 +146,12 @@ if (isset($_GET['ruta'])) {
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
                             <p>Directorios</p>
                         </div>
-                        <div class="asideBody" id="asideTree"></div>
+                        <div class="asideBody" id="asideTreeBody">
+                            <div class="spinner">
+    							<div class="dot1"></div>
+    							<div class="dot2"></div>
+    						</div>
+                        </div>
                     </div>
                 </aside>
                 <section>

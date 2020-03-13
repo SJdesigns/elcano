@@ -54,7 +54,7 @@ function listDirectory($path) {
                 $fileType = 'unknown';
             }
 
-            if ($archivo != "." && $archivo != ".." && $archivo != "explorerConf") {
+            if ($archivo != "." && $archivo != ".." && ($archivo != "default.php")) {
                 $content = [];
                 $content['fileName'] = $archivo;
                 $content['filePath'] = $path . $archivo;

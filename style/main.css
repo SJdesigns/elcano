@@ -340,6 +340,7 @@ main #mainCenter section {
   position: relative;
   width: 100%;
   height: 100%;
+  overflow: auto;
 }
 main #mainCenter section #itemArea {
   position: relative;
@@ -505,6 +506,155 @@ main #mainCenter section #folderInfo {
   font-size: 11pt;
   padding: 3px 7px 4px;
   background-color: rgba(0, 0, 0, 0.1);
+}
+
+/* ---- aside ---- */
+details {
+  margin: 0px;
+  color: #444444;
+  padding: 5px;
+  cursor: default;
+  -webkit-transition: all 0.1s;
+}
+
+details[open] {
+  animation-name: slideDown;
+  animation-duration: 200ms;
+  animation-timing-function: ease-in;
+}
+
+details:hover {
+  background-color: #fff;
+}
+
+details details {
+  border: 0px;
+  margin-left: 12px;
+}
+
+summary p.linkTree {
+  color: #333333;
+  text-decoration: none;
+}
+
+summary p.linkTree:hover {
+  color: #2196f3;
+}
+
+summary p.linkTree:focus {
+  text-decoration: none;
+}
+
+details#activo > summary > p.linkTree {
+  color: #2196f3;
+}
+
+summary {
+  outline: 0;
+}
+
+details summary::-webkit-details-marker {
+  display: none;
+}
+
+summary::before {
+  position: relative;
+  float: left;
+  content: "+";
+  margin-right: 0px;
+  padding-right: 12px;
+  margin-top: -5px;
+  font-size: 18pt;
+}
+
+summary:hover::before {
+  color: #2196f3;
+}
+
+details[open] > summary::before {
+  position: relative;
+  float: left;
+  content: "-";
+  margin-left: 0px;
+  padding-left: 2px;
+  margin-right: 0px;
+  padding-right: 14px;
+  margin-top: -10px;
+  font-size: 22pt;
+}
+
+@keyframes slideDown {
+  0% {
+    opacity: 0;
+    height: 0;
+  }
+  100% {
+    opacity: 1;
+    height: 20px;
+  }
+}
+aside ::selection {
+  background-color: transparent;
+}
+
+/* ---- aside spinner ---- */
+.spinner {
+  margin: 100px auto;
+  width: 50px;
+  height: 50px;
+  position: relative;
+  text-align: center;
+  -webkit-animation: sk-rotate 2s infinite linear;
+  animation: sk-rotate 2s infinite linear;
+}
+
+.dot1, .dot2 {
+  width: 60%;
+  height: 60%;
+  display: inline-block;
+  position: absolute;
+  top: 0;
+  background-color: #2196f3;
+  border-radius: 100%;
+  -webkit-animation: sk-bounce 2s infinite ease-in-out;
+  animation: sk-bounce 2s infinite ease-in-out;
+}
+
+.dot2 {
+  top: auto;
+  bottom: 0;
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+
+@-webkit-keyframes sk-rotate {
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
+}
+@keyframes sk-rotate {
+  100% {
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes sk-bounce {
+  0%, 100% {
+    -webkit-transform: scale(0);
+  }
+  50% {
+    -webkit-transform: scale(1);
+  }
+}
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0);
+    -webkit-transform: scale(0);
+  }
+  50% {
+    transform: scale(1);
+    -webkit-transform: scale(1);
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

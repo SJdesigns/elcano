@@ -1,4 +1,4 @@
-/* ---- elcano Explorer v3.0 - alpha 0.3. ---- */
+/* ---- elcano Explorer v3.0 - alpha 1.1. ---- */
 
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
@@ -8,6 +8,7 @@ var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
 var optMoreDespl = false; // estado del desplegable de más opciones
 var optViewDespl = false; // estado del desplegable de las vistas
+var timeline = [];
 
 if (localStorage.getItem('elcano-settings') == null) {
     var settings = {'tree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
@@ -38,6 +39,8 @@ $(function() { // init
 
     checkAccess();
 
+    $('#asideTreeBody').html('<div class="spinner"><div class="dot1"></div><div class="dot2"></div></div>');
+    loadTree();
 
     // options functionalities
     $('#optLaunch').on('click', function() {
@@ -148,7 +151,8 @@ function checkAccess() {
 }
 
 function getFolder(path) {
-    explodePath(path); // actualiza los directorios del nav
+    console.log('getFolder(\''+path+'\')');
+    explodePath(path);
 
     var coincidencia = false;
 	if (favorites.length>0) {
@@ -230,11 +234,13 @@ function changePath(url) { // cambia la ruta actual
     if (url.substring(0,2) == './' && url.indexOf('../') == -1) {
     	getFolder(url);
     	document.title = 'elcano ' + url;
-    	/*if (historyPaths.length>=10) {
-    		historyPaths.splice(0,1);
-    	}
-    	historyPaths.push(url);*/
-    	path = url;
+        if (timeline.length>0) {
+            if (timeline[timeline.length-1].path != url) {
+                timeline.push({'path':url});
+            }
+        } else {
+            timeline.push({'path':url});
+        }
     } else {
         console.log('forbiden access to path '+url);
     }
@@ -245,7 +251,7 @@ function readFich(url) {
 	window.open(url,'_blank');
 }
 
-function explodePath(url) {
+function explodePath(url) { // actualiza los directorios del nav
 	var explode = url.split('/');
 	$('nav').html('');
 
@@ -278,7 +284,7 @@ function explodePath(url) {
 	}
 }
 
-function showFavorites() {
+function showFavorites() { // recarga la lista de favoritos en el aside
 	if (favorites.length>0) {
 		var favs = '';
 		for (x in favorites) {
@@ -290,7 +296,7 @@ function showFavorites() {
 	}
 }
 
-function changeView(view) {
+function changeView(view) { // permite cambiar el layout de elementos en el directorio
     if (view != settings.view && (view=='Mosaic' || view=='List' || view=='Wall')) {
         $('.item').removeClass('itemMosaic');
         $('.item').removeClass('itemList');
@@ -392,10 +398,10 @@ function setItemIcon(type,path) {
     //return '<svg version="1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" enable-background="new 0 0 48 48"><path fill="#FFA000" d="M40,12H22l-4-4H8c-2.2,0-4,1.8-4,4v8h40v-4C44,13.8,42.2,12,40,12z"/><path fill="#FFCA28" d="M40,12H8c-2.2,0-4,1.8-4,4v20c0,2.2,1.8,4,4,4h32c2.2,0,4-1.8,4-4V16C44,13.8,42.2,12,40,12z"/></svg>';
 }
 
-function showTree() {
+function showTree() { // muestra u oculta el árbol de directorios lateral
     console.log('showTree');
     if (settings.tree) {
-        $('aside').css('margin-left','-330px');
+        $('aside').css('margin-left','-320px');
         settings.tree = false;
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     } else {
@@ -403,6 +409,33 @@ function showTree() {
         settings.tree = true;
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     }
+    $('#optMoreDespl').slideUp(200);
+    $('#shadow').fadeOut(200);
+    optMoreDespl = false;
+}
+
+function loadTree() { // carga los datos del árbol de directorios
+    $.get( "directoryTree2.php", { ruta: path } )
+		.done(function( data ) {
+			$('#asideTreeBody').html(data);
+			console.log("tree loaded");
+	});
+}
+
+function showSettings() { // muestra u oculta la ventana de configuración
+    console.log('showSettings');
+}
+
+function prevPath() {
+    console.log('prevPath');
+    if (timeline.length>1) {
+        var url = timeline[timeline.length-2].path;
+        timeline.splice(timeline.length-1,1);
+        changePath(url);
+    }
+    $('#optMoreDespl').slideUp(200);
+    $('#shadow').fadeOut(200);
+    optMoreDespl = false;
 }
 
 /* ---- app utils ---- */
@@ -437,4 +470,148 @@ function getCookie(cname) {
         }
     }
     return false;
+}
+
+function sha1 (str) {
+  var hash
+  try {
+    var crypto = require('crypto')
+    var sha1sum = crypto.createHash('sha1')
+    sha1sum.update(str)
+    hash = sha1sum.digest('hex')
+  } catch (e) {
+    hash = undefined
+  }
+
+  if (hash !== undefined) {
+    return hash
+  }
+
+  var _rotLeft = function (n, s) {
+    var t4 = (n << s) | (n >>> (32 - s))
+    return t4
+  }
+
+  var _cvtHex = function (val) {
+    var str = ''
+    var i
+    var v
+
+    for (i = 7; i >= 0; i--) {
+      v = (val >>> (i * 4)) & 0x0f
+      str += v.toString(16)
+    }
+    return str
+  }
+
+  var blockstart
+  var i, j
+  var W = new Array(80)
+  var H0 = 0x67452301
+  var H1 = 0xEFCDAB89
+  var H2 = 0x98BADCFE
+  var H3 = 0x10325476
+  var H4 = 0xC3D2E1F0
+  var A, B, C, D, E
+  var temp
+
+  // utf8_encode
+  str = unescape(encodeURIComponent(str))
+  var strLen = str.length
+
+  var wordArray = []
+  for (i = 0; i < strLen - 3; i += 4) {
+    j = str.charCodeAt(i) << 24 |
+      str.charCodeAt(i + 1) << 16 |
+      str.charCodeAt(i + 2) << 8 |
+      str.charCodeAt(i + 3)
+    wordArray.push(j)
+  }
+
+  switch (strLen % 4) {
+    case 0:
+      i = 0x080000000
+      break
+    case 1:
+      i = str.charCodeAt(strLen - 1) << 24 | 0x0800000
+      break
+    case 2:
+      i = str.charCodeAt(strLen - 2) << 24 | str.charCodeAt(strLen - 1) << 16 | 0x08000
+      break
+    case 3:
+      i = str.charCodeAt(strLen - 3) << 24 |
+        str.charCodeAt(strLen - 2) << 16 |
+        str.charCodeAt(strLen - 1) <<
+      8 | 0x80
+      break
+  }
+
+  wordArray.push(i)
+
+  while ((wordArray.length % 16) !== 14) {
+    wordArray.push(0)
+  }
+
+  wordArray.push(strLen >>> 29)
+  wordArray.push((strLen << 3) & 0x0ffffffff)
+
+  for (blockstart = 0; blockstart < wordArray.length; blockstart += 16) {
+    for (i = 0; i < 16; i++) {
+      W[i] = wordArray[blockstart + i]
+    }
+    for (i = 16; i <= 79; i++) {
+      W[i] = _rotLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1)
+    }
+
+    A = H0
+    B = H1
+    C = H2
+    D = H3
+    E = H4
+
+    for (i = 0; i <= 19; i++) {
+      temp = (_rotLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff
+      E = D
+      D = C
+      C = _rotLeft(B, 30)
+      B = A
+      A = temp
+    }
+
+    for (i = 20; i <= 39; i++) {
+      temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff
+      E = D
+      D = C
+      C = _rotLeft(B, 30)
+      B = A
+      A = temp
+    }
+
+    for (i = 40; i <= 59; i++) {
+      temp = (_rotLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff
+      E = D
+      D = C
+      C = _rotLeft(B, 30)
+      B = A
+      A = temp
+    }
+
+    for (i = 60; i <= 79; i++) {
+      temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff
+      E = D
+      D = C
+      C = _rotLeft(B, 30)
+      B = A
+      A = temp
+    }
+
+    H0 = (H0 + A) & 0x0ffffffff
+    H1 = (H1 + B) & 0x0ffffffff
+    H2 = (H2 + C) & 0x0ffffffff
+    H3 = (H3 + D) & 0x0ffffffff
+    H4 = (H4 + E) & 0x0ffffffff
+  }
+
+  temp = _cvtHex(H0) + _cvtHex(H1) + _cvtHex(H2) + _cvtHex(H3) + _cvtHex(H4)
+  return temp.toLowerCase()
 }
