@@ -1,4 +1,4 @@
-/* ---- elcano Explorer v3.0 - alpha 1.1. ---- */
+/* ---- elcano Explorer v3.0 - alpha 1.2. ---- */
 
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
@@ -25,22 +25,23 @@ if (localStorage.getItem('elcano-favorites') == null) {
 }
 
 $(function() { // init
-    if (sessionStorage.getItem('elcano-access') === allowedPass) {
-        enableExplorer();
+    if (sessionStorage.getItem('elcano-access') != null) {
+        storedAuth = JSON.parse(sessionStorage.getItem('elcano-access'));
+        let storedUser = storedAuth.user;
+        let storedPass = storedAuth.pass;
+        authorize(storedUser,storedPass);
     } else {
         disableExplorer();
     }
 
-    $('#signInForm').on('submit',function(e) {
-        console.log('submit: ' + $('#signInUser').val() + ' ' + $('#signInPass').val());
+    $('#signInForm').on('submit',function(e) { // evento al rellenar el formulario de login
         e.preventDefault();
-        authorize();
+        let user = $('#signInUser').val();
+        let pass = $('#signInPass').val();
+        authorize(user,sha1(pass));
     });
 
-    checkAccess();
-
     $('#asideTreeBody').html('<div class="spinner"><div class="dot1"></div><div class="dot2"></div></div>');
-    loadTree();
 
     // options functionalities
     $('#optLaunch').on('click', function() {
@@ -112,16 +113,38 @@ $(function() { // init
     })
 });
 
-function authorize() {
+function authorize(authUser,authPass) {
+    // función que actúa tanto al rellenar el formulario de login como al cargar por primera vez la página si la contraseña está guardada en sessionStorage
+    // la variable authPass contiene la contraseña a comprobar ya encriptada para enviar a PHP
     console.log('authorize');
 
-    let user = $('#signInUser').val();
-    let pass = $('#signInPass').val();
+    var tokenCheck = Math.random();
 
-    if (user == 'root' && pass == 'admin') {
-        sessionStorage.setItem('elcano-access',passEncoder(pass));
-        enableExplorer();
-    }
+    $.get( "auth.php", { user: authUser,pass: authPass,token: tokenCheck } )
+		.done(function( data ) {
+            //console.log(data);
+            var response = JSON.parse(data);
+
+            if (response.token == tokenCheck) {
+                if (response.status == 200) {
+                    accessDataJson = JSON.stringify({'user':authUser,'pass':authPass});
+                    sessionStorage.setItem('elcano-access',accessDataJson);
+                    enableExplorer();
+                } else {
+                    disableExplorer();
+                }
+            } else {
+                disableExplorer();
+            }
+    });
+}
+
+function logout() { // cierra la sesión iniciada volviendo a mostrar el formulario de login
+    sessionStorage.removeItem('elcano-access');
+    disableExplorer();
+    $('#optMoreDespl').slideUp(200);
+    $('#shadow').fadeOut(200);
+    optMoreDespl = false;
 }
 
 function enableExplorer() {
@@ -129,8 +152,9 @@ function enableExplorer() {
     allowedAccess = true;
     changePath('./');
     showFavorites();
+    loadTree();
     $('.screen').hide();
-    $('#explorer').show();
+    $('#explorer').fadeIn(200);
 }
 
 function disableExplorer() {
@@ -142,15 +166,7 @@ function disableExplorer() {
     $('#signInUser').focus();
 }
 
-function checkAccess() {
-    var accessInterval = setInterval(function() {
-        if (sessionStorage.getItem('elcano-access') != allowedPass && allowedAccess) {
-            disableExplorer();
-        }
-    },5000);
-}
-
-function getFolder(path) {
+function getFolder(path) { // recupera los ficheros y directorios existentes en la ruta que se le introduzca como parámetro
     console.log('getFolder(\''+path+'\')');
     explodePath(path);
 
