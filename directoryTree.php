@@ -1,12 +1,23 @@
 <?php
 
+if (isset($_GET['ruta'])) {
+	$ruta = $_GET['ruta'];
+
+	if ($ruta == '../') {
+		$ruta = './';
+	}
+	directoryTree("./", $ruta);
+} else {
+	echo '<p>Árbol de directorios</p><p>no disponible</p>';
+}
+
 function directoryTree($explRuta, $rutaGlobal) {
-	//echo 'ruta global: ' . $rutaGlobal . '<br />';
-	//echo 'ruta nivel: ' . $explRuta . '<br />';
-	$sepRutaGlobal = explode("/", $rutaGlobal);
-	$sepRutaNivel = explode("/", $explRuta);
-	$contGlobal = count($sepRutaGlobal) - 1;
-	$contNivel = count($sepRutaNivel) - 2;
+	//echo 'ruta global: ' . $rutaGlobal . '<br />'; // ruta raíz del arbol de directorios (normalmente ./)
+	//echo 'ruta nivel: ' . $explRuta . '<br />'; // ruta actual a leer
+	$sepRutaGlobal = explode("/", $rutaGlobal); // array con la ruta global segmentada
+	$sepRutaNivel = explode("/", $explRuta); // array con la ruta actual segmentada
+	$contGlobal = count($sepRutaGlobal) - 1; // cantidad de subdirectorios
+	$contNivel = count($sepRutaNivel) - 2; // cantidad de subdirectorios
 
 	$explDir = opendir($explRuta);
 
@@ -42,7 +53,7 @@ function directoryTree($explRuta, $rutaGlobal) {
 					$explRuta2 = $explRuta;
 				}
 
-				echo '<summary><p class="linkTree" onclick="getData(\'' . $explRuta2 . $explFich . '/\')">' . $explFich . '</p></summary>';
+				echo '<summary><p class="linkTree" onclick="getFolder(\'' . $explRuta2 . $explFich . '/\')">' . $explFich . '</p></summary>';
 				directoryTree($explRuta . $explFich . "/", $rutaGlobal);
 				echo '</details>';
 			}
@@ -50,15 +61,38 @@ function directoryTree($explRuta, $rutaGlobal) {
 	}
 }
 
-if (isset($_GET['ruta'])) {
-	$ruta = $_GET['ruta'];
+function directoryTree2($root) {
+    $treeData = [];
 
-	if ($ruta == './') {
-		$ruta = '../';
+
+	function recursiveTree($root) {
+		treePath($root);
 	}
-	directoryTree("../", $ruta);
-} else {
-	echo '<p>Árbol de directorios</p><p>no disponible</p>';
+
+	recursiveTree($root);
+}
+
+function treePath($path) { // lee directorios de una ruta concreta
+    $directories = [];
+
+    $stream = opendir($path);
+    while ($fich = readdir($stream)) {
+		if (is_dir($path . $fich)) {
+			if ($fich != "." && $fich != "..") {
+                echo '<p>'.$fich.' <small>('.$path.$fich.')</small></p>';
+                $item = [];
+                $item['path'] = $path.$fich;
+                $item['dir'] = $fich;
+                array_push($directories,$item);
+            }
+        }
+    }
+
+    return $directories;
+
+    /*echo '<pre>';
+    print_r($directories);
+    echo '</pre>';*/
 }
 
 ?>

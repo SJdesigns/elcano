@@ -1,0 +1,19 @@
+Cosas que añadir
+----------------------------------------------------
+- Función para buscar ficheros y directorios
+- Comandos rápidos por teclado a las distintas funciones
+- Personalizar el menu contextual
+- Permitir configurar la experiencia en un panel de configuración
+- Crear interfaz para el historial
+- Utilizar media queries para ajustar para distintas pantallas
+
+
+
+
+
+Cosas de menor importancia
+---------------------------------------------------
+- Evitar que el recuadro de favoritos ocupe todo el aside si hay muchos favoritos
+- Ajustar la ventana de configuracion con media queries para pantallas pequeñas
+- Personalizar scroll
+- Evitar que al cancelar añadir a favoritos se creen de todas formas sin nombre

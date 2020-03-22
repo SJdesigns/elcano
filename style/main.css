@@ -18,6 +18,10 @@
   font-family: "Roboto-Regular", sans-serif;
 }
 
+body {
+  overflow: overlay;
+}
+
 .screen {
   position: fixed;
   width: 100%;
@@ -236,7 +240,7 @@ header div#options .optDropDown {
   cursor: pointer;
   display: none;
 }
-header div#options .optDropDown div {
+header div#options .optDropDown div.optDropDownItem {
   position: relative;
   width: 100%;
   padding: 12px 20px;
@@ -244,16 +248,34 @@ header div#options .optDropDown div {
   box-sizing: border-box;
   display: flex;
 }
-header div#options .optDropDown div:hover {
+header div#options .optDropDown div.optDropDownItem:hover {
   background-color: rgba(0, 0, 0, 0.1);
 }
-header div#options .optDropDown div svg {
+header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown {
+  display: flex;
+}
+header div#options .optDropDown div.optDropDownItem svg {
   width: 25px;
   height: 25px;
   margin-right: 12px;
 }
-header div#options .optDropDown div p {
+header div#options .optDropDown div.optDropDownItem p {
   margin-top: 2px;
+}
+header div#options .optDropDown div.optDropDownItem p small {
+  color: #aaa;
+  margin-left: 12px;
+}
+header div#options .optDropDown .optChainDropdown {
+  position: absolute;
+  width: 200px;
+  margin-left: -220px;
+  top: -8px;
+  padding: 8px 0px;
+  background-color: #fff;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  flex-direction: column;
+  display: none;
 }
 
 main {
@@ -509,7 +531,7 @@ main #mainCenter section #folderInfo {
   background-color: rgba(0, 0, 0, 0.1);
 }
 
-/* ---- aside ---- */
+/* ----- aside ----- */
 details {
   margin: 0px;
   color: #444444;
@@ -598,7 +620,7 @@ aside ::selection {
   background-color: transparent;
 }
 
-/* ---- aside spinner ---- */
+/* ----- aside spinner ----- */
 .spinner {
   margin: 100px auto;
   width: 50px;
@@ -656,6 +678,126 @@ aside ::selection {
     transform: scale(1);
     -webkit-transform: scale(1);
   }
+}
+/* ----- settings tab ----- */
+#dialogBack {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  background-color: rgba(0, 0, 0, 0.1);
+  align-items: center;
+  display: none;
+}
+#dialogBack #settings, #dialogBack #history {
+  width: 950px;
+  height: 500px;
+}
+#dialogBack .dialog {
+  position: relative;
+  margin: 0px auto;
+  background-color: #fff;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  display: none;
+}
+#dialogBack .dialog .dialogTitleBar {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+}
+#dialogBack .dialog .dialogTitleBar h2 {
+  padding: 10px 20px;
+  font-family: "Roboto-Light", "Roboto-Regular", sans-serif;
+}
+#dialogBack .dialog .dialogTitleBar svg {
+  width: 30px;
+  height: 30px;
+  fill: #777;
+  padding: 10px 20px;
+}
+#dialogBack .dialog .dialogTitleBar svg:hover {
+  fill: #000;
+}
+#dialogBack .dialog .dialogBody {
+  position: relative;
+  width: 100%;
+  height: auto;
+}
+#dialogBack .dialog .dialogBody .settingsItem {
+  position: relative;
+  width: 100%;
+  height: auto;
+  padding: 16px 24px;
+  box-sizing: border-box;
+}
+#dialogBack .dialog .dialogBody .settingsItem h3 {
+  margin-bottom: 5px;
+}
+#dialogBack .dialog .dialogBody .settingsItem div {
+  padding: 0px 8px;
+}
+#dialogBack .dialog .dialogBody .settingsItem div input[type=checkbox] {
+  vertical-align: middle;
+  margin-right: 8px;
+}
+#dialogBack .dialog #historyBody {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  padding-top: 50px;
+  box-sizing: border-box;
+}
+#dialogBack .dialog #historyBody #historyPaths {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+#dialogBack .dialog #historyBody #historyPaths .historyItem {
+  position: relative;
+  width: 100%;
+  height: 50px;
+  padding: 4px 20px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #f2f2f2;
+  display: flex;
+}
+#dialogBack .dialog #historyBody #historyPaths .historyItem p {
+  min-width: 130px;
+  padding: 12px 40px;
+}
+#dialogBack .dialog #historyBody #historyPaths .historyItem p:last-child {
+  color: #999;
+}
+#dialogBack .dialog #historyBody #historyPaths .historyItem svg {
+  position: absolute;
+  right: 30px;
+  width: 30px;
+  height: 30px;
+  fill: #6f6f6f;
+  padding: 7px 25px;
+}
+#dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover {
+  fill: #222;
+}
+
+/* ----- scroll ----- */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #aaa;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
 }
 
 /*# sourceMappingURL=main.css.map */

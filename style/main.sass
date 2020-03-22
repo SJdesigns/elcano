@@ -1,3 +1,5 @@
+$primaryColor: #34515f
+
 @font-face
 	font-family: "Roboto-Regular"
 	font-style: normal
@@ -16,6 +18,10 @@
 	padding: 0px
 	margin: 0px
 	font-family: 'Roboto-Regular', sans-serif
+
+
+body
+	overflow: overlay
 
 .screen
 	position: fixed
@@ -52,7 +58,7 @@
 				padding: 25px 0px
 				text-align: center
 				color: #fff
-				background-color: #34515f
+				background-color: $primaryColor
 
 				h1
 					font-family: 'Roboto-Light'
@@ -89,7 +95,7 @@
 						&:focus ~ .signInInputEffect
 							width: 100%
 							left: 0%
-							border-color: #34515f
+							border-color: $primaryColor
 
 						&:focus ~ .signInIcons
 							fill: #444
@@ -113,7 +119,7 @@
 					#signInSubmit
 						width: 100%
 						height: 50px
-						color: #34515f
+						color: $primaryColor
 						font-size: 13pt
 						margin-top: 15px
 						text-align: center
@@ -129,7 +135,7 @@ header
 	width: 100%
 	height: 50px
 	top: 0px
-	background-color: #34515f
+	background-color: $primaryColor
 	display: flex
 	justify-content: space-between
 	z-index: 10
@@ -232,7 +238,7 @@ header
 			cursor: pointer
 			display: none
 
-			div
+			div.optDropDownItem
 				position: relative
 				width: 100%
 				padding: 12px 20px
@@ -243,6 +249,9 @@ header
 				&:hover
 					background-color: rgba(#000,.1)
 
+				&:hover .optChainDropdown
+					display: flex
+
 				svg
 					width: 25px
 					height: 25px
@@ -250,6 +259,21 @@ header
 
 				p
 					margin-top: 2px
+
+					small
+						color: #aaa
+						margin-left: 12px
+
+			.optChainDropdown
+				position: absolute
+				width: 200px
+				margin-left: -220px
+				top: -8px
+				padding: 8px 0px
+				background-color: #fff
+				box-shadow: 2px 2px 8px rgba(0,0,0,.1)
+				flex-direction: column
+				display: none
 
 main
 	position: absolute
@@ -285,7 +309,7 @@ main
 
 			hr
 				border: 0px
-				border-bottom: 1px solid #34515f
+				border-bottom: 1px solid $primaryColor
 
 			#asideFavorites
 				position: relative
@@ -507,7 +531,7 @@ main
 				padding: 3px 7px 4px
 				background-color: rgba(#000,.1)
 
-/* ---- aside ---- */
+/* ----- aside ----- */
 
 details
 	margin: 0px
@@ -581,7 +605,7 @@ details[open] > summary::before
 aside ::selection
 	background-color: transparent
 
-/* ---- aside spinner ---- */
+/* ----- aside spinner ----- */
 
 .spinner
 	margin: 100px auto
@@ -634,3 +658,122 @@ aside ::selection
 	50%
 		transform: scale(1.0)
 		-webkit-transform: scale(1.0)
+
+/* ----- settings tab ----- */
+
+#dialogBack
+	position: fixed
+	width: 100%
+	height: 100%
+	top: 0px
+	background-color: rgba(#000,.1)
+	align-items: center
+	display: none
+
+	#settings, #history
+		width: 950px
+		height: 500px
+
+	.dialog
+		position: relative
+		margin: 0px auto
+		background-color: #fff
+		box-shadow: 2px 2px 8px rgba(#000,.1)
+		display: none
+
+		.dialogTitleBar
+			position: relative
+			width: 100%
+			height: 50px
+			box-shadow: 2px 2px 8px rgba(#000,.1)
+			display: flex
+			justify-content: space-between
+			z-index: 1
+
+			h2
+				padding: 10px 20px
+				font-family: 'Roboto-Light', 'Roboto-Regular', sans-serif
+
+			svg
+				width: 30px
+				height: 30px
+				fill: #777
+				padding: 10px 20px
+
+				&:hover
+					fill: #000
+
+		.dialogBody
+			position: relative
+			width: 100%
+			height: auto
+
+			.settingsItem
+				position: relative
+				width: 100%
+				height: auto
+				padding: 16px 24px
+				box-sizing: border-box
+
+				h3
+					margin-bottom: 5px
+
+				div
+					padding: 0px 8px
+
+					input[type=checkbox]
+						vertical-align: middle
+						margin-right: 8px
+
+		#historyBody
+			position: absolute
+			width: 100%
+			height: 100%
+			top: 0px
+			padding-top: 50px
+			box-sizing: border-box
+
+			#historyPaths
+				position: relative
+				width: 100%
+				height: 100%
+				overflow: auto
+
+				.historyItem
+					position: relative
+					width: 100%
+					height: 50px
+					padding: 4px 20px
+					box-sizing: border-box
+					border-bottom: 1px solid #f2f2f2
+					display: flex
+
+					p
+						min-width: 130px
+						padding: 12px 40px
+
+						&:last-child
+							color: #999
+
+					svg
+						position: absolute
+						right: 30px
+						width: 30px
+						height: 30px
+						fill: #6f6f6f
+						padding: 7px 25px
+
+						&:hover
+							fill: #222
+
+/* ----- scroll ----- */
+
+::-webkit-scrollbar
+	width: 10px
+	height: 10px
+
+::-webkit-scrollbar-thumb
+	background: #aaa
+
+::-webkit-scrollbar-track
+	background: rgba(#000, 0.05)

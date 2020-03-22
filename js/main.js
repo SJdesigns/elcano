@@ -1,8 +1,7 @@
-/* ---- elcano Explorer v3.0 - alpha 1.2. ---- */
+/* ---- elcano Explorer v3.0 - alpha 1.3. ---- */
 
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
-var allowedPass = '097100109105110'; // contraseña aceptada encriptada
 
 var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
@@ -111,6 +110,16 @@ $(function() { // init
         $('#shadow').fadeOut(200);
         optMoreDespl = false;
     })
+
+    $('#optMoreHistory').on('click',function(e) {
+        if (e.target.id == 'optMoreHistory' || e.target.parentNode.id == 'optMoreHistory' || e.target.parentNode.parentNode.id == 'optMoreHistory') {
+            showHistory(true);
+        } else if (e.target.id == 'optMorePrevPath' || e.target.parentNode.id == 'optMorePrevPath' || e.target.parentNode.parentNode.id == 'optMorePrevPath') {
+            prevPath();
+        } else if (e.target.id == 'optMoreNextPath' || e.target.parentNode.id == 'optMoreNextPath' || e.target.parentNode.parentNode.id == 'optMoreNextPath') {
+            nextPath();
+        }
+    });
 });
 
 function authorize(authUser,authPass) {
@@ -167,50 +176,52 @@ function disableExplorer() {
 }
 
 function getFolder(path) { // recupera los ficheros y directorios existentes en la ruta que se le introduzca como parámetro
-    console.log('getFolder(\''+path+'\')');
-    explodePath(path);
+    if (allowedAccess) {
+        console.log('getFolder(\''+path+'\')');
+        explodePath(path);
 
-    var coincidencia = false;
-	if (favorites.length>0) {
-		for (x in favorites) {
-			if (favorites[x].path == path) {
-				coincidencia = true;
-			}
-		}
-	}
+        var coincidencia = false;
+    	if (favorites.length>0) {
+    		for (x in favorites) {
+    			if (favorites[x].path == path) {
+    				coincidencia = true;
+    			}
+    		}
+    	}
 
-	if (coincidencia) {
-		$('#optFavorite').show();
-		$('#optNotFavorite').hide();
-	} else {
-		$('#optFavorite').hide();
-		$('#optNotFavorite').show();
-	}
+    	if (coincidencia) {
+    		$('#optFavorite').show();
+    		$('#optNotFavorite').hide();
+    	} else {
+    		$('#optFavorite').hide();
+    		$('#optNotFavorite').show();
+    	}
 
-    $.get( "listDirectory2.php", { ruta: path } )
-		.done(function( data ) {
-            console.log(data);
-            var response = JSON.parse(data);
+        $.get( "listDirectory.php", { ruta: path } )
+    		.done(function( data ) {
+                console.log(data);
+                var response = JSON.parse(data);
 
-            $('#itemArea').html('');
+                $('#itemArea').html('');
 
-            var files = 0;
-            var directories = 0;
+                var files = 0;
+                var directories = 0;
 
-            if (response.dir.length == 0 && response.files.length == 0) {
-                $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
-            }
-            for (i in response.dir) {
-                setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
-                directories++;
-            }
-            for (i in response.files) {
-                setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize);
-                files++;
-            }
+                if (response.dir.length == 0 && response.files.length == 0) {
+                    $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
+                }
+                for (i in response.dir) {
+                    setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
+                    directories++;
+                }
+                for (i in response.files) {
+                    setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize);
+                    files++;
+                }
 
-            $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
-    });
+                $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
+        });
+    }
 }
 
 function setFolderItems(name,path,type,size) {
@@ -257,6 +268,7 @@ function changePath(url) { // cambia la ruta actual
         } else {
             timeline.push({'path':url});
         }
+        reloadHistory();
     } else {
         console.log('forbiden access to path '+url);
     }
@@ -335,7 +347,6 @@ function changeView(view) { // permite cambiar el layout de elementos en el dire
         $('#shadow').fadeOut(200);
         optViewDespl = false;
     }
-    console.log(settings);
 }
 
 function setItemIcon(type,path) {
@@ -431,15 +442,29 @@ function showTree() { // muestra u oculta el árbol de directorios lateral
 }
 
 function loadTree() { // carga los datos del árbol de directorios
-    $.get( "directoryTree2.php", { ruta: path } )
-		.done(function( data ) {
-			$('#asideTreeBody').html(data);
-			console.log("tree loaded");
-	});
+    if (allowedAccess) {
+        $.get( "directoryTree.php", { ruta: path } )
+    		.done(function( data ) {
+    			$('#asideTreeBody').html(data);
+    			console.log("tree loaded");
+    	});
+    }
 }
 
-function showSettings() { // muestra u oculta la ventana de configuración
+function showSettings(op) { // muestra u oculta la ventana de configuración
     console.log('showSettings');
+    if (op) {
+        $('#dialogBack').css('display','flex');
+        $('.dialog').hide();
+        $('#settings').fadeIn(200);
+    } else {
+        $('#settings').fadeOut(200);
+        $('#dialogBack').css('display','none');
+    }
+
+    $('#optMoreDespl').slideUp(200);
+    $('#shadow').fadeOut(200);
+    optMoreDespl = false;
 }
 
 function prevPath() {
@@ -452,6 +477,45 @@ function prevPath() {
     $('#optMoreDespl').slideUp(200);
     $('#shadow').fadeOut(200);
     optMoreDespl = false;
+}
+
+function showHistory(op) {
+    console.log('showHistory');
+    if (op) {
+        $('#dialogBack').css('display','flex');
+        $('.dialog').hide();
+        $('#history').fadeIn(200);
+    } else {
+        $('#history').fadeOut(200);
+        $('#dialogBack').css('display','none');
+    }
+
+    $('#optMoreDespl').slideUp(200);
+    $('#shadow').fadeOut(200);
+    optMoreDespl = false;
+}
+
+function reloadHistory() {
+    var html = '';
+    for (i in timeline) {
+        var folderName = timeline[i].path.split('/');
+        if (folderName.length==2) {
+            folderName2 = 'Pagina de Inicio';
+        } else {
+            folderName2 = folderName[folderName.length-2];
+        }
+        html += '<div class="historyItem">';
+        html += '<p>'+folderName2+'</p>';
+        html += '<p>'+timeline[i].path+'</p>';
+        html += '<svg onclick="navigateHistory('+i+')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L3.71 8.71C3.08 8.08 2 8.52 2 9.41V15c0 .55.45 1 1 1h5.59c.89 0 1.34-1.08.71-1.71l-1.91-1.91c1.39-1.16 3.16-1.88 5.12-1.88 3.16 0 5.89 1.84 7.19 4.5.27.56.91.84 1.5.64.71-.23 1.07-1.04.75-1.72C20.23 10.42 16.65 8 12.5 8z"/></svg>';
+        html += '</div>';
+    }
+    $('#historyPaths').html(html);
+}
+
+function navigateHistory(pos) {
+    console.log('navigateHistory to: '+pos);
+    changePath(timeline[pos].path);
 }
 
 /* ---- app utils ---- */
@@ -630,4 +694,55 @@ function sha1 (str) {
 
   temp = _cvtHex(H0) + _cvtHex(H1) + _cvtHex(H2) + _cvtHex(H3) + _cvtHex(H4)
   return temp.toLowerCase()
+}
+
+/* ----- comandos de teclado ----- */
+
+document.onkeydown = function() {
+	if (window.event.keyCode == 86) { if (event.altKey) { changeView('List') } }
+	if (window.event.keyCode == 88) { if (event.altKey) { showTree() } }
+	if (window.event.keyCode == 72) { if (event.altKey) { showHistory(true) } }
+    if (window.event.keyCode == 83) { if (event.altKey) { showSettings(true) } }
+
+	if (window.event.keycode == 8) {
+		console.log('backspace');
+	}
+
+	// navegación por el directorio con las flechas de dirección
+
+	/*if (window.event.keyCode == 37) {
+		$('.dir').removeClass('dirActive');
+		if (posSelect<=0) {
+			posSelect=0;
+		} else if (posSelect>=$('.dir').length-1) {
+			posSelect=$('.dir').length-2;
+		} else {
+			posSelect--;
+		}
+		$($('.dir')[posSelect]).addClass('dirActive');
+		console.log(posSelect);
+	}
+	if (window.event.keyCode == 39) {
+		$('.dir').removeClass('dirActive');
+		if (posSelect==null) {
+			posSelect=0;
+		} else if (posSelect<=0) {
+			posSelect=1;
+		} else if (posSelect>=$('.dir').length-1) {
+			posSelect=$('.dir').length-1;
+		} else {
+			posSelect++;
+		}
+		$($('.dir')[posSelect]).addClass('dirActive');
+		console.log(posSelect);
+	}
+	if (window.event.keyCode == 13) {
+		if (posSelect!=null) {
+			$($('.dir')[posSelect]).click();
+		}
+	}
+	$('#directoryFiles').on('click',function() {
+		posSelect=null;
+		$('.dir').removeClass('dirActive');
+	});*/
 }
