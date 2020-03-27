@@ -283,6 +283,31 @@ main
 	padding-top: 50px
 	box-sizing: border-box
 
+	#errorReporting
+		position: fixed
+		right: 0px
+		z-index: 1
+
+		.errorItem
+			position: relative
+			max-width: 400px
+			padding: 10px 35px
+			margin: 10px 18px
+			background-color: rgba(#f44,.8)
+			box-shadow: -2px 2px 8px rgba(#000,.1)
+			display: flex
+			justify-content: center
+
+			svg
+				width: 30px
+				height: 30px
+				fill: #fff
+
+			p
+				color: #fff
+				font-size: 13pt
+				padding: 5px 12px
+
 	#shadow
 		position: fixed
 		width: 100%
@@ -315,10 +340,12 @@ main
 				position: relative
 				width: 100%
 				height: auto
-				max-height: 150px
+				max-height: 190px
 
 				#asideFavBody
 					padding: 5px 0px 8px
+					overflow: auto
+					max-height: 143px
 
 					.favFolder
 						padding: 3px 10px
@@ -386,11 +413,14 @@ main
 				.itemHidden
 					opacity: .4
 
+				.itemActive
+					background-color: rgba(#000,.1)
+
 				/* estilos para las distintas vistas */
 
 				// mosaic
 				.itemMosaic
-					width: 25%
+					width: 16.66666666667%
 					height: 60px
 
 					.itemLogo
@@ -658,6 +688,33 @@ aside ::selection
 	50%
 		transform: scale(1.0)
 		-webkit-transform: scale(1.0)
+
+/* ----- section media queries ----- */
+// no cambiar los valores sin modificar los keyCodes de las flechas de dirección verticales
+
+@media screen and (max-width: 2100px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 20%
+
+@media screen and (max-width: 1750px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 25%
+
+@media screen and (max-width: 1300px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 33.33333333%
+
+@media screen and (max-width: 1050px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 50%
+
+@media screen and (max-width: 750px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 100%
+
+@media screen and (max-width: 420px)
+	main #mainCenter aside
+		margin-left: -320px
 
 /* ----- settings tab ----- */
 

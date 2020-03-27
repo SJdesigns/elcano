@@ -1,4 +1,4 @@
-/* ---- elcano Explorer v3.0 - alpha 1.3. ---- */
+/* ---- elcano Explorer v3.0 - alpha 1.4. ---- */
 
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
@@ -7,7 +7,8 @@ var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
 var optMoreDespl = false; // estado del desplegable de más opciones
 var optViewDespl = false; // estado del desplegable de las vistas
-var timeline = [];
+var timeline = []; // almacena todas las rutas accedidas anteriormente
+var posSelect = null; // posición del fichero o directorio seleccionado con las flechas de dirección
 
 if (localStorage.getItem('elcano-settings') == null) {
     var settings = {'tree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
@@ -66,12 +67,14 @@ $(function() { // init
 
     $('#optNotFavorite').on('click', function() {
         var titFav = prompt('Título del favorito: ','');
-        favorites.push({'path':path,'title':titFav});
-        localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
-        console.log(favorites);
-
-        $('#optFavorite').show();$('#optNotFavorite').hide();
-        showFavorites();
+        if (titFav!=null && titFav!='') {
+            console.log(path);
+            favorites.push({'path':path,'title':titFav});
+            localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
+            console.log(favorites);
+            $('#optFavorite').show();$('#optNotFavorite').hide();
+            showFavorites();
+        }
     });
 
     $('#optView').on('click', function() {
@@ -175,15 +178,14 @@ function disableExplorer() {
     $('#signInUser').focus();
 }
 
-function getFolder(path) { // recupera los ficheros y directorios existentes en la ruta que se le introduzca como parámetro
+function getFolder(url) { // recupera los ficheros y directorios existentes en la ruta que se le introduzca como parámetro
     if (allowedAccess) {
-        console.log('getFolder(\''+path+'\')');
-        explodePath(path);
+        console.log('getFolder(\''+url+'\')');
 
         var coincidencia = false;
     	if (favorites.length>0) {
     		for (x in favorites) {
-    			if (favorites[x].path == path) {
+    			if (favorites[x].path == url) {
     				coincidencia = true;
     			}
     		}
@@ -197,29 +199,36 @@ function getFolder(path) { // recupera los ficheros y directorios existentes en 
     		$('#optNotFavorite').show();
     	}
 
-        $.get( "listDirectory.php", { ruta: path } )
+        $.post( "listDirectory.php", { ruta: url, listDir: true } )
     		.done(function( data ) {
                 console.log(data);
                 var response = JSON.parse(data);
 
-                $('#itemArea').html('');
+                if (response.error != null) {
+                    console.log('Se ha producido un error al acceder al directorio');
+                    errorReporting(response);
+                } else {
+                    path = url; // cambiamos la ruta general al confirmar la existencia del directorio
+                    explodePath(url);
+                    $('#itemArea').html('');
 
-                var files = 0;
-                var directories = 0;
+                    var files = 0;
+                    var directories = 0;
 
-                if (response.dir.length == 0 && response.files.length == 0) {
-                    $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
-                }
-                for (i in response.dir) {
-                    setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
-                    directories++;
-                }
-                for (i in response.files) {
-                    setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize);
-                    files++;
-                }
+                    if (response.dir.length == 0 && response.files.length == 0) {
+                        $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
+                    }
+                    for (i in response.dir) {
+                        setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
+                        directories++;
+                    }
+                    for (i in response.files) {
+                        setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize);
+                        files++;
+                    }
 
-                $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
+                    $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
+                }
         });
     }
 }
@@ -418,7 +427,7 @@ function setItemIcon(type,path) {
     }
 
     if (standardSvgIcon) {
-        image = '<svg id="fileicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 120"><title>FileIcon</title><g id="paper"><path d="M106,42v74a8,8,0,0,1-8,8H28a8,8,0,0,1-8-8V12a8,8,0,0,1,8-8H68L78,14V32H96Z" transform="translate(-20 -4)" style="fill:'+paper+'"/></g><text id="text" transform="translate(42 80.3)" style="text-anchor:middle;font-size:'+size+';fill:#fff;font-family:Calibri;cursor:default">'+text+'</text><polygon id="bend" points="86 38 48 38 48 0 86 38" style="fill:'+bend+'"/></svg>';
+        image = '<svg id="fileicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 86 120"><title>'+text+'</title><g id="paper"><path d="M106,42v74a8,8,0,0,1-8,8H28a8,8,0,0,1-8-8V12a8,8,0,0,1,8-8H68L78,14V32H96Z" transform="translate(-20 -4)" style="fill:'+paper+'"/></g><text id="text" transform="translate(42 80.3)" style="text-anchor:middle;font-size:'+size+';fill:#fff;font-family:Calibri;cursor:default">'+text+'</text><polygon id="bend" points="86 38 48 38 48 0 86 38" style="fill:'+bend+'"/></svg>';
     }
 
     return image;
@@ -443,7 +452,7 @@ function showTree() { // muestra u oculta el árbol de directorios lateral
 
 function loadTree() { // carga los datos del árbol de directorios
     if (allowedAccess) {
-        $.get( "directoryTree.php", { ruta: path } )
+        $.post( "directoryTree.php", { ruta: path, dirTree: true } )
     		.done(function( data ) {
     			$('#asideTreeBody').html(data);
     			console.log("tree loaded");
@@ -516,6 +525,23 @@ function reloadHistory() {
 function navigateHistory(pos) {
     console.log('navigateHistory to: '+pos);
     changePath(timeline[pos].path);
+}
+
+function errorReporting(info) {
+    console.log('errorReporting');
+
+    var errorItemId = Math.floor(Math.random()*10000);
+
+    var errorMsg = '<div class="errorItem" id="errorItem'+errorItemId+'">';
+    errorMsg += '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"/></svg>';
+    errorMsg += '<p>'+info.error.message+'</p>';
+    errorMsg += '</div>';
+
+    $('#errorReporting').append(errorMsg);
+
+    setTimeout(function() {
+        $('#errorItem'+errorItemId).remove();
+    },5000);
 }
 
 /* ---- app utils ---- */
@@ -710,39 +736,91 @@ document.onkeydown = function() {
 
 	// navegación por el directorio con las flechas de dirección
 
-	/*if (window.event.keyCode == 37) {
-		$('.dir').removeClass('dirActive');
+    // ATENCIÓN: NO MODIFICAR estos datos sin cambiar las media queries correspondientes
+    // Cada variable indica la anchura máxima para cada cantidad de columnas
+    cols1=750; cols2=1050; cols3=1300; cols4=1750; cols5=2100;
+
+	if (window.event.keyCode == 37) { // flecha izquierda
+		$('.item').removeClass('itemActive');
 		if (posSelect<=0) {
 			posSelect=0;
-		} else if (posSelect>=$('.dir').length-1) {
-			posSelect=$('.dir').length-2;
+		} else if (posSelect>=$('.item').length-1) {
+			posSelect=$('.item').length-2;
 		} else {
 			posSelect--;
 		}
-		$($('.dir')[posSelect]).addClass('dirActive');
+		$($('.item')[posSelect]).addClass('itemActive');
 		console.log(posSelect);
 	}
-	if (window.event.keyCode == 39) {
-		$('.dir').removeClass('dirActive');
+	if (window.event.keyCode == 39) { // flecha derecha
+		$('.item').removeClass('itemActive');
 		if (posSelect==null) {
 			posSelect=0;
 		} else if (posSelect<=0) {
 			posSelect=1;
-		} else if (posSelect>=$('.dir').length-1) {
-			posSelect=$('.dir').length-1;
+		} else if (posSelect>=$('.item').length-1) {
+			posSelect=$('.item').length-1;
 		} else {
 			posSelect++;
 		}
-		$($('.dir')[posSelect]).addClass('dirActive');
+		$($('.item')[posSelect]).addClass('itemActive');
 		console.log(posSelect);
 	}
-	if (window.event.keyCode == 13) {
+    if (window.event.keyCode == 38) { // fecha arriba
+        $('.item').removeClass('itemActive');
+        if (posSelect==null) {
+            posSelect=0;
+        } else if (posSelect<=0) {
+            posSelect=0;
+        } else {
+            if (window.innerWidth < cols1) { // 1 columna
+                if (posSelect-1>=0) { posSelect = posSelect-1; }
+            } else if (window.innerWidth < cols2) { // 2 columnas
+                if (posSelect-2>=0) { posSelect = posSelect-2; }
+            } else if (window.innerWidth < cols3) { // 3 columnas
+                if (posSelect-3>=0) { posSelect = posSelect-3; }
+            } else if (window.innerWidth < cols4) { // 4 columnas
+                if (posSelect-4>=0) { posSelect = posSelect-4; }
+            } else if (window.innerWidth < cols5) { // 5 columnas
+                if (posSelect-5>=0) { posSelect = posSelect-5; }
+            } else if (window.innerWidth >= cols5) { // 6 columnas
+                if (posSelect-6>=0) { posSelect = posSelect-6; }
+            }
+        }
+        $($('.item')[posSelect]).addClass('itemActive');
+		console.log(posSelect);
+    }
+    if (window.event.keyCode == 40) { // flecha abajo
+        $('.item').removeClass('itemActive');
+        if (posSelect==null) {
+            posSelect=0;
+        } else if (posSelect>=$('.item').length-1) {
+            posSelect=$('.item').length-1;
+        } else {
+            if (window.innerWidth < cols1) { // 1 columna
+                if (posSelect+1<=$('.item').length-1) { posSelect = posSelect+1; }
+            } else if (window.innerWidth < cols2) { // 2 columnas
+                if (posSelect+2<=$('.item').length-1) { posSelect = posSelect+2; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+            } else if (window.innerWidth < cols3) { // 3 columnas
+                if (posSelect+3<=$('.item').length-1) { posSelect = posSelect+3; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+            } else if (window.innerWidth < cols4) { // 4 columnas
+                if (posSelect+4<=$('.item').length-1) { posSelect = posSelect+4; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+            } else if (window.innerWidth < cols5) { // 5 columnas
+                if (posSelect+5<=$('.item').length-1) { posSelect = posSelect+5; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+            } else if (window.innerWidth >= cols5) { // 6 columnas
+                if (posSelect+6<=$('.item').length-1) { posSelect = posSelect+6; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+            }
+        }
+        $($('.item')[posSelect]).addClass('itemActive');
+		console.log(posSelect);
+    }
+	if (window.event.keyCode == 13) { // intro
 		if (posSelect!=null) {
-			$($('.dir')[posSelect]).click();
+			$($('.item')[posSelect]).click();
 		}
 	}
-	$('#directoryFiles').on('click',function() {
+	$('section').on('click',function() { // deseleccionar los items
 		posSelect=null;
-		$('.dir').removeClass('dirActive');
-	});*/
+		$('.item').removeClass('itemActive');
+	});
 }

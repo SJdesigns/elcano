@@ -1,9 +1,13 @@
 <?php
 
-if (isset($_GET['ruta'])) {
-	listDirectory($_GET['ruta']);
+if (isset($_POST['ruta'])) {
+	if (file_exists($_POST['ruta'])) {
+		listDirectory($_POST['ruta']);
+	} else {
+		directoryError(404,$_POST['ruta']);
+	}
 } else {
-	listDirectory('./');
+	directoryError(403);
 }
 
 function listDirectory($path) {
@@ -74,6 +78,19 @@ function listDirectory($path) {
     /*echo '<pre>';
     print_r($return);
     echo '</pre>';*/
+}
+
+function directoryError($code, $path='') {
+	$return = [];
+	$return['error']['code'] = $code;
+
+	if ($code == '404') {
+		$return['error']['message'] = 'No se ha encontrado el directorio';
+	} else if ($code == '403') {
+		$return['error']['message'] = 'No tiene acceso al directorio';
+	}
+
+	echo json_encode($return);
 }
 
 ?>

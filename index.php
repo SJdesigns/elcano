@@ -1,8 +1,13 @@
 <?php
-// listDirectory.php
 
-if (isset($_GET['ruta'])) {
+if (isset($_POST['token'])) {
+    // auth.php
+} else if (isset($_POST['listDir'])) {
+    // listDirectory.php
+} else if (isset($_POST['dirTree'])) {
+    // directoryTree.php
 } else {
+    // html
 
 ?>
 
@@ -16,7 +21,6 @@ if (isset($_GET['ruta'])) {
     <title>elcano v3.0</title>
     <link rel="stylesheet" href="style/main.css">
     <script type="text/javascript" src="js/jquery-3.1.1.min.js">
-
     </script>
     <script type="text/javascript" src="js/main.js"></script>
 </head>
@@ -134,6 +138,7 @@ if (isset($_GET['ruta'])) {
             </div>
         </header>
         <main>
+            <div id="errorReporting"></div>
             <div id="shadow"></div>
             <div id="mainCenter">
                 <aside>
@@ -182,6 +187,7 @@ if (isset($_GET['ruta'])) {
                     <svg onclick="showSettings(false)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </div>
                 <div class="dialogBody">
+                    <p style="color:#f00">Ventana en desarrollo</p>
                     <div class="settingsItem">
                         <h3>General</h3>
                         <div>

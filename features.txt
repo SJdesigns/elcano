@@ -6,6 +6,7 @@ Cosas que añadir
 - Permitir configurar la experiencia en un panel de configuración
 - Crear interfaz para el historial
 - Utilizar media queries para ajustar para distintas pantallas
+- Añadir soporte de idiomas (Español, Inglés y Francés minimo)
 
 
 

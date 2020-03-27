@@ -286,6 +286,31 @@ main {
   padding-top: 50px;
   box-sizing: border-box;
 }
+main #errorReporting {
+  position: fixed;
+  right: 0px;
+  z-index: 1;
+}
+main #errorReporting .errorItem {
+  position: relative;
+  max-width: 400px;
+  padding: 10px 35px;
+  margin: 10px 18px;
+  background-color: rgba(255, 68, 68, 0.8);
+  box-shadow: -2px 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  justify-content: center;
+}
+main #errorReporting .errorItem svg {
+  width: 30px;
+  height: 30px;
+  fill: #fff;
+}
+main #errorReporting .errorItem p {
+  color: #fff;
+  font-size: 13pt;
+  padding: 5px 12px;
+}
 main #shadow {
   position: fixed;
   width: 100%;
@@ -318,10 +343,12 @@ main #mainCenter aside #asideFavorites {
   position: relative;
   width: 100%;
   height: auto;
-  max-height: 150px;
+  max-height: 190px;
 }
 main #mainCenter aside #asideFavorites #asideFavBody {
   padding: 5px 0px 8px;
+  overflow: auto;
+  max-height: 143px;
 }
 main #mainCenter aside #asideFavorites #asideFavBody .favFolder {
   padding: 3px 10px;
@@ -390,8 +417,11 @@ main #mainCenter section #itemArea .item:hover {
 main #mainCenter section #itemArea .itemHidden {
   opacity: 0.4;
 }
+main #mainCenter section #itemArea .itemActive {
+  background-color: rgba(0, 0, 0, 0.1);
+}
 main #mainCenter section #itemArea .itemMosaic {
-  width: 25%;
+  width: 16.6666666667%;
   height: 60px;
 }
 main #mainCenter section #itemArea .itemMosaic .itemLogo {
@@ -677,6 +707,37 @@ aside ::selection {
   50% {
     transform: scale(1);
     -webkit-transform: scale(1);
+  }
+}
+/* ----- section media queries ----- */
+@media screen and (max-width: 2100px) {
+  main #mainCenter section #itemArea .itemMosaic {
+    width: 20%;
+  }
+}
+@media screen and (max-width: 1750px) {
+  main #mainCenter section #itemArea .itemMosaic {
+    width: 25%;
+  }
+}
+@media screen and (max-width: 1300px) {
+  main #mainCenter section #itemArea .itemMosaic {
+    width: 33.33333333%;
+  }
+}
+@media screen and (max-width: 1050px) {
+  main #mainCenter section #itemArea .itemMosaic {
+    width: 50%;
+  }
+}
+@media screen and (max-width: 750px) {
+  main #mainCenter section #itemArea .itemMosaic {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 420px) {
+  main #mainCenter aside {
+    margin-left: -320px;
   }
 }
 /* ----- settings tab ----- */

@@ -1,7 +1,7 @@
 <?php
 
-if (isset($_GET['ruta'])) {
-	$ruta = $_GET['ruta'];
+if (isset($_POST['ruta'])) {
+	$ruta = $_POST['ruta'];
 
 	if ($ruta == '../') {
 		$ruta = './';
@@ -61,7 +61,7 @@ function directoryTree($explRuta, $rutaGlobal) {
 	}
 }
 
-function directoryTree2($root) {
+/*function directoryTree2($root) {
     $treeData = [];
 
 
@@ -93,6 +93,6 @@ function treePath($path) { // lee directorios de una ruta concreta
     /*echo '<pre>';
     print_r($directories);
     echo '</pre>';*/
-}
+//}
 
 ?>
