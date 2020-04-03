@@ -746,16 +746,15 @@ aside ::selection {
   width: 100%;
   height: 100%;
   top: 0px;
+  padding-top: 25px;
   background-color: rgba(0, 0, 0, 0.1);
   align-items: center;
   display: none;
 }
-#dialogBack #settings, #dialogBack #history {
-  width: 950px;
-  height: 500px;
-}
 #dialogBack .dialog {
   position: relative;
+  width: 950px;
+  height: 520px;
   margin: 0px auto;
   background-color: #fff;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
@@ -847,6 +846,24 @@ aside ::selection {
   fill: #222;
 }
 
+@media screen and (max-width: 1080px) {
+  #dialogBack .dialog {
+    width: 92%;
+  }
+}
+@media screen and (max-width: 800px) {
+  #dialogBack .dialog {
+    width: 100%;
+  }
+}
+@media screen and (max-height: 620px) {
+  #dialogBack {
+    padding-top: 50px;
+  }
+  #dialogBack .dialog {
+    height: 100%;
+  }
+}
 /* ----- scroll ----- */
 ::-webkit-scrollbar {
   width: 10px;

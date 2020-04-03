@@ -1,17 +1,18 @@
-/* ---- elcano Explorer v3.0 - alpha 1.4. ---- */
+/* ---- elcano Explorer v3.0 - alpha 1.5. ---- */
 
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
-
 var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
 var optMoreDespl = false; // estado del desplegable de más opciones
 var optViewDespl = false; // estado del desplegable de las vistas
 var timeline = []; // almacena todas las rutas accedidas anteriormente
 var posSelect = null; // posición del fichero o directorio seleccionado con las flechas de dirección
+var defaultDirectoryIndex = ['index.php','index.asp','index.html'];
+var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
 
 if (localStorage.getItem('elcano-settings') == null) {
-    var settings = {'tree':true,'view':'Mosaic','optMoreDespl':false,'optViewDespl':false};
+    var settings = {'tree':true,'view':'Mosaic','debug':true,'systemIndex':true,'directoryIndex':defaultDirectoryIndex};
     localStorage.setItem('elcano-settings',JSON.stringify(settings));
 } else {
     var settings = JSON.parse(localStorage.getItem('elcano-settings'));
@@ -41,11 +42,16 @@ $(function() { // init
         authorize(user,sha1(pass));
     });
 
+    // aside tree loading circle
     $('#asideTreeBody').html('<div class="spinner"><div class="dot1"></div><div class="dot2"></div></div>');
 
     // options functionalities
     $('#optLaunch').on('click', function() {
-		window.open(path,'_blank');
+        if (settings.systemIndex) {
+            window.open(path,'_blank');
+        } else {
+            window.open(currentPathLaunch,'_blank');
+        }
 	});
 
     $('#optDatabase').on('click', function() {
@@ -66,15 +72,7 @@ $(function() { // init
     });
 
     $('#optNotFavorite').on('click', function() {
-        var titFav = prompt('Título del favorito: ','');
-        if (titFav!=null && titFav!='') {
-            console.log(path);
-            favorites.push({'path':path,'title':titFav});
-            localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
-            console.log(favorites);
-            $('#optFavorite').show();$('#optNotFavorite').hide();
-            showFavorites();
-        }
+        addFavorite();
     });
 
     $('#optView').on('click', function() {
@@ -105,6 +103,13 @@ $(function() { // init
 		}
 	});
 
+    if (settings.tree) { // set startup state of the aside tree
+        $('#optMoreDesplExplorer p').html('Ocultar Explorador<small>alt+x</small>');
+    } else {
+        $('aside').css('margin-left','-320px');
+        $('#optMoreDesplExplorer p').html('Mostrar Explorador<small>alt+x</small>');
+    }
+
     $('#shadow').on('click', function() {
         $('#optViewDespl').slideUp(200);
         $('#shadow').fadeOut(200);
@@ -128,7 +133,7 @@ $(function() { // init
 function authorize(authUser,authPass) {
     // función que actúa tanto al rellenar el formulario de login como al cargar por primera vez la página si la contraseña está guardada en sessionStorage
     // la variable authPass contiene la contraseña a comprobar ya encriptada para enviar a PHP
-    console.log('authorize');
+    if (settings.debug){console.log('authorize')};
 
     var tokenCheck = Math.random();
 
@@ -152,6 +157,7 @@ function authorize(authUser,authPass) {
 }
 
 function logout() { // cierra la sesión iniciada volviendo a mostrar el formulario de login
+    if (settings.debug){console.log('logout')};
     sessionStorage.removeItem('elcano-access');
     disableExplorer();
     $('#optMoreDespl').slideUp(200);
@@ -160,7 +166,7 @@ function logout() { // cierra la sesión iniciada volviendo a mostrar el formula
 }
 
 function enableExplorer() {
-    console.log('explorer enabled');
+    if (settings.debug){console.log('explorer enabled')};
     allowedAccess = true;
     changePath('./');
     showFavorites();
@@ -170,7 +176,7 @@ function enableExplorer() {
 }
 
 function disableExplorer() {
-    console.log('explorer disabled');
+    if (settings.debug){console.log('explorer disabled')};
     allowedAccess = false;
     $('.screen').hide();
     $('#blocked').show();
@@ -180,7 +186,7 @@ function disableExplorer() {
 
 function getFolder(url) { // recupera los ficheros y directorios existentes en la ruta que se le introduzca como parámetro
     if (allowedAccess) {
-        console.log('getFolder(\''+url+'\')');
+        if (settings.debug){console.log('getFolder(\''+url+'\')')};
 
         var coincidencia = false;
     	if (favorites.length>0) {
@@ -201,11 +207,11 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
 
         $.post( "listDirectory.php", { ruta: url, listDir: true } )
     		.done(function( data ) {
-                console.log(data);
+                if (settings.debug){console.log(data)};
                 var response = JSON.parse(data);
 
                 if (response.error != null) {
-                    console.log('Se ha producido un error al acceder al directorio');
+                    if (settings.debug){console.log('Se ha producido un error al acceder al directorio')};
                     errorReporting(response);
                 } else {
                     path = url; // cambiamos la ruta general al confirmar la existencia del directorio
@@ -227,6 +233,8 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
                         files++;
                     }
 
+                    setLaunchOptions(response);
+
                     $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
                 }
         });
@@ -235,7 +243,7 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
 
 function setFolderItems(name,path,type,size) {
     var html = '';
-    console.log(type);
+    if (settings.debug){console.log(type)};
     if (type=='folder') {
         if (name.substring(0,1) == '.') {
             html += '<div class="item item'+settings.view+' itemHidden" onclick="changePath(\'' + path + '/\')">';
@@ -266,7 +274,7 @@ function setFolderItems(name,path,type,size) {
 }
 
 function changePath(url) { // cambia la ruta actual
-    console.log('changePath to: '+url);
+    if (settings.debug){console.log('changePath to: '+url)};
     if (url.substring(0,2) == './' && url.indexOf('../') == -1) {
     	getFolder(url);
     	document.title = 'elcano ' + url;
@@ -279,7 +287,7 @@ function changePath(url) { // cambia la ruta actual
         }
         reloadHistory();
     } else {
-        console.log('forbiden access to path '+url);
+        if (settings.debug){console.log('forbiden access to path '+url)};
     }
 }
 
@@ -331,6 +339,19 @@ function showFavorites() { // recarga la lista de favoritos en el aside
 	} else {
 		$('#asideFavBody').html('<p style="text-align:center;color:#555">No hay favoritos</p>');
 	}
+}
+
+function addFavorite() {
+    console.log('addFavorite');
+    var titFav = prompt('Título del favorito: ','');
+    if (titFav!=null && titFav!='') {
+        if (settings.debug){console.log(path)};
+        favorites.push({'path':path,'title':titFav});
+        localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
+        if (settings.debug){console.log(favorites)};
+        $('#optFavorite').show();$('#optNotFavorite').hide();
+        showFavorites();
+    }
 }
 
 function changeView(view) { // permite cambiar el layout de elementos en el directorio
@@ -397,6 +418,9 @@ function setItemIcon(type,path) {
     } else if (type=='c' || type=='cpp' || type=='cs') {
         standardSvgIcon = true;
         paper='#2196f3';bend='#6ec6ff';text='C';
+    } else if (type=='asp') {
+        standardSvgIcon = true;
+        paper='#6cbeff';bend='#a1d9fe';text='ASP';
     } else if (type=='doc' || type=='docx' || type=='odt') {
         standardSvgIcon = true;
         paper='#1565c0';bend='#5e92f3';text='W';var size='50';
@@ -435,14 +459,16 @@ function setItemIcon(type,path) {
 }
 
 function showTree() { // muestra u oculta el árbol de directorios lateral
-    console.log('showTree');
+    if (settings.debug){console.log('showTree')};
     if (settings.tree) {
         $('aside').css('margin-left','-320px');
         settings.tree = false;
+        $('#optMoreDesplExplorer p').html('Mostrar Explorador<small>alt+x</small>');
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     } else {
         $('aside').css('margin-left','0px');
         settings.tree = true;
+        $('#optMoreDesplExplorer p').html('Ocultar Explorador<small>alt+x</small>');
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     }
     $('#optMoreDespl').slideUp(200);
@@ -455,13 +481,13 @@ function loadTree() { // carga los datos del árbol de directorios
         $.post( "directoryTree.php", { ruta: path, dirTree: true } )
     		.done(function( data ) {
     			$('#asideTreeBody').html(data);
-    			console.log("tree loaded");
+    			if (settings.debug){console.log("tree loaded")};
     	});
     }
 }
 
 function showSettings(op) { // muestra u oculta la ventana de configuración
-    console.log('showSettings');
+    if (settings.debug){console.log('showSettings')};
     if (op) {
         $('#dialogBack').css('display','flex');
         $('.dialog').hide();
@@ -477,7 +503,7 @@ function showSettings(op) { // muestra u oculta la ventana de configuración
 }
 
 function prevPath() {
-    console.log('prevPath');
+    if (settings.debug){console.log('prevPath')};
     if (timeline.length>1) {
         var url = timeline[timeline.length-2].path;
         timeline.splice(timeline.length-1,1);
@@ -488,8 +514,12 @@ function prevPath() {
     optMoreDespl = false;
 }
 
+function nextPath() {
+    if (settings.debug){console.log('nextPath')};
+}
+
 function showHistory(op) {
-    console.log('showHistory');
+    if (settings.debug){console.log('showHistory')};
     if (op) {
         $('#dialogBack').css('display','flex');
         $('.dialog').hide();
@@ -523,12 +553,12 @@ function reloadHistory() {
 }
 
 function navigateHistory(pos) {
-    console.log('navigateHistory to: '+pos);
+    if (settings.debug){console.log('navigateHistory to: '+pos)};
     changePath(timeline[pos].path);
 }
 
-function errorReporting(info) {
-    console.log('errorReporting');
+function errorReporting(info) { // Muestra los mensajes de error por pantalla
+    if (settings.debug){console.log('errorReporting')};
 
     var errorItemId = Math.floor(Math.random()*10000);
 
@@ -542,6 +572,33 @@ function errorReporting(info) {
     setTimeout(function() {
         $('#errorItem'+errorItemId).remove();
     },5000);
+}
+
+function setLaunchOptions(data) { // indica el fichero ejecutable prioritario del directorio
+    console.log(settings.directoryIndex);
+    var priority = settings.directoryIndex;
+    var priorityFound = false;
+    var launchPath = '';
+
+    for (i in priority) {
+        console.log(priority[i]); // index.php
+        for (j in data.files) {
+            if (!priorityFound) {
+                if (data.files[j].fileName==priority[i]) {
+                    launchPath = data.files[j].filePath;
+                    priorityFound = true;
+                }
+            }
+        }
+    }
+
+    if (priorityFound) {
+        $('#optLaunch').show();
+        currentPathLaunch = launchPath;
+    } else {
+        $('#optLaunch').hide();
+        currentPathLaunch = false;
+    }
 }
 
 /* ---- app utils ---- */
@@ -579,147 +636,146 @@ function getCookie(cname) {
 }
 
 function sha1 (str) {
-  var hash
-  try {
-    var crypto = require('crypto')
-    var sha1sum = crypto.createHash('sha1')
-    sha1sum.update(str)
-    hash = sha1sum.digest('hex')
-  } catch (e) {
-    hash = undefined
-  }
-
-  if (hash !== undefined) {
-    return hash
-  }
-
-  var _rotLeft = function (n, s) {
-    var t4 = (n << s) | (n >>> (32 - s))
-    return t4
-  }
-
-  var _cvtHex = function (val) {
-    var str = ''
-    var i
-    var v
-
-    for (i = 7; i >= 0; i--) {
-      v = (val >>> (i * 4)) & 0x0f
-      str += v.toString(16)
-    }
-    return str
-  }
-
-  var blockstart
-  var i, j
-  var W = new Array(80)
-  var H0 = 0x67452301
-  var H1 = 0xEFCDAB89
-  var H2 = 0x98BADCFE
-  var H3 = 0x10325476
-  var H4 = 0xC3D2E1F0
-  var A, B, C, D, E
-  var temp
-
-  // utf8_encode
-  str = unescape(encodeURIComponent(str))
-  var strLen = str.length
-
-  var wordArray = []
-  for (i = 0; i < strLen - 3; i += 4) {
-    j = str.charCodeAt(i) << 24 |
-      str.charCodeAt(i + 1) << 16 |
-      str.charCodeAt(i + 2) << 8 |
-      str.charCodeAt(i + 3)
-    wordArray.push(j)
-  }
-
-  switch (strLen % 4) {
-    case 0:
-      i = 0x080000000
-      break
-    case 1:
-      i = str.charCodeAt(strLen - 1) << 24 | 0x0800000
-      break
-    case 2:
-      i = str.charCodeAt(strLen - 2) << 24 | str.charCodeAt(strLen - 1) << 16 | 0x08000
-      break
-    case 3:
-      i = str.charCodeAt(strLen - 3) << 24 |
-        str.charCodeAt(strLen - 2) << 16 |
-        str.charCodeAt(strLen - 1) <<
-      8 | 0x80
-      break
-  }
-
-  wordArray.push(i)
-
-  while ((wordArray.length % 16) !== 14) {
-    wordArray.push(0)
-  }
-
-  wordArray.push(strLen >>> 29)
-  wordArray.push((strLen << 3) & 0x0ffffffff)
-
-  for (blockstart = 0; blockstart < wordArray.length; blockstart += 16) {
-    for (i = 0; i < 16; i++) {
-      W[i] = wordArray[blockstart + i]
-    }
-    for (i = 16; i <= 79; i++) {
-      W[i] = _rotLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1)
+    var hash
+    try {
+        var crypto = require('crypto')
+        var sha1sum = crypto.createHash('sha1')
+        sha1sum.update(str)
+        hash = sha1sum.digest('hex')
+    } catch (e) {
+        hash = undefined
     }
 
-    A = H0
-    B = H1
-    C = H2
-    D = H3
-    E = H4
-
-    for (i = 0; i <= 19; i++) {
-      temp = (_rotLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff
-      E = D
-      D = C
-      C = _rotLeft(B, 30)
-      B = A
-      A = temp
+    if (hash !== undefined) {
+        return hash
     }
 
-    for (i = 20; i <= 39; i++) {
-      temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff
-      E = D
-      D = C
-      C = _rotLeft(B, 30)
-      B = A
-      A = temp
+    var _rotLeft = function (n, s) {
+        var t4 = (n << s) | (n >>> (32 - s))
+        return t4
     }
 
-    for (i = 40; i <= 59; i++) {
-      temp = (_rotLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff
-      E = D
-      D = C
-      C = _rotLeft(B, 30)
-      B = A
-      A = temp
+    var _cvtHex = function (val) {
+        var str = ''
+        var i
+        var v
+
+        for (i = 7; i >= 0; i--) {
+            v = (val >>> (i * 4)) & 0x0f
+            str += v.toString(16)
+        }
+        return str
     }
 
-    for (i = 60; i <= 79; i++) {
-      temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff
-      E = D
-      D = C
-      C = _rotLeft(B, 30)
-      B = A
-      A = temp
+    var blockstart
+    var i, j
+    var W = new Array(80)
+    var H0 = 0x67452301
+    var H1 = 0xEFCDAB89
+    var H2 = 0x98BADCFE
+    var H3 = 0x10325476
+    var H4 = 0xC3D2E1F0
+    var A, B, C, D, E
+    var temp
+
+    // utf8_encode
+    str = unescape(encodeURIComponent(str))
+    var strLen = str.length
+
+    var wordArray = []
+    for (i = 0; i < strLen - 3; i += 4) {
+        j = str.charCodeAt(i) << 24 |
+        str.charCodeAt(i + 1) << 16 |
+        str.charCodeAt(i + 2) << 8 |
+        str.charCodeAt(i + 3)
+        wordArray.push(j)
     }
 
-    H0 = (H0 + A) & 0x0ffffffff
-    H1 = (H1 + B) & 0x0ffffffff
-    H2 = (H2 + C) & 0x0ffffffff
-    H3 = (H3 + D) & 0x0ffffffff
-    H4 = (H4 + E) & 0x0ffffffff
-  }
+    switch (strLen % 4) {
+        case 0:
+            i = 0x080000000
+            break
+        case 1:
+            i = str.charCodeAt(strLen - 1) << 24 | 0x0800000
+            break
+        case 2:
+            i = str.charCodeAt(strLen - 2) << 24 | str.charCodeAt(strLen - 1) << 16 | 0x08000
+            break
+        case 3:
+            i = str.charCodeAt(strLen - 3) << 24 |
+            str.charCodeAt(strLen - 2) << 16 |
+            str.charCodeAt(strLen - 1) << 8 | 0x80
+            break
+        }
 
-  temp = _cvtHex(H0) + _cvtHex(H1) + _cvtHex(H2) + _cvtHex(H3) + _cvtHex(H4)
-  return temp.toLowerCase()
+        wordArray.push(i)
+
+        while ((wordArray.length % 16) !== 14) {
+            wordArray.push(0)
+        }
+
+        wordArray.push(strLen >>> 29)
+        wordArray.push((strLen << 3) & 0x0ffffffff)
+
+        for (blockstart = 0; blockstart < wordArray.length; blockstart += 16) {
+            for (i = 0; i < 16; i++) {
+                W[i] = wordArray[blockstart + i]
+            }
+            for (i = 16; i <= 79; i++) {
+                W[i] = _rotLeft(W[i - 3] ^ W[i - 8] ^ W[i - 14] ^ W[i - 16], 1)
+            }
+
+            A = H0
+            B = H1
+            C = H2
+            D = H3
+            E = H4
+
+            for (i = 0; i <= 19; i++) {
+                temp = (_rotLeft(A, 5) + ((B & C) | (~B & D)) + E + W[i] + 0x5A827999) & 0x0ffffffff
+                E = D
+                D = C
+                C = _rotLeft(B, 30)
+                B = A
+                A = temp
+            }
+
+            for (i = 20; i <= 39; i++) {
+                temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0x6ED9EBA1) & 0x0ffffffff
+                E = D
+                D = C
+                C = _rotLeft(B, 30)
+                B = A
+                A = temp
+            }
+
+            for (i = 40; i <= 59; i++) {
+                temp = (_rotLeft(A, 5) + ((B & C) | (B & D) | (C & D)) + E + W[i] + 0x8F1BBCDC) & 0x0ffffffff
+                E = D
+                D = C
+                C = _rotLeft(B, 30)
+                B = A
+                A = temp
+            }
+
+            for (i = 60; i <= 79; i++) {
+                temp = (_rotLeft(A, 5) + (B ^ C ^ D) + E + W[i] + 0xCA62C1D6) & 0x0ffffffff
+                E = D
+                D = C
+                C = _rotLeft(B, 30)
+                B = A
+                A = temp
+            }
+
+            H0 = (H0 + A) & 0x0ffffffff
+            H1 = (H1 + B) & 0x0ffffffff
+            H2 = (H2 + C) & 0x0ffffffff
+            H3 = (H3 + D) & 0x0ffffffff
+            H4 = (H4 + E) & 0x0ffffffff
+        }
+
+        temp = _cvtHex(H0) + _cvtHex(H1) + _cvtHex(H2) + _cvtHex(H3) + _cvtHex(H4)
+        return temp.toLowerCase()
 }
 
 /* ----- comandos de teclado ----- */
@@ -731,7 +787,7 @@ document.onkeydown = function() {
     if (window.event.keyCode == 83) { if (event.altKey) { showSettings(true) } }
 
 	if (window.event.keycode == 8) {
-		console.log('backspace');
+		if (settings.debug){console.log('backspace')};
 	}
 
 	// navegación por el directorio con las flechas de dirección
@@ -750,7 +806,7 @@ document.onkeydown = function() {
 			posSelect--;
 		}
 		$($('.item')[posSelect]).addClass('itemActive');
-		console.log(posSelect);
+		if (settings.debug){console.log(posSelect)};
 	}
 	if (window.event.keyCode == 39) { // flecha derecha
 		$('.item').removeClass('itemActive');
@@ -764,7 +820,7 @@ document.onkeydown = function() {
 			posSelect++;
 		}
 		$($('.item')[posSelect]).addClass('itemActive');
-		console.log(posSelect);
+		if (settings.debug){console.log(posSelect)};
 	}
     if (window.event.keyCode == 38) { // fecha arriba
         $('.item').removeClass('itemActive');
@@ -788,7 +844,7 @@ document.onkeydown = function() {
             }
         }
         $($('.item')[posSelect]).addClass('itemActive');
-		console.log(posSelect);
+		if (settings.debug){console.log(posSelect)};
     }
     if (window.event.keyCode == 40) { // flecha abajo
         $('.item').removeClass('itemActive');
@@ -812,7 +868,7 @@ document.onkeydown = function() {
             }
         }
         $($('.item')[posSelect]).addClass('itemActive');
-		console.log(posSelect);
+		if (settings.debug){console.log(posSelect)};
     }
 	if (window.event.keyCode == 13) { // intro
 		if (posSelect!=null) {

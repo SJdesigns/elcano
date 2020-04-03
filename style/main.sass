@@ -381,7 +381,7 @@ main
 					margin: 2px 8px
 
 				p
-					margin: 4px 0px
+					margin: 5px 0px
 
 		section
 			position: relative
@@ -723,16 +723,19 @@ aside ::selection
 	width: 100%
 	height: 100%
 	top: 0px
+	padding-top: 25px
 	background-color: rgba(#000,.1)
 	align-items: center
 	display: none
 
 	#settings, #history
-		width: 950px
-		height: 500px
+		//width: 950px
+		//height: 500px
 
 	.dialog
 		position: relative
+		width: 950px
+		height: 520px
 		margin: 0px auto
 		background-color: #fff
 		box-shadow: 2px 2px 8px rgba(#000,.1)
@@ -822,6 +825,21 @@ aside ::selection
 
 						&:hover
 							fill: #222
+
+@media screen and (max-width: 1080px)
+	#dialogBack .dialog
+		width: 92%
+
+@media screen and (max-width: 800px)
+	#dialogBack .dialog
+		width: 100%
+
+@media screen and (max-height: 620px)
+	#dialogBack
+		padding-top: 50px
+
+		.dialog
+			height: 100%
 
 /* ----- scroll ----- */
 

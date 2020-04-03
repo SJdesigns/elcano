@@ -18,3 +18,5 @@ Cosas de menor importancia
 - Ajustar la ventana de configuracion con media queries para pantallas pequeñas
 - Personalizar scroll
 - Evitar que al cancelar añadir a favoritos se creen de todas formas sin nombre
+- Dar funcionalidad a avanzar en el historial
+- Añadir carteles de texto en las opciones del header

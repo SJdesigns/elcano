@@ -190,12 +190,10 @@ if (isset($_POST['token'])) {
                     <p style="color:#f00">Ventana en desarrollo</p>
                     <div class="settingsItem">
                         <h3>General</h3>
-                        <div>
-                            <label><input type="checkbox" />Activar el modo oscuro</label>
-                        </div>
-                        <div>
-                            <label><input type="checkbox" />Activar</label>
-                        </div>
+                        <div><label><input type="checkbox" />Activar el modo oscuro</label></div>
+                        <div><label><input type="checkbox" />Mostrar archivos ocultos</label></div>
+                        <div><label><input type="checkbox" />Mostrar extensión de los archivos</label></div>
+                        <div><label><input type="checkbox" />Activar</label></div>
                     </div>
                     <div class="settingsItem">
                         <h3>Estado Inicial</h3>
@@ -207,6 +205,21 @@ if (isset($_POST['token'])) {
                                 <label><input type="radio" name="viewOption" value="Icons" />Iconos</label>
                                 <label><input type="radio" name="viewOption" value="last" />Último activo</label>
                             </form>
+                        </div>
+                    </div>
+                    <div class="settingsItem">
+                        <h3>Omitir archivos</h3>
+                        <div>
+                            <p>nombres de archivos y extensiones separados por comas</p>
+                            <input id="ignoreFilesInput" type="text" name="" value="" />
+                        </div>
+                    </div>
+                    <div class="settingsItem">
+                        <h3>Prioridad de Índices</h3>
+                        <div>
+                            <div><label><input type="checkbox" />Índice predeterminado del sistema</label></div>
+                            <p>Lista de prioridad de ejecución para los directorios</p>
+                            <input id="indexPriorityInput" type="text" name="" value="" />
                         </div>
                     </div>
                 </div>
