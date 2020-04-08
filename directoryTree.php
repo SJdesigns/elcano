@@ -1,16 +1,5 @@
 <?php
 
-if (isset($_POST['ruta'])) {
-	$ruta = $_POST['ruta'];
-
-	if ($ruta == '../') {
-		$ruta = './';
-	}
-	directoryTree("./", $ruta);
-} else {
-	echo '<p>Árbol de directorios</p><p>no disponible</p>';
-}
-
 function directoryTree($explRuta, $rutaGlobal) {
 	//echo 'ruta global: ' . $rutaGlobal . '<br />'; // ruta raíz del arbol de directorios (normalmente ./)
 	//echo 'ruta nivel: ' . $explRuta . '<br />'; // ruta actual a leer
@@ -59,6 +48,17 @@ function directoryTree($explRuta, $rutaGlobal) {
 			}
 	    }
 	}
+}
+
+if (isset($_POST['ruta'])) {
+	$ruta = $_POST['ruta'];
+
+	if ($ruta == '../') {
+		$ruta = './';
+	}
+	directoryTree("./", $ruta);
+} else {
+	echo '<p>Árbol de directorios</p><p>no disponible</p>';
 }
 
 /*function directoryTree2($root) {

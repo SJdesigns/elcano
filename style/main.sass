@@ -172,12 +172,27 @@ header
 			height: 34px
 			color: #fff
 			margin: 8px 0px
-			padding: 7px 10px
+			padding: 8px 10px
 			box-sizing: border-box
 			cursor: pointer
 
 			&:hover
 				background-color: rgba(#fff, .1)
+
+			.navHomeItem
+				position: relative
+				display: flex
+
+				svg
+					width: 25px
+					height: 25px
+					margin-top: -3px
+					fill: #fff
+
+				i
+					margin-top: 0px
+					margin-left: 5px
+					font-style: normal
 
 		.navSeparator
 			position: relative
@@ -252,6 +267,18 @@ header
 				&:hover .optChainDropdown
 					display: flex
 
+				.optMoreDisabled
+					color: #aaa
+
+					&:hover
+						background-color: #fff
+
+					svg
+						fill: #aaa
+
+					p small
+						color: #ddd
+
 				svg
 					width: 25px
 					height: 25px
@@ -266,8 +293,8 @@ header
 
 			.optChainDropdown
 				position: absolute
-				width: 200px
-				margin-left: -220px
+				width: 220px
+				margin-left: -240px
 				top: -8px
 				padding: 8px 0px
 				background-color: #fff
@@ -825,6 +852,10 @@ aside ::selection
 
 						&:hover
 							fill: #222
+
+				.historyActive
+					color: #34515f
+					background-color: rgba(#000,.06)
 
 @media screen and (max-width: 1080px)
 	#dialogBack .dialog

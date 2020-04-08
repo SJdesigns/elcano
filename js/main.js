@@ -1,4 +1,4 @@
-/* ---- elcano Explorer v3.0 - alpha 1.5. ---- */
+/* ---- elcano Explorer v3.0 - alpha 1.6. ---- */
 
 // global variables
 var allowedAccess = false; // indica si el usuario esta autenticado
@@ -10,6 +10,7 @@ var timeline = []; // almacena todas las rutas accedidas anteriormente
 var posSelect = null; // posición del fichero o directorio seleccionado con las flechas de dirección
 var defaultDirectoryIndex = ['index.php','index.asp','index.html'];
 var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
+var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
 
 if (localStorage.getItem('elcano-settings') == null) {
     var settings = {'tree':true,'view':'Mosaic','debug':true,'systemIndex':true,'directoryIndex':defaultDirectoryIndex};
@@ -120,12 +121,12 @@ $(function() { // init
     })
 
     $('#optMoreHistory').on('click',function(e) {
-        if (e.target.id == 'optMoreHistory' || e.target.parentNode.id == 'optMoreHistory' || e.target.parentNode.parentNode.id == 'optMoreHistory') {
-            showHistory(true);
-        } else if (e.target.id == 'optMorePrevPath' || e.target.parentNode.id == 'optMorePrevPath' || e.target.parentNode.parentNode.id == 'optMorePrevPath') {
+        if (e.target.id == 'optMorePrevPath' || e.target.parentNode.id == 'optMorePrevPath' || e.target.parentNode.parentNode.id == 'optMorePrevPath') {
             prevPath();
         } else if (e.target.id == 'optMoreNextPath' || e.target.parentNode.id == 'optMoreNextPath' || e.target.parentNode.parentNode.id == 'optMoreNextPath') {
             nextPath();
+        } else if (e.target.id == 'optMoreHistory' || e.target.parentNode.id == 'optMoreHistory' || e.target.parentNode.parentNode.id == 'optMoreHistory') {
+            showHistory(true);
         }
     });
 });
@@ -273,19 +274,23 @@ function setFolderItems(name,path,type,size) {
     $('#itemArea').append(html);
 }
 
-function changePath(url) { // cambia la ruta actual
-    if (settings.debug){console.log('changePath to: '+url)};
+function changePath(url,tlPos = null) { // cambia la ruta actual. tlPos indica que se llama desde la funcion navigateHistory
+    if (settings.debug){console.log('changePath to: '+url+' | tlPos = '+tlPos)};
     if (url.substring(0,2) == './' && url.indexOf('../') == -1) {
     	getFolder(url);
     	document.title = 'elcano ' + url;
-        if (timeline.length>0) {
-            if (timeline[timeline.length-1].path != url) {
+        if (tlPos == null) {
+            if (timeline.length>0) {
+                if (timeline[timeline.length-1].path != url) {
+                    timeline.push({'path':url});
+                }
+            } else {
                 timeline.push({'path':url});
             }
+            reloadTimeline();
         } else {
-            timeline.push({'path':url});
+            reloadTimeline(tlPos);
         }
-        reloadHistory();
     } else {
         if (settings.debug){console.log('forbiden access to path '+url)};
     }
@@ -305,12 +310,15 @@ function explodePath(url) { // actualiza los directorios del nav
 			explode.splice(i,1);
 		} else {
 			if (explode[i]=='.') {
-				explode[i] = 'paginas';
+				//explode[i] = '<div class="navHomeItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/></svg><i>Home</i></div>';
+                explode[i] = 'homePage';
 			}
 
             var implode = ''; // permite asignar la url a cada item del nav
             for (j=0;j<=i;j++) {
-                if (explode[j] == 'paginas') {
+                //if (explode[j] == '<div class="navHomeItem"><svg class="navHomeItem" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/></svg><i>home</i></div>') {
+
+                if (explode[j] == 'homePage') {
                     implode += './';
                 } else {
                     implode += explode[j] + '/';
@@ -318,12 +326,20 @@ function explodePath(url) { // actualiza los directorios del nav
             }
 
             if (i != explode.length-1 && i != explode.length-2) {
-                $('nav').append('<div class="navItem" onclick="changePath(\'' + implode + '\')"><p>'+explode[i]+'</p></div>');
+                if (explode[i] == 'homePage') {
+                    $('nav').append('<div class="navItem" onclick="changePath(\'' + implode + '\')"><p><div class="navHomeItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/></svg></div></p></div>');
+                } else {
+                    $('nav').append('<div class="navItem" onclick="changePath(\'' + implode + '\')"><p>'+explode[i]+'</p></div>');
+                }
                 if (i != explode.length -1) {
                     $('nav').append('<div class="navSeparator"><p>/</p></div>');
                 }
             } else if (explode[i] != '') {
-                $('nav').append('<div class="navItem"><p>'+explode[i]+'</p></div>');
+                if (explode[i] == 'homePage') {
+                    $('nav').append('<div class="navItem"><p><div class="navHomeItem"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" width="24px" height="24px"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10 19v-5h4v5c0 .55.45 1 1 1h3c.55 0 1-.45 1-1v-7h1.7c.46 0 .68-.57.33-.87L12.67 3.6c-.38-.34-.96-.34-1.34 0l-8.36 7.53c-.34.3-.13.87.33.87H5v7c0 .55.45 1 1 1h3c.55 0 1-.45 1-1z"/></svg><i>Home</i></div></p></div>');
+                } else {
+                    $('nav').append('<div class="navItem"><p>'+explode[i]+'</p></div>');
+                }
             }
 		}
 	}
@@ -504,11 +520,15 @@ function showSettings(op) { // muestra u oculta la ventana de configuración
 
 function prevPath() {
     if (settings.debug){console.log('prevPath')};
+
     if (timeline.length>1) {
-        var url = timeline[timeline.length-2].path;
-        timeline.splice(timeline.length-1,1);
-        changePath(url);
+        if (timeline[timelinePosition-1] != undefined) {
+            timelinePosition -= 1;
+            var url = timeline[timelinePosition].path;
+            changePath(url,timelinePosition);
+        }
     }
+
     $('#optMoreDespl').slideUp(200);
     $('#shadow').fadeOut(200);
     optMoreDespl = false;
@@ -516,6 +536,18 @@ function prevPath() {
 
 function nextPath() {
     if (settings.debug){console.log('nextPath')};
+
+    if (timelinePosition < timeline.length-1) {
+        if (timeline[timelinePosition+1] != undefined) {
+            timelinePosition += 1;
+            var url = timeline[timelinePosition].path;
+            changePath(url,timelinePosition);
+        }
+
+        $('#optMoreDespl').slideUp(200);
+        $('#shadow').fadeOut(200);
+        optMoreDespl = false;
+    }
 }
 
 function showHistory(op) {
@@ -534,7 +566,19 @@ function showHistory(op) {
     optMoreDespl = false;
 }
 
-function reloadHistory() {
+function reloadTimeline(pos = null) {
+    if (pos==null) {
+        timelinePosition = timeline.length-1;
+    } else {
+        timelinePosition = pos;
+    }
+
+    if (timelinePosition == timeline.length-1) { // detectamos si la opcion nextPath debe estar disponible
+        $('#optMoreNextPath').addClass('optMoreDisabled');
+    } else {
+        $('#optMoreNextPath').removeClass('optMoreDisabled');
+    }
+
     var html = '';
     for (i in timeline) {
         var folderName = timeline[i].path.split('/');
@@ -543,10 +587,21 @@ function reloadHistory() {
         } else {
             folderName2 = folderName[folderName.length-2];
         }
-        html += '<div class="historyItem">';
+        if (timelinePosition == i) {
+            html += '<div class="historyItem historyActive">';
+        } else {
+            html += '<div class="historyItem">';
+        }
         html += '<p>'+folderName2+'</p>';
         html += '<p>'+timeline[i].path+'</p>';
-        html += '<svg onclick="navigateHistory('+i+')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L3.71 8.71C3.08 8.08 2 8.52 2 9.41V15c0 .55.45 1 1 1h5.59c.89 0 1.34-1.08.71-1.71l-1.91-1.91c1.39-1.16 3.16-1.88 5.12-1.88 3.16 0 5.89 1.84 7.19 4.5.27.56.91.84 1.5.64.71-.23 1.07-1.04.75-1.72C20.23 10.42 16.65 8 12.5 8z"/></svg>';
+        if (timelinePosition > i) {
+            html += '<svg onclick="navigateHistory('+i+')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L3.71 8.71C3.08 8.08 2 8.52 2 9.41V15c0 .55.45 1 1 1h5.59c.89 0 1.34-1.08.71-1.71l-1.91-1.91c1.39-1.16 3.16-1.88 5.12-1.88 3.16 0 5.89 1.84 7.19 4.5.27.56.91.84 1.5.64.71-.23 1.07-1.04.75-1.72C20.23 10.42 16.65 8 12.5 8z"/></svg>';
+        } else if (timelinePosition < i) {
+            html += '<svg onclick="navigateHistory('+i+')" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/></svg>';
+        } else {
+            html += '';
+        }
+
         html += '</div>';
     }
     $('#historyPaths').html(html);
@@ -554,7 +609,8 @@ function reloadHistory() {
 
 function navigateHistory(pos) {
     if (settings.debug){console.log('navigateHistory to: '+pos)};
-    changePath(timeline[pos].path);
+    timelinePosition = pos;
+    changePath(timeline[pos].path,pos);
 }
 
 function errorReporting(info) { // Muestra los mensajes de error por pantalla
@@ -575,13 +631,13 @@ function errorReporting(info) { // Muestra los mensajes de error por pantalla
 }
 
 function setLaunchOptions(data) { // indica el fichero ejecutable prioritario del directorio
-    console.log(settings.directoryIndex);
+    if (settings.debug){console.log(settings.directoryIndex)};
     var priority = settings.directoryIndex;
     var priorityFound = false;
     var launchPath = '';
 
     for (i in priority) {
-        console.log(priority[i]); // index.php
+        if (settings.debug){console.log(priority[i])};
         for (j in data.files) {
             if (!priorityFound) {
                 if (data.files[j].fileName==priority[i]) {
@@ -781,10 +837,12 @@ function sha1 (str) {
 /* ----- comandos de teclado ----- */
 
 document.onkeydown = function() {
-	if (window.event.keyCode == 86) { if (event.altKey) { changeView('List') } }
-	if (window.event.keyCode == 88) { if (event.altKey) { showTree() } }
-	if (window.event.keyCode == 72) { if (event.altKey) { showHistory(true) } }
-    if (window.event.keyCode == 83) { if (event.altKey) { showSettings(true) } }
+	if (window.event.keyCode == 86) { if (event.altKey) { changeView('List') } } // alt+v
+	if (window.event.keyCode == 88) { if (event.altKey) { showTree() } } // alt+x
+	if (window.event.keyCode == 72) { if (event.altKey) { showHistory(true) } } // alt+h
+    if (window.event.keyCode == 83) { if (event.altKey) { showSettings(true) } } // alt+s
+    if (window.event.keyCode == 37) { if (event.altKey) { event.preventDefault(); prevPath() } } // alt+flecha izquierda
+    if (window.event.keyCode == 39) { if (event.altKey) { event.preventDefault(); nextPath() } } // alt+flecha derecha
 
 	if (window.event.keycode == 8) {
 		if (settings.debug){console.log('backspace')};

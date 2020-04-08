@@ -1,15 +1,5 @@
 <?php
 
-if (isset($_POST['ruta'])) {
-	if (file_exists($_POST['ruta'])) {
-		listDirectory($_POST['ruta']);
-	} else {
-		directoryError(404,$_POST['ruta']);
-	}
-} else {
-	directoryError(403);
-}
-
 function listDirectory($path) {
     $directories = [];
     $files = [];
@@ -91,6 +81,16 @@ function directoryError($code, $path='') {
 	}
 
 	echo json_encode($return);
+}
+
+if (isset($_POST['ruta'])) {
+	if (file_exists($_POST['ruta'])) {
+		listDirectory($_POST['ruta']);
+	} else {
+		directoryError(404,$_POST['ruta']);
+	}
+} else {
+	directoryError(403);
 }
 
 ?>

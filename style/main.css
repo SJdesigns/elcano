@@ -174,12 +174,27 @@ header nav .navItem {
   height: 34px;
   color: #fff;
   margin: 8px 0px;
-  padding: 7px 10px;
+  padding: 8px 10px;
   box-sizing: border-box;
   cursor: pointer;
 }
 header nav .navItem:hover {
   background-color: rgba(255, 255, 255, 0.1);
+}
+header nav .navItem .navHomeItem {
+  position: relative;
+  display: flex;
+}
+header nav .navItem .navHomeItem svg {
+  width: 25px;
+  height: 25px;
+  margin-top: -3px;
+  fill: #fff;
+}
+header nav .navItem .navHomeItem i {
+  margin-top: 0px;
+  margin-left: 5px;
+  font-style: normal;
 }
 header nav .navSeparator {
   position: relative;
@@ -254,6 +269,18 @@ header div#options .optDropDown div.optDropDownItem:hover {
 header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown {
   display: flex;
 }
+header div#options .optDropDown div.optDropDownItem .optMoreDisabled {
+  color: #aaa;
+}
+header div#options .optDropDown div.optDropDownItem .optMoreDisabled:hover {
+  background-color: #fff;
+}
+header div#options .optDropDown div.optDropDownItem .optMoreDisabled svg {
+  fill: #aaa;
+}
+header div#options .optDropDown div.optDropDownItem .optMoreDisabled p small {
+  color: #ddd;
+}
 header div#options .optDropDown div.optDropDownItem svg {
   width: 25px;
   height: 25px;
@@ -268,8 +295,8 @@ header div#options .optDropDown div.optDropDownItem p small {
 }
 header div#options .optDropDown .optChainDropdown {
   position: absolute;
-  width: 200px;
-  margin-left: -220px;
+  width: 220px;
+  margin-left: -240px;
   top: -8px;
   padding: 8px 0px;
   background-color: #fff;
@@ -384,7 +411,7 @@ main #mainCenter aside .asideTitle svg {
   margin: 2px 8px;
 }
 main #mainCenter aside .asideTitle p {
-  margin: 4px 0px;
+  margin: 5px 0px;
 }
 main #mainCenter section {
   position: relative;
@@ -844,6 +871,10 @@ aside ::selection {
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover {
   fill: #222;
+}
+#dialogBack .dialog #historyBody #historyPaths .historyActive {
+  color: #34515f;
+  background-color: rgba(0, 0, 0, 0.06);
 }
 
 @media screen and (max-width: 1080px) {
