@@ -24,7 +24,7 @@ if (isset($_POST['token'])) {
     </script>
     <script type="text/javascript" src="js/main.js"></script>
 </head>
-<body>
+<body class="lightMode">
     <div class="screen" id="startUp"></div>
     <div class="screen" id="blocked">
         <div id="blockedBack">
@@ -190,20 +190,19 @@ if (isset($_POST['token'])) {
                     <p style="color:#f00">Ventana en desarrollo</p>
                     <div class="settingsItem">
                         <h3>General</h3>
-                        <div><label><input type="checkbox" />Activar el modo oscuro</label></div>
-                        <div><label><input type="checkbox" />Mostrar archivos ocultos</label></div>
-                        <div><label><input type="checkbox" />Mostrar extensión de los archivos</label></div>
-                        <div><label><input type="checkbox" />Activar</label></div>
+                        <div><label><input id="darkModeCheckbox" type="checkbox" />Activar el modo oscuro</label></div>
+                        <div><label><input id="showHiddenCheckbox" type="checkbox" />Mostrar archivos ocultos</label></div>
+                        <div><label><input id="showExtensionCheckbox" type="checkbox" />Mostrar extensión de los archivos</label></div>
                     </div>
                     <div class="settingsItem">
                         <h3>Estado Inicial</h3>
                         <div>
                             <p>Vista activa por defecto</p>
                             <form>
-                                <label><input type="radio" name="viewOption" value="Mosaic" />Mosaico</label>
-                                <label><input type="radio" name="viewOption" value="List" />Lista</label>
-                                <label><input type="radio" name="viewOption" value="Icons" />Iconos</label>
-                                <label><input type="radio" name="viewOption" value="last" />Último activo</label>
+                                <label><input class="defaultView" id="defaultViewMosaic" type="radio" name="viewOption" value="Mosaic" />Mosaico</label>
+                                <label><input class="defaultView" id="defaultViewList" type="radio" name="viewOption" value="List" />Lista</label>
+                                <label><input class="defaultView" id="defaultViewWall" type="radio" name="viewOption" value="Icons" />Muro</label>
+                                <label><input class="defaultView" id="defaultViewLast" type="radio" name="viewOption" value="last" />Último activo</label>
                             </form>
                         </div>
                     </div>

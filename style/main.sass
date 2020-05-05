@@ -609,8 +609,10 @@ details details
 	border: 0px
 	margin-left: 12px
 
-summary p.linkTree
+details summary p.linkTree
 	color: #333333
+
+summary p.linkTree
 	text-decoration: none
 
 summary p.linkTree:hover
@@ -632,6 +634,7 @@ summary::before
 	position: relative
 	float: left
 	content: "+"
+	color: #444
 	margin-right: 0px
 	padding-right: 12px
 	margin-top: -5px
@@ -871,6 +874,80 @@ aside ::selection
 
 		.dialog
 			height: 100%
+
+/* ----- dark mode ----- */
+
+body.darkMode .screen
+	background-color: #212121
+	color: #fff
+
+body.darkMode header
+	background-color: #484848
+
+body.darkMode main #mainCenter aside
+	background: #303030
+	color: #fff
+
+body.darkMode #mainCenter aside .asideTitle svg
+	fill: #fff
+
+body.darkMode details summary p.linkTree
+	color: #fff
+
+body.darkMode summary::before
+	color: #fff
+
+body.darkMode header div#options .optDropDown
+	color: #000
+
+body.darkMode #dialogBack .dialog
+	background-color: #444
+
+body.darkMode main #mainCenter section #itemArea .item:hover
+	background-color: rgba(255,255,255,.06)
+
+body.darkMode main #mainCenter section #folderInfo
+	background-color: rgba(255,255,255,.06)
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small
+	color: #bbb
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover
+	color: #222
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small
+	color: #777
+
+body.darkMode .dialog .dialogTitleBar
+	background-color: #545454
+
+body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem
+	border-bottom: 1px solid #5f5f5f
+
+body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyActive
+	color: #2196f3
+
+body.darkMode details:hover summary p.linkTree
+	color: #000
+
+body.darkMode details:hover summary::before
+	color: #444
+
+body.darkMode main #mainCenter section #itemArea .item
+	box-shadow: 2px 2px 8px rgba(0,0,0,.15)
+
+body.darkMode header div#options .optDropDown
+	color: #fff
+	background-color: #555
+
+	div.optDropDownItem svg
+		fill: #fff
+
+	div.optDropDownItem:hover
+		background-color: rgba(255,255,255,.1)
+
+		.optChainDropdown
+			background-color: #606060
 
 /* ----- scroll ----- */
 
