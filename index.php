@@ -149,7 +149,6 @@ if (isset($_POST['token'])) {
                         </div>
                         <div class="asideBody" id="asideFavBody"></div>
                     </div>
-                    <hr />
                     <div id="asideTree">
                         <div class="asideTitle">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
@@ -183,43 +182,45 @@ if (isset($_POST['token'])) {
         <div id="dialogBack">
             <div id="settings" class="dialog">
                 <div class="dialogTitleBar">
-                    <h2>Settings</h2>
+                    <h2>Configuración <p style="color:#f00;font-size:12pt;margin-top:5px;margin-left:8px;font-weight:normal">Ventana en desarrollo</p></h2>
                     <svg onclick="showSettings(false)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </div>
                 <div class="dialogBody">
-                    <p style="color:#f00">Ventana en desarrollo</p>
-                    <div class="settingsItem">
-                        <h3>General</h3>
-                        <div><label><input id="darkModeCheckbox" type="checkbox" />Activar el modo oscuro</label></div>
-                        <div><label><input id="showHiddenCheckbox" type="checkbox" />Mostrar archivos ocultos</label></div>
-                        <div><label><input id="showExtensionCheckbox" type="checkbox" />Mostrar extensión de los archivos</label></div>
-                    </div>
-                    <div class="settingsItem">
-                        <h3>Estado Inicial</h3>
-                        <div>
-                            <p>Vista activa por defecto</p>
-                            <form>
-                                <label><input class="defaultView" id="defaultViewMosaic" type="radio" name="viewOption" value="Mosaic" />Mosaico</label>
-                                <label><input class="defaultView" id="defaultViewList" type="radio" name="viewOption" value="List" />Lista</label>
-                                <label><input class="defaultView" id="defaultViewWall" type="radio" name="viewOption" value="Icons" />Muro</label>
-                                <label><input class="defaultView" id="defaultViewLast" type="radio" name="viewOption" value="last" />Último activo</label>
-                            </form>
+                    <div class="dialogBodyCenter">
+                        <div class="settingsItem">
+                            <h3>General</h3>
+                            <div><label><input id="darkModeCheckbox" type="checkbox" />Activar el modo oscuro</label></div>
+                            <div><label><input id="showHiddenCheckbox" type="checkbox" />Mostrar archivos ocultos</label></div>
+                            <div><label><input id="showExtensionCheckbox" type="checkbox" />Mostrar extensión de los archivos</label></div>
                         </div>
-                    </div>
-                    <div class="settingsItem">
-                        <h3>Omitir archivos</h3>
-                        <div>
-                            <p>nombres de archivos y extensiones separados por comas</p>
-                            <input id="ignoreFilesInput" type="text" name="" value="" />
+                        <div class="settingsItem">
+                            <h3>Estado Inicial</h3>
+                            <div>
+                                <p>Vista activa por defecto</p>
+                                <form>
+                                    <label><input class="defaultView" id="defaultViewMosaic" type="radio" name="viewOption" value="Mosaic" />Mosaico</label>
+                                    <label><input class="defaultView" id="defaultViewList" type="radio" name="viewOption" value="List" />Lista</label>
+                                    <label><input class="defaultView" id="defaultViewWall" type="radio" name="viewOption" value="Icons" />Muro</label>
+                                    <label><input class="defaultView" id="defaultViewLast" type="radio" name="viewOption" value="last" />Último activo</label>
+                                </form>
+                            </div>
                         </div>
-                    </div>
-                    <div class="settingsItem">
-                        <h3>Prioridad de Índices</h3>
-                        <div>
-                            <div><label><input type="checkbox" />Índice predeterminado del sistema</label></div>
-                            <p>Lista de prioridad de ejecución para los directorios</p>
-                            <input id="indexPriorityInput" type="text" name="" value="" />
+                        <div class="settingsItem">
+                            <h3>Omitir archivos</h3>
+                            <div>
+                                <p>nombres de archivos y extensiones separados por comas</p>
+                                <input id="ignoreFilesInput" type="text" name="" value="" />
+                            </div>
                         </div>
+                        <div class="settingsItem">
+                            <h3>Prioridad de Índices</h3>
+                            <div>
+                                <div><label><input id="systemIndexPriority" type="checkbox" />Índice predeterminado del sistema</label></div>
+                                <p>Lista de prioridad de ejecución para los directorios</p>
+                                <input id="indexPriorityInput" type="text" name="" value="" spellcheck="false" />
+                            </div>
+                        </div>
+                        <p id="settingsVersion">beta v3.1.7</p>
                     </div>
                 </div>
             </div>

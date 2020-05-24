@@ -141,6 +141,7 @@ header {
   display: flex;
   justify-content: space-between;
   z-index: 10;
+  transition: background-color 0.4s;
 }
 header div#headerTitle {
   position: relative;
@@ -362,18 +363,15 @@ main #mainCenter aside {
   flex-direction: column;
   transition: margin-left 0.4s;
 }
-main #mainCenter aside hr {
-  border: 0px;
-  border-bottom: 1px solid #34515f;
-}
 main #mainCenter aside #asideFavorites {
   position: relative;
   width: 100%;
   height: auto;
   max-height: 190px;
+  box-shadow: -2px 2px 4px rgba(120, 144, 156, 0.4);
 }
 main #mainCenter aside #asideFavorites #asideFavBody {
-  padding: 5px 0px 8px;
+  padding: 4px 0px 8px;
   overflow: auto;
   max-height: 143px;
 }
@@ -401,8 +399,10 @@ main #mainCenter aside .asideTitle {
   position: relative;
   width: 100%;
   height: 30px;
+  margin-top: 8px;
   display: flex;
   flex-direction: row;
+  cursor: default;
 }
 main #mainCenter aside .asideTitle svg {
   width: 25px;
@@ -425,6 +425,7 @@ main #mainCenter section #itemArea {
   height: auto;
   display: flex;
   flex-wrap: wrap;
+  color: #34515f;
   /* estilos para las distintas vistas */
 }
 main #mainCenter section #itemArea #emptyFolder {
@@ -803,6 +804,7 @@ aside ::selection {
 #dialogBack .dialog .dialogTitleBar h2 {
   padding: 10px 20px;
   font-family: "Roboto-Light", "Roboto-Regular", sans-serif;
+  display: flex;
 }
 #dialogBack .dialog .dialogTitleBar svg {
   width: 30px;
@@ -814,26 +816,42 @@ aside ::selection {
   fill: #000;
 }
 #dialogBack .dialog .dialogBody {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  height: 100%;
+  padding-top: 50px;
+  box-sizing: border-box;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter {
   position: relative;
   width: 100%;
-  height: auto;
+  height: 100%;
+  overflow: auto;
 }
-#dialogBack .dialog .dialogBody .settingsItem {
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
   position: relative;
   width: 100%;
   height: auto;
   padding: 16px 24px;
   box-sizing: border-box;
 }
-#dialogBack .dialog .dialogBody .settingsItem h3 {
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem h3 {
   margin-bottom: 5px;
 }
-#dialogBack .dialog .dialogBody .settingsItem div {
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div {
   padding: 0px 8px;
 }
-#dialogBack .dialog .dialogBody .settingsItem div input[type=checkbox] {
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=checkbox] {
   vertical-align: middle;
   margin-right: 8px;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsVersion {
+  position: absolute;
+  right: 12px;
+  bottom: 0px;
+  font-size: 11pt;
+  color: #777;
 }
 #dialogBack .dialog #historyBody {
   position: absolute;
@@ -934,12 +952,20 @@ body.darkMode #dialogBack .dialog {
   background-color: #444;
 }
 
+body.darkMode main #mainCenter section #itemArea {
+  color: #9eb9c6;
+}
+
 body.darkMode main #mainCenter section #itemArea .item:hover {
   background-color: rgba(255, 255, 255, 0.06);
 }
 
 body.darkMode main #mainCenter section #folderInfo {
   background-color: rgba(255, 255, 255, 0.06);
+}
+
+body.darkMode main #mainCenter aside #asideFavorites {
+  box-shadow: -2px 2px 4px rgba(120, 120, 120, 0.2);
 }
 
 body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small {
@@ -954,8 +980,15 @@ body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:ho
   color: #777;
 }
 
-body.darkMode .dialog .dialogTitleBar {
+body.darkMode #dialogBack .dialog .dialogTitleBar {
   background-color: #545454;
+}
+
+body.darkMode #dialogBack .dialog .dialogTitleBar svg {
+  fill: #888;
+}
+body.darkMode #dialogBack .dialog .dialogTitleBar svg:hover {
+  fill: #bbb;
 }
 
 body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem {

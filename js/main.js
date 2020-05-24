@@ -1,6 +1,7 @@
-/* ---- elcano Explorer v3.0 - beta 1.7 ---- */
+/* ---- elcano Explorer v3.0 - beta 1.8 ---- */
 
 // global variables
+var version = '3.1.8';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
@@ -9,11 +10,12 @@ var optViewDespl = false; // estado del desplegable de las vistas
 var timeline = []; // almacena todas las rutas accedidas anteriormente
 var posSelect = null; // posición del fichero o directorio seleccionado con las flechas de dirección
 var defaultDirectoryIndex = ['index.php','index.asp','index.html'];
+var ignoreFiles = ['index.html'];
 var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
 var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
 
 if (localStorage.getItem('elcano-settings') == null) {
-    var settings = {'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'firstLoad':false};
+    var settings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'firstLoad':false};
     localStorage.setItem('elcano-settings',JSON.stringify(settings));
 } else {
     var settings = JSON.parse(localStorage.getItem('elcano-settings'));
@@ -229,23 +231,27 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
                         $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
                     }
                     for (i in response.dir) {
-                        if (settings.showHidden) { // muestra los ficheros y directorios ocultos
-                            setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
-                            directories++;
-                        } else { // solo muestra los directorios y ficheros que son visibles
-                            if (response.dir[i].fileName.substring(0,1) != '.') {
+                        if (settings.ignoreFiles.indexOf(response.dir[i].fileName) == -1) {
+                            if (settings.showHidden) { // muestra los ficheros y directorios ocultos
                                 setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
                                 directories++;
+                            } else { // solo muestra los directorios y ficheros que son visibles
+                                if (response.dir[i].fileName.substring(0,1) != '.') {
+                                    setFolderItems(response.dir[i].fileName,response.dir[i].filePath, response.dir[i].fileType);
+                                    directories++;
+                                }
                             }
                         }
                     }
                     for (i in response.files) {
-                        if (settings.showExtensions) {
-                            setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize,true);
-                        } else {
-                            setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize,false);
+                        if (settings.ignoreFiles.indexOf(response.files[i].fileName) == -1) {
+                            if (settings.showExtensions) {
+                                setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize,true);
+                            } else {
+                                setFolderItems(response.files[i].fileName,response.files[i].filePath,response.files[i].fileType,response.files[i].fileSize,false);
+                            }
+                            files++;
                         }
-                        files++;
                     }
 
                     setLaunchOptions(response);
@@ -693,6 +699,10 @@ function setLaunchOptions(data) { // indica el fichero ejecutable prioritario de
 function setSettings() {
     console.log('setSettings');
 
+    if (settings.version != version) {
+        upgradeSettings();
+    }
+
     // dark mode
     if (settings.darkMode) {
         console.log('set dark mode');
@@ -779,6 +789,116 @@ function setSettings() {
         }
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     });
+
+    // ignore files
+    $('#ignoreFilesInput').val((settings.ignoreFiles).join(','));
+
+    $('#ignoreFilesInput').on('change',function() {
+        console.log('ignoreFiles change');
+        settings.ignoreFiles = ($('#ignoreFilesInput').val()).split(',');
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        getFolder(path);
+        console.log(settings.ignoreFiles);
+    });
+
+    // index priority
+    if (settings.systemIndex) {
+        $('#systemIndexPriority').attr('checked',true);
+        $('#indexPriorityInput').attr('disabled',true);
+    }
+
+    $('#indexPriorityInput').val((settings.directoryIndex).join(','));
+
+    $('#systemIndexPriority').on('change',function() {
+        if (settings.systemIndex) {
+            settings.systemIndex = false;
+            $('#systemIndexPriority').attr('checked',false);
+            $('#indexPriorityInput').attr('disabled',false);
+        } else {
+            settings.systemIndex = true;
+            $('#systemIndexPriority').attr('checked',true);
+            $('#indexPriorityInput').attr('disabled',true);
+        }
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+    });
+
+    $('#indexPriorityInput').on('change',function() {
+        console.log('indexPriority change');
+        settings.directoryIndex = ($('#indexPriorityInput').val()).split(',');
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        getFolder(path);
+        console.log(settings.directoryIndex);
+    });
+
+    $('#settingsVersion').text('beta '+version);
+}
+
+function upgradeSettings() { // actualiza los datos del localStorage si el usuario tiene una versión diferente
+    console.log('upgradeSettings');
+
+    var newSettings = {};
+
+    if (settings.version != version) {
+        newSettings.version = version;
+
+
+        if (settings.tree==true) { newSettings.tree = true; }
+        else if (settings.tree==false) { newSettings.tree = false; }
+        else { newSettings.tree = true; }
+
+        if (settings.view == 'Mosaic' || settings.view == 'List' || settings.view == 'Wall') {
+            newSettings.view = settings.view;
+        } else {
+            newSettings.view = 'Mosaic';
+        }
+
+        if (settings.darkMode == true) { newSettings.darkMode = true; }
+        else if (settings.darkMode == false) { newSettings.darkMode = false; }
+        else { newSettings.darkMode = false; }
+
+        if (settings.showHidden == true) { newSettings.showHidden = true; }
+        else if (settings.showHidden == false) { newSettings.showHidden = false; }
+        else { newSettings.showHidden = false; }
+
+        if (settings.showExtensions == true) { newSettings.showExtensions = true; }
+        else if (settings.showExtensions == false) { newSettings.showExtensions = false; }
+        else { newSettings.showExtensions = false; }
+
+        if (settings.defaultView=='mosaic' || settings.defaultView=='list' || settings.defaultView=='wall' || settings.defaultView=='last') {
+            newSettings.defaultView = settings.defaultView;
+        } else {
+            newSettings.defaultView = 'last';
+        }
+
+        if (settings.debug==true || settings.debug==false) { newSettings.debug = settings.debug; } else { newSettings.debug = false; }
+
+        if (Array.isArray(settings.ignoreFiles)) {
+            newSettings.ignoreFiles = settings.ignoreFiles;
+        } else {
+            newSettings.ignoreFiles = ignoreFiles;
+        }
+
+        if (settings.systemIndex=='true' || settings.systemIndex=='false') {
+            newSettings.systemIndex = settings.systemIndex;
+        } else {
+            newSettings.systemIndex = true;
+        }
+
+        if (Array.isArray(settings.directoryIndex)) {
+            newSettings.directoryIndex = settings.directoryIndex;
+        } else {
+            newSettings.directoryIndex = defaultDirectoryIndex;
+        }
+
+        if (settings.firstLoad == true || settings.firstLoad == false) {
+            newSettings.firstLoad = settings.firstLoad;
+        } else {
+            newSettings.firstLoad = 'false';
+        }
+
+        localStorage.setItem('elcano-settings',JSON.stringify(newSettings));
+        settings = newSettings;
+    }
 }
 
 /* ---- app utils ---- */
@@ -978,85 +1098,97 @@ document.onkeydown = function() {
     // Cada variable indica la anchura máxima para cada cantidad de columnas
     cols1=750; cols2=1050; cols3=1300; cols4=1750; cols5=2100;
 
-	if (window.event.keyCode == 37) { // flecha izquierda
-		$('.item').removeClass('itemActive');
-		if (posSelect<=0) {
-			posSelect=0;
-		} else if (posSelect>=$('.item').length-1) {
-			posSelect=$('.item').length-2;
-		} else {
-			posSelect--;
-		}
-		$($('.item')[posSelect]).addClass('itemActive');
-		if (settings.debug){console.log(posSelect)};
-	}
-	if (window.event.keyCode == 39) { // flecha derecha
-		$('.item').removeClass('itemActive');
-		if (posSelect==null) {
-			posSelect=0;
-		} else if (posSelect<=0) {
-			posSelect=1;
-		} else if (posSelect>=$('.item').length-1) {
-			posSelect=$('.item').length-1;
-		} else {
-			posSelect++;
-		}
-		$($('.item')[posSelect]).addClass('itemActive');
-		if (settings.debug){console.log(posSelect)};
-	}
-    if (window.event.keyCode == 38) { // fecha arriba
-        $('.item').removeClass('itemActive');
-        if (posSelect==null) {
-            posSelect=0;
-        } else if (posSelect<=0) {
-            posSelect=0;
-        } else {
-            if (window.innerWidth < cols1) { // 1 columna
-                if (posSelect-1>=0) { posSelect = posSelect-1; }
-            } else if (window.innerWidth < cols2) { // 2 columnas
-                if (posSelect-2>=0) { posSelect = posSelect-2; }
-            } else if (window.innerWidth < cols3) { // 3 columnas
-                if (posSelect-3>=0) { posSelect = posSelect-3; }
-            } else if (window.innerWidth < cols4) { // 4 columnas
-                if (posSelect-4>=0) { posSelect = posSelect-4; }
-            } else if (window.innerWidth < cols5) { // 5 columnas
-                if (posSelect-5>=0) { posSelect = posSelect-5; }
-            } else if (window.innerWidth >= cols5) { // 6 columnas
-                if (posSelect-6>=0) { posSelect = posSelect-6; }
+    if ($('#settings').css('display') == 'block') {
+        if ($(':focus').attr('id') == undefined) {
+            if (window.event.keyCode == 88) {
+                showSettings(false);
             }
         }
-        $($('.item')[posSelect]).addClass('itemActive');
-		if (settings.debug){console.log(posSelect)};
-    }
-    if (window.event.keyCode == 40) { // flecha abajo
-        $('.item').removeClass('itemActive');
-        if (posSelect==null) {
-            posSelect=0;
-        } else if (posSelect>=$('.item').length-1) {
-            posSelect=$('.item').length-1;
-        } else {
-            if (window.innerWidth < cols1) { // 1 columna
-                if (posSelect+1<=$('.item').length-1) { posSelect = posSelect+1; }
-            } else if (window.innerWidth < cols2) { // 2 columnas
-                if (posSelect+2<=$('.item').length-1) { posSelect = posSelect+2; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-            } else if (window.innerWidth < cols3) { // 3 columnas
-                if (posSelect+3<=$('.item').length-1) { posSelect = posSelect+3; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-            } else if (window.innerWidth < cols4) { // 4 columnas
-                if (posSelect+4<=$('.item').length-1) { posSelect = posSelect+4; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-            } else if (window.innerWidth < cols5) { // 5 columnas
-                if (posSelect+5<=$('.item').length-1) { posSelect = posSelect+5; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-            } else if (window.innerWidth >= cols5) { // 6 columnas
-                if (posSelect+6<=$('.item').length-1) { posSelect = posSelect+6; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-            }
+    } else if ($('#history').css('display') == 'block') {
+        if (window.event.keyCode == 88) {
+            showHistory(false);
         }
-        $($('.item')[posSelect]).addClass('itemActive');
-		if (settings.debug){console.log(posSelect)};
+    } else {
+    	if (window.event.keyCode == 37) { // flecha izquierda
+    		$('.item').removeClass('itemActive');
+    		if (posSelect<=0) {
+    			posSelect=0;
+    		} else if (posSelect>=$('.item').length-1) {
+    			posSelect=$('.item').length-2;
+    		} else {
+    			posSelect--;
+    		}
+    		$($('.item')[posSelect]).addClass('itemActive');
+    		if (settings.debug){console.log(posSelect)};
+    	}
+    	if (window.event.keyCode == 39) { // flecha derecha
+    		$('.item').removeClass('itemActive');
+    		if (posSelect==null) {
+    			posSelect=0;
+    		} else if (posSelect<=0) {
+    			posSelect=1;
+    		} else if (posSelect>=$('.item').length-1) {
+    			posSelect=$('.item').length-1;
+    		} else {
+    			posSelect++;
+    		}
+    		$($('.item')[posSelect]).addClass('itemActive');
+    		if (settings.debug){console.log(posSelect)};
+    	}
+        if (window.event.keyCode == 38) { // fecha arriba
+            $('.item').removeClass('itemActive');
+            if (posSelect==null) {
+                posSelect=0;
+            } else if (posSelect<=0) {
+                posSelect=0;
+            } else {
+                if (window.innerWidth < cols1) { // 1 columna
+                    if (posSelect-1>=0) { posSelect = posSelect-1; }
+                } else if (window.innerWidth < cols2) { // 2 columnas
+                    if (posSelect-2>=0) { posSelect = posSelect-2; }
+                } else if (window.innerWidth < cols3) { // 3 columnas
+                    if (posSelect-3>=0) { posSelect = posSelect-3; }
+                } else if (window.innerWidth < cols4) { // 4 columnas
+                    if (posSelect-4>=0) { posSelect = posSelect-4; }
+                } else if (window.innerWidth < cols5) { // 5 columnas
+                    if (posSelect-5>=0) { posSelect = posSelect-5; }
+                } else if (window.innerWidth >= cols5) { // 6 columnas
+                    if (posSelect-6>=0) { posSelect = posSelect-6; }
+                }
+            }
+            $($('.item')[posSelect]).addClass('itemActive');
+    		if (settings.debug){console.log(posSelect)};
+        }
+        if (window.event.keyCode == 40) { // flecha abajo
+            $('.item').removeClass('itemActive');
+            if (posSelect==null) {
+                posSelect=0;
+            } else if (posSelect>=$('.item').length-1) {
+                posSelect=$('.item').length-1;
+            } else {
+                if (window.innerWidth < cols1) { // 1 columna
+                    if (posSelect+1<=$('.item').length-1) { posSelect = posSelect+1; }
+                } else if (window.innerWidth < cols2) { // 2 columnas
+                    if (posSelect+2<=$('.item').length-1) { posSelect = posSelect+2; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                } else if (window.innerWidth < cols3) { // 3 columnas
+                    if (posSelect+3<=$('.item').length-1) { posSelect = posSelect+3; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                } else if (window.innerWidth < cols4) { // 4 columnas
+                    if (posSelect+4<=$('.item').length-1) { posSelect = posSelect+4; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                } else if (window.innerWidth < cols5) { // 5 columnas
+                    if (posSelect+5<=$('.item').length-1) { posSelect = posSelect+5; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                } else if (window.innerWidth >= cols5) { // 6 columnas
+                    if (posSelect+6<=$('.item').length-1) { posSelect = posSelect+6; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                }
+            }
+            $($('.item')[posSelect]).addClass('itemActive');
+    		if (settings.debug){console.log(posSelect)};
+        }
+    	if (window.event.keyCode == 13) { // intro
+    		if (posSelect!=null) {
+    			$($('.item')[posSelect]).click();
+    		}
+    	}
     }
-	if (window.event.keyCode == 13) { // intro
-		if (posSelect!=null) {
-			$($('.item')[posSelect]).click();
-		}
-	}
 	$('section').on('click',function() { // deseleccionar los items
 		posSelect=null;
 		$('.item').removeClass('itemActive');

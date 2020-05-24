@@ -7,6 +7,7 @@ Cosas que añadir
 - Crear interfaz para el historial
 - Utilizar media queries para ajustar para distintas pantallas
 - Añadir soporte de idiomas (Español, Inglés y Francés minimo)
+- Añadir opción para elegir ruta de la base de datos
 
 
 
@@ -20,3 +21,5 @@ Cosas de menor importancia
 - Evitar que al cancelar añadir a favoritos se creen de todas formas sin nombre
 - Dar funcionalidad a avanzar en el historial
 - Añadir carteles de texto en las opciones del header
+- Corregir que al modificar los cuadros de texto del menú de configuración, no se actualiza la configuración hasta mover el cursor varias veces
+- Indicar el número de favoritos encima de la lista de favoritos
