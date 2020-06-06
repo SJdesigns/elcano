@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.0 - beta 1.8 ---- */
+/* ---- elcano Explorer v3.0 - beta 1.9 ---- */
 
 // global variables
-var version = '3.1.8';
+var version = '3.1.9';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
@@ -13,9 +13,10 @@ var defaultDirectoryIndex = ['index.php','index.asp','index.html'];
 var ignoreFiles = ['index.html'];
 var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
 var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
+var defaultSettings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'dbpath':'http://localhost/phpmyadmin/','firstLoad':false}; // configuracion por defecto de la aplicacion
 
 if (localStorage.getItem('elcano-settings') == null) {
-    var settings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'firstLoad':false};
+    var settings = defaultSettings;
     localStorage.setItem('elcano-settings',JSON.stringify(settings));
 } else {
     var settings = JSON.parse(localStorage.getItem('elcano-settings'));
@@ -59,7 +60,7 @@ $(function() { // init
 	});
 
     $('#optDatabase').on('click', function() {
-		window.open('http://localhost/phpmyadmin/','_blank');
+		window.open(dbpath,'_blank');
 	});
 
     $('#optFavorite').on('click', function() {
@@ -705,12 +706,10 @@ function setSettings() {
 
     // dark mode
     if (settings.darkMode) {
-        console.log('set dark mode');
         $('body').removeClass('lightMode');
         $('body').addClass('darkMode');
         $('#darkModeCheckbox').prop('checked', true);
     } else {
-        console.log('set light mode');
         $('body').removeClass('darkMode');
         $('body').addClass('lightMode');
         $('#darkModeCheckbox').prop('checked', false);
@@ -830,6 +829,23 @@ function setSettings() {
         console.log(settings.directoryIndex);
     });
 
+    // database
+    $('#databasePathInput').val(settings.dbpath);
+
+    $('#databasePathInput').on('change',function() {
+        settings.dbpath = $('#databasePathInput').val();
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+    });
+
+    // reset
+    $('#resetSettingsButton').on('click',function() {
+        console.log('reset settings');
+        settings = defaultSettings;
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        setSettings();
+        changePath(path);
+    });
+
     $('#settingsVersion').text('beta '+version);
 }
 
@@ -888,6 +904,10 @@ function upgradeSettings() { // actualiza los datos del localStorage si el usuar
             newSettings.directoryIndex = settings.directoryIndex;
         } else {
             newSettings.directoryIndex = defaultDirectoryIndex;
+        }
+
+        if (!settings.dbpath) {
+            newSettings.dbpath = defaultSettings.dbpath;
         }
 
         if (settings.firstLoad == true || settings.firstLoad == false) {

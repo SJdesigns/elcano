@@ -1,6 +1,7 @@
 <?php
+/* ---- elcano Explorer v3.0 - beta 1.9 ---- */
 
-if (isset($_POST['token'])) {
+if (isset($_GET['token'])) {
     // auth.php
 } else if (isset($_POST['listDir'])) {
     // listDirectory.php
@@ -19,6 +20,7 @@ if (isset($_POST['token'])) {
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="img/favicon.png">
     <title>elcano v3.0</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style/main.css">
     <script type="text/javascript" src="js/jquery-3.1.1.min.js">
     </script>
@@ -182,18 +184,18 @@ if (isset($_POST['token'])) {
         <div id="dialogBack">
             <div id="settings" class="dialog">
                 <div class="dialogTitleBar">
-                    <h2>Configuración <p style="color:#f00;font-size:12pt;margin-top:5px;margin-left:8px;font-weight:normal">Ventana en desarrollo</p></h2>
+                    <h2>Configuración <p style="color:#ff4545;font-size:12pt;margin-top:5px;margin-left:8px;font-weight:normal">Ventana en desarrollo</p></h2>
                     <svg onclick="showSettings(false)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </div>
                 <div class="dialogBody">
                     <div class="dialogBodyCenter">
-                        <div class="settingsItem">
+                        <div class="settingsItem" id="settingsItemGeneral">
                             <h3>General</h3>
                             <div><label><input id="darkModeCheckbox" type="checkbox" />Activar el modo oscuro</label></div>
                             <div><label><input id="showHiddenCheckbox" type="checkbox" />Mostrar archivos ocultos</label></div>
                             <div><label><input id="showExtensionCheckbox" type="checkbox" />Mostrar extensión de los archivos</label></div>
                         </div>
-                        <div class="settingsItem">
+                        <div class="settingsItem" id="settingsItemStartUp">
                             <h3>Estado Inicial</h3>
                             <div>
                                 <p>Vista activa por defecto</p>
@@ -205,19 +207,42 @@ if (isset($_POST['token'])) {
                                 </form>
                             </div>
                         </div>
-                        <div class="settingsItem">
+                        <div class="settingsItem" id="settingsItemIgnore">
                             <h3>Omitir archivos</h3>
                             <div>
                                 <p>nombres de archivos y extensiones separados por comas</p>
-                                <input id="ignoreFilesInput" type="text" name="" value="" />
+                                <div class="settingsInputText">
+                                    <input id="ignoreFilesInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="ficheros ignorados" />
+                                    <div class="settingsInputEffect"></div>
+                                </div>
                             </div>
                         </div>
-                        <div class="settingsItem">
+                        <div class="settingsItem" id="settingsItemPriority">
                             <h3>Prioridad de Índices</h3>
                             <div>
                                 <div><label><input id="systemIndexPriority" type="checkbox" />Índice predeterminado del sistema</label></div>
                                 <p>Lista de prioridad de ejecución para los directorios</p>
-                                <input id="indexPriorityInput" type="text" name="" value="" spellcheck="false" />
+                                <div class="settingsInputText">
+                                    <input id="indexPriorityInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="orden de prioridad de archivos" />
+                                    <div class="settingsInputEffect"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settingsItem" id="settingsItemDatabase">
+                            <h3>Base de datos</h3>
+                            <div>
+                                <p>Ruta de acceso a la base de datos</p>
+                                <div class="settingsInputText">
+                                    <input id="databasePathInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="ruta de la base de datos" />
+                                    <div class="settingsInputEffect"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="settingsItem" id="settingsItemReset">
+                            <h3>Configuración predeterminada</h3>
+                            <div>
+                                <button id="resetSettingsButton">Reestablecer</button>
+                                <span>Volver a la configuración por defecto</span>
                             </div>
                         </div>
                         <p id="settingsVersion">beta v3.1.7</p>
