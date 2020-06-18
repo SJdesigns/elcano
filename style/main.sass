@@ -353,6 +353,16 @@ main
 				max-height: 190px
 				box-shadow: -2px 2px 4px rgba(120,144,156,.4)
 
+				#favTitle
+					justify-content: space-between
+
+					div
+						display: flex
+						flex-direction: row
+
+					#favCount
+						padding: 0px 15px
+
 				#asideFavBody
 					padding: 4px 0px 8px
 					overflow: auto
@@ -1063,6 +1073,58 @@ body.darkMode header div#options .optDropDown
 
 		.optChainDropdown
 			background-color: #606060
+
+/* ---- context menu ---- */
+
+#context
+	position: absolute
+	width: 180px
+	height: auto
+	background-color: #ffffff
+	box-shadow: 2px 2px 7px #cccccc
+	overflow: hidden
+	opacity: 0.8
+	cursor: default
+	display: none
+	z-index: 15
+	-webkit-transition: left 0.5s, top 0.5s, opacity 0.4s
+	-moz-transition: left 0.5s, top 0.5s, opacity 0.4s
+	-o-transition: left 0.5s, top 0.5s, opacity 0.4s
+	-ms-transition: left 0.5s, top 0.5s, opacity 0.4s
+
+	&:hover
+		opacity: 1
+
+	ul
+		position: relative
+		width: 100%
+		height: auto
+		margin: 5px 0px
+		padding: 0px
+		list-style-type: none
+
+		li
+			position: relative
+			width: 100%
+			height: auto
+			color: #282828
+			font-size: 12pt
+			border-radius: 50%
+			padding: 12px 0px
+			text-align: center
+			box-sizing: border-box
+
+			&:hover
+				border-radius: 0px
+				color: #fff
+				background-color: #2177ff
+
+		li.disabled
+			color: rgba(40,40,40,0.5)
+
+			&:hover
+				color: #ffffff
+				background-color: #b4b4b4
 
 /* ----- scroll ----- */
 

@@ -1,5 +1,5 @@
 <?php
-/* ---- elcano Explorer v3.0 - beta 1.9 ---- */
+/* ---- elcano Explorer v3.0 - beta 2.0 ---- */
 
 if (isset($_GET['token'])) {
     // auth.php
@@ -19,7 +19,7 @@ if (isset($_GET['token'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="shortcut icon" href="img/favicon.png">
-    <title>elcano v3.0</title>
+    <title>elcano</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style/main.css">
     <script type="text/javascript" src="js/jquery-3.1.1.min.js">
@@ -71,7 +71,7 @@ if (isset($_GET['token'])) {
                 <div class="navItem"><p>folder4</p></div>-->
             </nav>
             <div id="options">
-                <div class="option" id="optMore">
+                <div class="option" id="optMore" title="Más opciones">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                     <div class="optionArea"></div>
                 </div>
@@ -145,9 +145,12 @@ if (isset($_GET['token'])) {
             <div id="mainCenter">
                 <aside>
                     <div id="asideFavorites">
-                        <div class="asideTitle">
-                            <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.66 3.99c-2.64-1.8-5.9-.96-7.66 1.1-1.76-2.06-5.02-2.91-7.66-1.1-1.4.96-2.28 2.58-2.34 4.29-.14 3.88 3.3 6.99 8.55 11.76l.1.09c.76.69 1.93.69 2.69-.01l.11-.1c5.25-4.76 8.68-7.87 8.55-11.75-.06-1.7-.94-3.32-2.34-4.28zM12.1 18.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
-                            <p>Favoritos</p>
+                        <div id="favTitle" class="asideTitle">
+                            <div>
+                                <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.66 3.99c-2.64-1.8-5.9-.96-7.66 1.1-1.76-2.06-5.02-2.91-7.66-1.1-1.4.96-2.28 2.58-2.34 4.29-.14 3.88 3.3 6.99 8.55 11.76l.1.09c.76.69 1.93.69 2.69-.01l.11-.1c5.25-4.76 8.68-7.87 8.55-11.75-.06-1.7-.94-3.32-2.34-4.28zM12.1 18.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
+                                <p>Favoritos</p>
+                            </div>
+                            <p id="favCount">0</p>
                         </div>
                         <div class="asideBody" id="asideFavBody"></div>
                     </div>
@@ -184,7 +187,7 @@ if (isset($_GET['token'])) {
         <div id="dialogBack">
             <div id="settings" class="dialog">
                 <div class="dialogTitleBar">
-                    <h2>Configuración <p style="color:#ff4545;font-size:12pt;margin-top:5px;margin-left:8px;font-weight:normal">Ventana en desarrollo</p></h2>
+                    <h2>Configuración</h2>
                     <svg onclick="showSettings(false)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </div>
                 <div class="dialogBody">
@@ -260,6 +263,15 @@ if (isset($_GET['token'])) {
             </div>
         </div>
     </div>
+    <!-- inicio del menu contextual -->
+    <div id="context" class="swing">
+        <ul>
+            <li id="context1">Abrir fichero / carpeta</li>
+            <li id="context2" class="disabled">información</li>
+            <li id="context3">Agregar a favoritos</li>
+        </ul>
+    </div>
+    <!-- fin del menu contextual -->
 </body>
 </html>
 

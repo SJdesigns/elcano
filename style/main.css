@@ -356,6 +356,16 @@ main #mainCenter aside #asideFavorites {
   max-height: 190px;
   box-shadow: -2px 2px 4px rgba(120, 144, 156, 0.4);
 }
+main #mainCenter aside #asideFavorites #favTitle {
+  justify-content: space-between;
+}
+main #mainCenter aside #asideFavorites #favTitle div {
+  display: flex;
+  flex-direction: row;
+}
+main #mainCenter aside #asideFavorites #favTitle #favCount {
+  padding: 0px 15px;
+}
 main #mainCenter aside #asideFavorites #asideFavBody {
   padding: 4px 0px 8px;
   overflow: auto;
@@ -1101,6 +1111,58 @@ body.darkMode header div#options .optDropDown div.optDropDownItem:hover {
 }
 body.darkMode header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown {
   background-color: #606060;
+}
+
+/* ---- context menu ---- */
+#context {
+  position: absolute;
+  width: 180px;
+  height: auto;
+  background-color: #ffffff;
+  box-shadow: 2px 2px 7px #cccccc;
+  overflow: hidden;
+  opacity: 0.8;
+  cursor: default;
+  display: none;
+  z-index: 15;
+  -webkit-transition: left 0.5s, top 0.5s, opacity 0.4s;
+  -moz-transition: left 0.5s, top 0.5s, opacity 0.4s;
+  -o-transition: left 0.5s, top 0.5s, opacity 0.4s;
+  -ms-transition: left 0.5s, top 0.5s, opacity 0.4s;
+}
+#context:hover {
+  opacity: 1;
+}
+#context ul {
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin: 5px 0px;
+  padding: 0px;
+  list-style-type: none;
+}
+#context ul li {
+  position: relative;
+  width: 100%;
+  height: auto;
+  color: #282828;
+  font-size: 12pt;
+  border-radius: 50%;
+  padding: 12px 0px;
+  text-align: center;
+  box-sizing: border-box;
+}
+#context ul li:hover {
+  border-radius: 0px;
+  color: #fff;
+  background-color: #2177ff;
+}
+#context ul li.disabled {
+  color: rgba(40, 40, 40, 0.5);
+}
+#context ul li.disabled:hover {
+  color: #ffffff;
+  background-color: #b4b4b4;
 }
 
 /* ----- scroll ----- */
