@@ -1,5 +1,22 @@
 <?php
 
+/*$userList2 = '{ "users": {
+"0": {
+    "user": "sergio",
+    "pass": "admin"
+},
+"1": {
+    "user": "javier",
+    "pass": "admin"
+}
+}}';
+
+$arrayList2 = json_decode($userList2);
+
+echo '<pre>';
+print_r($arrayList2);
+echo '</pre>';*/
+
 // Usuarios Habilitados
 // ----------------------------------------------------
 // $userList = array('user'=>'pass')

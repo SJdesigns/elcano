@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.0 - beta 2.0 ---- */
+/* ---- elcano Explorer v3.0 - beta 2.1 ---- */
 
 // global variables
-var version = '3.2.0';
+var version = '3.2.1';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del eplorador
 var favorites = []; // almacena las rutas favoritas
@@ -14,6 +14,7 @@ var ignoreFiles = ['index.html'];
 var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
 var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
 var defaultSettings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'dbpath':'http://localhost/phpmyadmin/','firstLoad':false}; // configuracion por defecto de la aplicacion
+var lang = getCookie('elcano-lang');
 
 if (localStorage.getItem('elcano-settings') == null) {
     var settings = defaultSettings;
@@ -109,10 +110,10 @@ $(function() { // init
 	});
 
     if (settings.tree) { // set startup state of the aside tree
-        $('#optMoreDesplExplorer p').html('Ocultar Explorador<small>alt+x</small>');
+        $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreHideExpl+'<small>alt+x</small>');
     } else {
         $('aside').css('margin-left','-320px');
-        $('#optMoreDesplExplorer p').html('Mostrar Explorador<small>alt+x</small>');
+        $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreShowExpl+'<small>alt+x</small>');
     }
 
     $('#shadow').on('click', function() {
@@ -154,6 +155,7 @@ function authorize(authUser,authPass) {
                     enableExplorer();
                 } else {
                     disableExplorer();
+                    $('#signInError').html('<p>'+response.message+'</p>');
                 }
             } else {
                 disableExplorer();
@@ -187,6 +189,7 @@ function disableExplorer() {
     $('.screen').hide();
     $('#blocked').show();
     $('#signInUser,#signInPass').val('');
+    $('#signInError').html('');
     $('#signInUser').focus();
 }
 
@@ -229,7 +232,7 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
                     var directories = 0;
 
                     if (response.dir.length == 0 && response.files.length == 0) {
-                        $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
+                        $('#itemArea').html('<div id="emptyFolder"><p>'+langs[lang].section.noResults+'</p></div>');
                     }
                     for (i in response.dir) {
                         if (settings.ignoreFiles.indexOf(response.dir[i].fileName) == -1) {
@@ -257,7 +260,7 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
 
                     setLaunchOptions(response);
 
-                    $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
+                    $('#folderInfo p').text(directories+' '+langs[lang].section.sectionFolder+', '+files+' '+langs[lang].section.sectionFiles);
                 }
                 settings.firstLoad = false;
         });
@@ -530,12 +533,12 @@ function showTree() { // muestra u oculta el árbol de directorios lateral
     if (settings.tree) {
         $('aside').css('margin-left','-320px');
         settings.tree = false;
-        $('#optMoreDesplExplorer p').html('Mostrar Explorador<small>alt+x</small>');
+        $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreShowExpl+'<small>alt+x</small>');
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     } else {
         $('aside').css('margin-left','0px');
         settings.tree = true;
-        $('#optMoreDesplExplorer p').html('Ocultar Explorador<small>alt+x</small>');
+        $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreHideExpl+'<small>alt+x</small>');
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     }
     $('#optMoreDespl').slideUp(200);
@@ -634,7 +637,7 @@ function reloadTimeline(pos = null) {
     for (i in timeline) {
         var folderName = timeline[i].path.split('/');
         if (folderName.length==2) {
-            folderName2 = 'Pagina de Inicio';
+            folderName2 = langs[lang].history.historyHome;
         } else {
             folderName2 = folderName[folderName.length-2];
         }
@@ -1241,10 +1244,10 @@ $(function() {
         if (target.parents('.item').length) { // detecta si elemento sobre el que se hace click es hijo de .item
 			$('#context>ul').html('');
             if (target.parents('.itemDir').length) {
-                $('#context>ul').append('<li id="contextExplore" onclick="changePath('+target.closest('.item').attr('onclick')+')">Explorar</li>'); // CLOSEST: obtener el primer elemento padre con una clase determinada
-    			$('#context>ul').append('<li id="contextAddFav" onclick="addFavorite('+target.closest('.item').attr('onclick').substring(target.closest('.item').attr('onclick').indexOf('(')+1, target.closest('.item').attr('onclick').indexOf(')'))+')">Agregar a favoritos</li>');
+                $('#context>ul').append('<li id="contextExplore" onclick="changePath('+target.closest('.item').attr('onclick')+')">'+langs[lang].context.contextExplore+'</li>'); // CLOSEST: obtener el primer elemento padre con una clase determinada
+    			$('#context>ul').append('<li id="contextAddFav" onclick="addFavorite('+target.closest('.item').attr('onclick').substring(target.closest('.item').attr('onclick').indexOf('(')+1, target.closest('.item').attr('onclick').indexOf(')'))+')">'+langs[lang].context.contextFavorites+'</li>');
             } else {
-                $('#context>ul').append('<li id="contextOpen" onclick="readFich('+target.closest('.item').attr('onclick')+')">Abrir</li>');
+                $('#context>ul').append('<li id="contextOpen" onclick="readFich('+target.closest('.item').attr('onclick')+')">'+langs[lang].context.contextOpen+'</li>');
             }
 
 			menu.css({'display':'block', 'left':e.pageX, 'top':e.pageY});

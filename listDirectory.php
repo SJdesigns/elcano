@@ -75,9 +75,9 @@ function directoryError($code, $path='') {
 	$return['error']['code'] = $code;
 
 	if ($code == '404') {
-		$return['error']['message'] = 'No se ha encontrado el directorio';
+		$return['error']['message'] = 'Directory not found';
 	} else if ($code == '403') {
-		$return['error']['message'] = 'No tiene acceso al directorio';
+		$return['error']['message'] = 'Access prohibited';
 	}
 
 	echo json_encode($return);

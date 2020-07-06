@@ -59,6 +59,8 @@ body
 					width: 100%
 					min-height: 30px
 					padding: 15px 0px
+					text-align: center
+					color: #f00
 
 				.signInBodyItem
 					position: relative
@@ -839,7 +841,7 @@ aside ::selection
 
 						button
 							padding: 6px 14px
-							margin: 10px 0px
+							margin: 10px 5px
 							font-size: 12pt
 							background-color: #ddd
 							border: 0px
@@ -1074,14 +1076,24 @@ body.darkMode header div#options .optDropDown
 		.optChainDropdown
 			background-color: #606060
 
+body.darkMode #context
+	background-color: #555
+	box-shadow: 2px 2px 7px #333
+
+	ul li
+		color: #f0f0f0
+
+		&:hover
+			background-color: #9eb9c6
+
 /* ---- context menu ---- */
 
 #context
 	position: absolute
 	width: 180px
 	height: auto
-	background-color: #ffffff
-	box-shadow: 2px 2px 7px #cccccc
+	background-color: #fff
+	box-shadow: 2px 2px 7px #ccc
 	overflow: hidden
 	opacity: 0.8
 	cursor: default

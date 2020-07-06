@@ -1,5 +1,5 @@
 <?php
-/* ---- elcano Explorer v3.0 - beta 2.0 ---- */
+/* ---- elcano Explorer v3.0 - beta 2.1 ---- */
 
 if (isset($_GET['token'])) {
     // auth.php
@@ -9,6 +9,9 @@ if (isset($_GET['token'])) {
     // $userList = array('user'=>'pass')
     $userList = array(
         'root' => 'admin',
+        'user1' => 'adminAccess1',
+        'user2' => 'adminAccess2',
+        'user3' => 'adminAccess3'
     );
     // ----------------------------------------------------
 
@@ -66,6 +69,7 @@ if (isset($_GET['token'])) {
     }
 
     echo json_encode($return);
+
 
 } else if (isset($_POST['listDir'])) {
     // listDirectory.php
@@ -145,9 +149,9 @@ if (isset($_GET['token'])) {
     	$return['error']['code'] = $code;
 
     	if ($code == '404') {
-    		$return['error']['message'] = 'No se ha encontrado el directorio';
+    		$return['error']['message'] = 'Directory not found';
     	} else if ($code == '403') {
-    		$return['error']['message'] = 'No tiene acceso al directorio';
+    		$return['error']['message'] = 'Access prohibited';
     	}
 
     	echo json_encode($return);
@@ -228,6 +232,12 @@ if (isset($_GET['token'])) {
     }
 
 } else {
+    // lang.php
+    if (!isset($_COOKIE['elcano-lang'])) { setcookie('elcano-lang', substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), time()+60*60*24*365, '/', "", false, false); $self = $_SERVER['PHP_SELF']; header("Location: $self"); };
+    $langTxt=['es'=>['login'=>['title'=>'Inicio de Sesión','user'=>'usuario','pass'=>'contraseña','submit'=>'Continuar'],'header'=>['headStartUp'=>'Ejecutar el índice del directorio','headDataBase'=>'Acceder a la base de datos','headFavorite'=>'Añadir a favoritos','headNotFavorite'=>'Quitar de favoritos','headView'=>'Cambiar la vista','headMore'=>'Más opciones','headViewMosaic'=>'Mosaico','headViewList'=>'Lista','headViewWall'=>'Muro','headMoreHistory'=>'Historial','headMoreHistoryPrev'=>'Atrás','headMoreHistoryNext'=>'Adelante','headMoreShowExpl'=>'Mostrar Explorador','headMoreHideExpl'=>'Ocultar Explorador','headMoreSettings'=>'Configuración','headMoreLogout'=>'Cerrar Sesión'],'aside'=>['asideFav'=>'Favoritos','asideDir'=>'Directorios',],'section'=>['sectionFolder'=>'carpetas','sectionFiles'=>'archivos','noResults'=>'Esta carpeta está vacia',],'context'=>['contextExplore'=>'Explorar','contextOpen'=>'Abrir','contextFavorites'=>'Agregar a favoritos',],'history'=>['historyHome'=>'Página de Inicio',],'settings'=>['general'=>'General','darkMode'=>'Activar el modo oscuro','showHiddenFiles'=>'Mostrar archivos ocultos','showfileExtensions'=>'Mostrar extensiones de los archivos','startUp'=>'Estado inicial','startUpDescrip'=>'Vista activa por defecto','startUpLast'=>'Último activo','hideFiles'=>'Omitir archivos','hideFilesDescrip'=>'Nombres de archivos y extensiones separados por comas','hideFilesPlaceholder'=>'ficheros ignorados','priority'=>'Prioridad de Índices','defaultPriority'=>'Índice predeterminado del sistema','priorityDescrip'=>'Lista de prioridad de ejecución para los directorios','priorityPlaceholder'=>'orden de prioridad de archivos','database'=>'Base de datos','databaseDescrip'=>'Ruta de acceso a la base de datos','databasePlaceholder'=>'ruta de la base de datos','default'=>'Configuración predeterminada','defaultButton'=>'Reestablecer','defaultDescrip'=>'Volver a la configuración por defecto'],'error'=>[]],'en'=>['login'=>['title'=>'Log In','user'=>'user','pass'=>'password','submit'=>'Continue'],'header'=>['headStartUp'=>'Run directory index','headDataBase'=>'Access database','headFavorite'=>'Add to favorites','headNotFavorite'=>'Remove from favorites','headView'=>'Change view','headMore'=>'More options','headViewMosaic'=>'Mosaic','headViewList'=>'List','headViewWall'=>'Wall','headMoreHistory'=>'History Review','headMoreHistoryPrev'=>'Prev','headMoreHistoryNext'=>'Next','headMoreShowExpl'=>'Show Explorer','headMoreHideExpl'=>'Hide Explorer','headMoreSettings'=>'Settings','headMoreLogout'=>'Log Out'],'aside'=>['asideFav'=>'Favorites','asideDir'=>'Directory Tree',],'section'=>['sectionFolder'=>'folders','sectionFiles'=>'files','noResults'=>'This folder is empty',],'context'=>['contextExplore'=>'Explore','contextOpen'=>'Open','contextFavorites'=>'Add to favorites',],'history'=>['historyHome'=>'Homepage',],'settings'=>['general'=>'General','darkMode'=>'Activate dark mode','showHiddenFiles'=>'Show hidden files','showfileExtensions'=>'Show file extensions','startUp'=>'Start Up','startUpDescrip'=>'Default active view','startUpLast'=>'Last active','hideFiles'=>'Ignore Files','hideFilesDescrip'=>'File names and extensions separated by commas','hideFilesPlaceholder'=>'ignored files','priority'=>'Index Priorities','defaultPriority'=>'Default System Index','priorityDescrip'=>'Execution priority list for directories','priorityPlaceholder'=>'file priority order','database'=>'Database','databaseDescrip'=>'Database path','databasePlaceholder'=>'database path','default'=>'Default Settings','defaultButton'=>'Reset','defaultDescrip'=>'Return to default settings'],'error'=>[]],];
+    if(isset($_COOKIE['elcano-lang'])){if(!isset($langTxt[$_COOKIE['elcano-lang']])){$_COOKIE['elcano-lang']='en';}}else{$_COOKIE['elcano-lang']='en';};$lang = $_COOKIE['elcano-lang'];
+    $langJson=json_encode($langTxt);
+
     // html
 
 ?>
@@ -242,13 +252,14 @@ if (isset($_GET['token'])) {
     <title>elcano</title>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
     <style>
-        *{padding:0;margin:0;font-family:Roboto,sans-serif}body{overflow:overlay}.screen{position:fixed;width:100%;height:100%;background-color:#fff;display:none}#startUp{display:block}#blocked{display:none;z-index:15}#blocked #blockedBack{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center}#blocked #blockedBack #signIn{position:relative;width:340px;height:auto;box-shadow:2px 2px 8px rgba(0,0,0,.1)}#blocked #blockedBack #signIn #signInTitle{position:relative;width:100%;height:auto;padding:25px 0;text-align:center;color:#fff;background-color:#34515f}#blocked #blockedBack #signIn #signInTitle h1{font-weight:300}#blocked #blockedBack #signIn #signInBody{position:relative;width:100%;height:auto}#blocked #blockedBack #signIn #signInBody #signInError{position:relative;width:100%;min-height:30px;padding:15px 0}#blocked #blockedBack #signIn #signInBody .signInBodyItem{position:relative;margin:0 40px 28px}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser{width:100%;height:40px;font-size:13pt;padding-left:40px;border:0;outline:0;box-sizing:border-box}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:hover~.signInInputEffect,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:hover~.signInInputEffect{width:100%;left:0;border-color:#ccc}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus~.signInInputEffect,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus~.signInInputEffect{width:100%;left:0;border-color:#34515f}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus~.signInIcons,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus~.signInIcons{fill:#444}#blocked #blockedBack #signIn #signInBody .signInBodyItem .signInIcons{position:absolute;width:25px;height:25px;left:6px;top:8px;fill:#777}#blocked #blockedBack #signIn #signInBody .signInBodyItem .signInInputEffect{position:absolute;width:0%;left:50%;bottom:0;border-bottom:2px solid;transition:all .2s}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit{width:100%;height:50px;color:#34515f;font-size:13pt;margin-top:15px;text-align:center;border:0;outline:0;background-color:#fff}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:focus,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:hover{background-color:#f4f4f4}header{position:relative;width:100%;height:50px;top:0;background-color:#34515f;display:flex;justify-content:space-between;z-index:10;transition:background-color .4s}header div#headerTitle{position:relative;width:auto;height:100%;display:flex;padding-right:50px}header div#headerTitle #headerLogo{position:relative;width:40px;height:40px;top:5px;left:20px}header div#headerTitle h1{color:#fff;padding:4px 0;margin-left:30px;cursor:default;font-weight:300}header nav{position:relative;width:100%;height:100%;display:flex}header nav .navItem{position:relative;height:34px;color:#fff;margin:8px 0;padding:8px 10px;box-sizing:border-box;cursor:pointer}header nav .navItem:hover{background-color:rgba(255,255,255,.1)}header nav .navItem .navHomeItem{position:relative;display:flex}header nav .navItem .navHomeItem svg{width:25px;height:25px;margin-top:-3px;fill:#fff}header nav .navItem .navHomeItem i{margin-top:0;margin-left:5px;font-style:normal}header nav .navSeparator{position:relative;margin:8px 0;padding:8px 6px;font-size:11pt;color:#999;cursor:default}header div#options{position:relative;width:200px;height:100%;padding-left:50px;padding-right:20px;display:flex;flex-direction:row-reverse}header div#options .option{position:relative;width:50px;height:50px}header div#options .option .optionArea{position:absolute;width:0%;height:0%;left:50%;top:50%;border-radius:50%;background-color:rgba(255,255,255,.1);transition:all .2s}header div#options .option svg{position:relative;width:34px;height:34px;padding:8px 8px;fill:#fff;z-index:1}header div#options .option svg:hover~.optionArea{width:100%;height:100%;left:0;top:0;border-radius:0}header div#options .optDropDown{position:absolute;width:260px;height:auto;right:0;top:50px;padding:8px 0;background-color:#fff;box-shadow:-2px 2px 8px rgba(0,0,0,.15);cursor:pointer;display:none}header div#options .optDropDown div.optDropDownItem{position:relative;width:100%;padding:12px 20px;text-align:center;box-sizing:border-box;display:flex}header div#options .optDropDown div.optDropDownItem:hover{background-color:rgba(0,0,0,.1)}header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown{display:flex}header div#options .optDropDown div.optDropDownItem .optMoreDisabled{color:#aaa}header div#options .optDropDown div.optDropDownItem .optMoreDisabled:hover{background-color:#fff}header div#options .optDropDown div.optDropDownItem .optMoreDisabled svg{fill:#aaa}header div#options .optDropDown div.optDropDownItem .optMoreDisabled p small{color:#ddd}header div#options .optDropDown div.optDropDownItem svg{width:25px;height:25px;margin-right:12px}header div#options .optDropDown div.optDropDownItem p{margin-top:2px}header div#options .optDropDown div.optDropDownItem p small{color:#aaa;margin-left:12px}header div#options .optDropDown .optChainDropdown{position:absolute;width:220px;margin-left:-240px;top:-8px;padding:8px 0;background-color:#fff;box-shadow:2px 2px 8px rgba(0,0,0,.1);flex-direction:column;display:none}main{position:absolute;width:100%;height:100%;top:0;padding-top:50px;box-sizing:border-box}main #errorReporting{position:fixed;right:0;z-index:1}main #errorReporting .errorItem{position:relative;max-width:400px;padding:10px 35px;margin:10px 18px;background-color:rgba(255,68,68,.8);box-shadow:-2px 2px 8px rgba(0,0,0,.1);display:flex;justify-content:center}main #errorReporting .errorItem svg{width:30px;height:30px;fill:#fff}main #errorReporting .errorItem p{color:#fff;font-size:13pt;padding:5px 12px}main #shadow{position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,.1);display:none;z-index:1}main #mainCenter{position:relative;width:100%;height:100%;display:flex}main #mainCenter aside{position:relative;width:320px;margin-left:0;height:100%;background-color:#8eacbc;display:flex;flex-direction:column;transition:margin-left .4s}main #mainCenter aside #asideFavorites{position:relative;width:100%;height:auto;max-height:190px;box-shadow:-2px 2px 4px rgba(120,144,156,.4)}main #mainCenter aside #asideFavorites #favTitle{justify-content:space-between}main #mainCenter aside #asideFavorites #favTitle div{display:flex;flex-direction:row}main #mainCenter aside #asideFavorites #favTitle #favCount{padding:0 15px}main #mainCenter aside #asideFavorites #asideFavBody{padding:4px 0 8px;overflow:auto;max-height:143px}main #mainCenter aside #asideFavorites #asideFavBody .favFolder{padding:3px 10px;box-sizing:border-box;cursor:pointer}main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover{background-color:#fff}main #mainCenter aside #asideFavorites #asideFavBody .favFolder small{font-size:10pt;font-weight:300;font-style:italic;margin-left:12px;color:#444}main #mainCenter aside #asideTree{position:relative;width:100%;height:auto}main #mainCenter aside .asideTitle{position:relative;width:100%;height:30px;margin-top:8px;display:flex;flex-direction:row;cursor:default}main #mainCenter aside .asideTitle svg{width:25px;height:25px;fill:#222;margin:2px 8px}main #mainCenter aside .asideTitle p{margin:5px 0}main #mainCenter section{position:relative;width:100%;height:100%;overflow:auto}main #mainCenter section #itemArea{position:relative;width:100%;height:auto;display:flex;flex-wrap:wrap;color:#34515f}main #mainCenter section #itemArea #emptyFolder{padding:25px 50px}main #mainCenter section #itemArea .item{position:relative;padding:0 12px;overflow:hidden;box-sizing:border-box;box-shadow:2px 2px 8px rgba(0,0,0,.1);display:flex}main #mainCenter section #itemArea .item:hover{background-color:rgba(0,0,0,.1)}main #mainCenter section #itemArea .itemHidden{opacity:.4}main #mainCenter section #itemArea .itemActive{background-color:rgba(0,0,0,.1)}main #mainCenter section #itemArea .itemMosaic{width:16.6666666667%;height:60px}main #mainCenter section #itemArea .itemMosaic .itemLogo{position:relative;width:60px;height:100%;padding:0;display:flex;justify-content:center;align-items:center}main #mainCenter section #itemArea .itemMosaic .itemLogo img,main #mainCenter section #itemArea .itemMosaic .itemLogo svg{height:42px}main #mainCenter section #itemArea .itemMosaic .itemText{position:relative;width:100%;height:100%;display:flex;align-items:center;margin-left:12px}main #mainCenter section #itemArea .itemMosaic .itemText p{font-size:13pt;margin:8px 0;word-wrap:break-word;cursor:default}main #mainCenter section #itemArea .itemMosaic .itemText p[split-lines]{white-space:pre-wrap}main #mainCenter section #itemArea .itemMosaic .itemFilesize,main #mainCenter section #itemArea .itemMosaic .itemFiletype{display:none}main #mainCenter section #itemArea .itemList{width:100%;height:60px}main #mainCenter section #itemArea .itemList .itemLogo{position:relative;width:60px;height:60px;margin-left:4px;display:flex;justify-content:center;align-items:center}main #mainCenter section #itemArea .itemList .itemLogo img,main #mainCenter section #itemArea .itemList .itemLogo svg{height:42px}main #mainCenter section #itemArea .itemList .itemText{position:relative;width:100%;height:100%;margin-left:18px;display:flex;align-items:center}main #mainCenter section #itemArea .itemList .itemText p{font-size:13pt;margin:8px 0;word-wrap:break-word;cursor:default}main #mainCenter section #itemArea .itemList .itemText p[split-lines]{white-space:pre-wrap}main #mainCenter section #itemArea .itemList .itemFiletype{position:relative;width:200px;height:100%;display:flex;align-items:center}main #mainCenter section #itemArea .itemList .itemFiletype p{font-size:13pt;margin:8px 0;cursor:default}main #mainCenter section #itemArea .itemList .itemFilesize{position:relative;width:200px;height:100%;margin-right:20%;display:flex;align-items:center}main #mainCenter section #itemArea .itemList .itemFilesize p{font-size:13pt;margin:8px 0;cursor:default}main #mainCenter section #itemArea .itemWall{width:auto;height:auto;flex-direction:column}main #mainCenter section #itemArea .itemWall .itemLogo{position:relative;width:50px;height:50px;padding:9px;display:flex;justify-content:center;margin:0 auto}main #mainCenter section #itemArea .itemWall .itemLogo img,main #mainCenter section #itemArea .itemWall .itemLogo svg{width:50px;height:50px}main #mainCenter section #itemArea .itemWall .itemText{position:relative;width:100%;height:100%;display:flex;align-items:center}main #mainCenter section #itemArea .itemWall .itemText p{font-size:13pt;margin:8px 0;margin:8px auto;word-wrap:break-word;cursor:default}main #mainCenter section #itemArea .itemWall .itemText p[split-lines]{white-space:pre-wrap}main #mainCenter section #itemArea .itemWall .itemFilesize,main #mainCenter section #itemArea .itemWall .itemFiletype{display:none}main #mainCenter section #folderInfo{position:fixed;right:0;bottom:0;font-size:11pt;padding:3px 7px 4px;background-color:rgba(0,0,0,.1)}details{margin:0;color:#444;padding:5px;cursor:default;-webkit-transition:all .1s}details[open]{animation-name:slideDown;animation-duration:.2s;animation-timing-function:ease-in}details:hover{background-color:#fff}details details{border:0;margin-left:12px}details summary p.linkTree{color:#333}summary p.linkTree{text-decoration:none}summary p.linkTree:hover{color:#2196f3}summary p.linkTree:focus{text-decoration:none}details#activo>summary>p.linkTree{color:#2196f3}summary{outline:0}details summary::-webkit-details-marker{display:none}summary::before{position:relative;float:left;content:"+";color:#444;margin-right:0;padding-right:12px;margin-top:-5px;font-size:18pt}summary:hover::before{color:#2196f3}details[open]>summary::before{position:relative;float:left;content:"-";margin-left:0;padding-left:2px;margin-right:0;padding-right:14px;margin-top:-10px;font-size:22pt}@keyframes slideDown{0%{opacity:0;height:0}100%{opacity:1;height:20px}}aside ::selection{background-color:transparent}.spinner{margin:100px auto;width:80px;height:80px;position:relative;text-align:center;-webkit-animation:sk-rotate 2s infinite linear;animation:sk-rotate 2s infinite linear}.dot1,.dot2{width:60%;height:60%;display:inline-block;position:absolute;top:0;background-color:#cfd8dc;border-radius:100%;-webkit-animation:sk-bounce 2s infinite ease-in-out;animation:sk-bounce 2s infinite ease-in-out}.dot2{top:auto;bottom:0;-webkit-animation-delay:-1s;animation-delay:-1s}@-webkit-keyframes sk-rotate{100%{-webkit-transform:rotate(360deg)}}@keyframes sk-rotate{100%{transform:rotate(360deg);-webkit-transform:rotate(360deg)}}@-webkit-keyframes sk-bounce{0%,100%{-webkit-transform:scale(0)}50%{-webkit-transform:scale(1)}}@keyframes sk-bounce{0%,100%{transform:scale(0);-webkit-transform:scale(0)}50%{transform:scale(1);-webkit-transform:scale(1)}}@media screen and (max-width:2100px){main #mainCenter section #itemArea .itemMosaic{width:20%}}@media screen and (max-width:1750px){main #mainCenter section #itemArea .itemMosaic{width:25%}}@media screen and (max-width:1300px){main #mainCenter section #itemArea .itemMosaic{width:33.33333333%}}@media screen and (max-width:1050px){main #mainCenter section #itemArea .itemMosaic{width:50%}}@media screen and (max-width:750px){main #mainCenter section #itemArea .itemMosaic{width:100%}}@media screen and (max-width:420px){main #mainCenter aside{margin-left:-320px}}#dialogBack{position:fixed;width:100%;height:100%;top:0;padding-top:25px;background-color:rgba(0,0,0,.1);align-items:center;display:none}#dialogBack .dialog{position:relative;width:950px;height:520px;margin:0 auto;background-color:#fff;box-shadow:2px 2px 8px rgba(0,0,0,.1);display:none}#dialogBack .dialog .dialogTitleBar{position:relative;width:100%;height:50px;box-shadow:2px 2px 8px rgba(0,0,0,.1);display:flex;justify-content:space-between;z-index:1}#dialogBack .dialog .dialogTitleBar h2{padding:10px 20px;font-weight:300;display:flex}#dialogBack .dialog .dialogTitleBar svg{width:30px;height:30px;fill:#777;padding:10px 20px}#dialogBack .dialog .dialogTitleBar svg:hover{fill:#000}#dialogBack .dialog .dialogBody{position:absolute;width:100%;top:0;height:100%;padding-top:50px;box-sizing:border-box}#dialogBack .dialog .dialogBody .dialogBodyCenter{position:relative;width:100%;height:100%;overflow:auto}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem{position:relative;width:100%;height:auto;padding:16px 24px;box-sizing:border-box}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem:hover{background-color:rgba(0,0,0,.04)}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem:hover input[type=text]{background-color:rgba(0,0,0,0)}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem h3{color:#777;margin-bottom:8px;font-weight:300;cursor:default}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem label,#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem p,#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem span{color:#333}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem label{cursor:pointer}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div{padding:0 8px}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=checkbox],#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=radio]{vertical-align:middle;margin-right:8px}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div button{padding:6px 14px;margin:10px 0;font-size:12pt;background-color:#ddd;border:0;outline:0;cursor:pointer}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div button:hover{background-color:#ccc}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemGeneral div{margin:6px 0}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemStartUp div form{margin:5px 0}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemStartUp div label{margin:0 10px}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemPriority p{margin:8px 0 5px}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText{width:50%;margin:6px 0}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText .settingsInputEffect{position:relative;width:0%;left:50%;padding:0;border-bottom:2px solid;transition:all .2s}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input{width:100%;color:#333;height:40px;font-size:13pt;padding:0 10px;border:0;outline:0;box-sizing:border-box}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input:hover~.settingsInputEffect{width:100%;left:0;border-color:#ccc}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input:focus~.settingsInputEffect{width:100%;left:0;border-color:#34515f}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input[disabled]{color:#999}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsVersion{position:relative;right:12px;bottom:4px;margin-top:8px;text-align:right;font-size:11pt;color:#777}#dialogBack .dialog #historyBody{position:absolute;width:100%;height:100%;top:0;padding-top:50px;box-sizing:border-box}#dialogBack .dialog #historyBody #historyPaths{position:relative;width:100%;height:100%;overflow:auto}#dialogBack .dialog #historyBody #historyPaths .historyItem{position:relative;width:100%;height:50px;padding:4px 20px;box-sizing:border-box;border-bottom:1px solid #f2f2f2;display:flex}#dialogBack .dialog #historyBody #historyPaths .historyItem p{min-width:130px;padding:12px 40px}#dialogBack .dialog #historyBody #historyPaths .historyItem p:last-child{color:#999}#dialogBack .dialog #historyBody #historyPaths .historyItem svg{position:absolute;right:30px;width:30px;height:30px;fill:#6f6f6f;padding:7px 25px}#dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover{fill:#222}#dialogBack .dialog #historyBody #historyPaths .historyActive{color:#34515f;background-color:rgba(0,0,0,.06)}@media screen and (max-width:1080px){#dialogBack .dialog{width:92%}}@media screen and (max-width:800px){#dialogBack .dialog{width:100%}}@media screen and (max-height:620px){#dialogBack{padding-top:50px}#dialogBack .dialog{height:100%}}body.darkMode .screen{background-color:#212121;color:#fff}body.darkMode header{background-color:#484848}body.darkMode main #mainCenter aside{background:#303030;color:#fff}body.darkMode #mainCenter aside .asideTitle svg{fill:#fff}body.darkMode details summary p.linkTree{color:#fff}body.darkMode summary::before{color:#fff}body.darkMode header div#options .optDropDown{color:#000}body.darkMode #dialogBack .dialog{background-color:#444}body.darkMode main #mainCenter section #itemArea{color:#9eb9c6}body.darkMode main #mainCenter section #itemArea .item:hover{background-color:rgba(255,255,255,.06)}body.darkMode main #mainCenter section #folderInfo{background-color:rgba(255,255,255,.06)}body.darkMode main #mainCenter aside #asideFavorites{box-shadow:-2px 2px 4px rgba(120,120,120,.2)}body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small{color:#bbb}body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover{color:#222}body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small{color:#777}body.darkMode #dialogBack .dialog .dialogTitleBar{background-color:#545454}body.darkMode #dialogBack .dialog .dialogTitleBar svg{fill:#888}body.darkMode #dialogBack .dialog .dialogTitleBar svg:hover{fill:#bbb}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem h3{color:#fff}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem label,body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem p,body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem span{color:#ddd}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover input[type=text]{background-color:#606060}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input{color:#eee;background-color:#606060}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:hover~.settingsInputEffect{border-color:#bbb}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:focus~.settingsInputEffect{border-color:#fff}body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem{border-bottom:1px solid #5f5f5f}body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyActive{color:#2196f3}body.darkMode details:hover summary p.linkTree{color:#000}body.darkMode details:hover summary::before{color:#444}body.darkMode main #mainCenter section #itemArea .item{box-shadow:2px 2px 8px rgba(0,0,0,.15)}body.darkMode header div#options .optDropDown{color:#fff;background-color:#555}body.darkMode header div#options .optDropDown div.optDropDownItem svg{fill:#fff}body.darkMode header div#options .optDropDown div.optDropDownItem:hover{background-color:rgba(255,255,255,.1)}body.darkMode header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown{background-color:#606060}#context{position:absolute;width:180px;height:auto;background-color:#fff;box-shadow:2px 2px 7px #ccc;overflow:hidden;opacity:.8;cursor:default;display:none;z-index:15;-webkit-transition:left .5s,top .5s,opacity .4s;-moz-transition:left .5s,top .5s,opacity .4s;-o-transition:left .5s,top .5s,opacity .4s;-ms-transition:left .5s,top .5s,opacity .4s}#context:hover{opacity:1}#context ul{position:relative;width:100%;height:auto;margin:5px 0;padding:0;list-style-type:none}#context ul li{position:relative;width:100%;height:auto;color:#282828;font-size:12pt;border-radius:50%;padding:12px 0;text-align:center;box-sizing:border-box}#context ul li:hover{border-radius:0;color:#fff;background-color:#2177ff}#context ul li.disabled{color:rgba(40,40,40,.5)}#context ul li.disabled:hover{color:#fff;background-color:#b4b4b4}::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#aaa}::-webkit-scrollbar-track{background:rgba(0,0,0,.05)}
+    *{padding:0;margin:0;font-family:Roboto,sans-serif}body{overflow:overlay}.screen{position:fixed;width:100%;height:100%;background-color:#fff;display:none}#startUp{display:block}#blocked{display:none;z-index:15}#blocked #blockedBack{position:absolute;width:100%;height:100%;display:flex;justify-content:center;align-items:center}#blocked #blockedBack #signIn{position:relative;width:340px;height:auto;box-shadow:2px 2px 8px rgba(0,0,0,.1)}#blocked #blockedBack #signIn #signInTitle{position:relative;width:100%;height:auto;padding:25px 0;text-align:center;color:#fff;background-color:#34515f}#blocked #blockedBack #signIn #signInTitle h1{font-weight:300}#blocked #blockedBack #signIn #signInBody{position:relative;width:100%;height:auto}#blocked #blockedBack #signIn #signInBody #signInError{position:relative;width:100%;min-height:30px;padding:15px 0;text-align:center;color:red}#blocked #blockedBack #signIn #signInBody .signInBodyItem{position:relative;margin:0 40px 28px}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser{width:100%;height:40px;font-size:13pt;padding-left:40px;border:0;outline:0;box-sizing:border-box}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:hover~.signInInputEffect,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:hover~.signInInputEffect{width:100%;left:0;border-color:#ccc}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus~.signInInputEffect,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus~.signInInputEffect{width:100%;left:0;border-color:#34515f}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus~.signInIcons,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus~.signInIcons{fill:#444}#blocked #blockedBack #signIn #signInBody .signInBodyItem .signInIcons{position:absolute;width:25px;height:25px;left:6px;top:8px;fill:#777}#blocked #blockedBack #signIn #signInBody .signInBodyItem .signInInputEffect{position:absolute;width:0%;left:50%;bottom:0;border-bottom:2px solid;transition:all .2s}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit{width:100%;height:50px;color:#34515f;font-size:13pt;margin-top:15px;text-align:center;border:0;outline:0;background-color:#fff}#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:focus,#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:hover{background-color:#f4f4f4}header{position:relative;width:100%;height:50px;top:0;background-color:#34515f;display:flex;justify-content:space-between;z-index:10;transition:background-color .4s}header div#headerTitle{position:relative;width:auto;height:100%;display:flex;padding-right:50px}header div#headerTitle #headerLogo{position:relative;width:40px;height:40px;top:5px;left:20px}header div#headerTitle h1{color:#fff;padding:4px 0;margin-left:30px;cursor:default;font-weight:300}header nav{position:relative;width:100%;height:100%;display:flex}header nav .navItem{position:relative;height:34px;color:#fff;margin:8px 0;padding:8px 10px;box-sizing:border-box;cursor:pointer}header nav .navItem:hover{background-color:rgba(255,255,255,.1)}header nav .navItem .navHomeItem{position:relative;display:flex}header nav .navItem .navHomeItem svg{width:25px;height:25px;margin-top:-3px;fill:#fff}header nav .navItem .navHomeItem i{margin-top:0;margin-left:5px;font-style:normal}header nav .navSeparator{position:relative;margin:8px 0;padding:8px 6px;font-size:11pt;color:#999;cursor:default}header div#options{position:relative;width:200px;height:100%;padding-left:50px;padding-right:20px;display:flex;flex-direction:row-reverse}header div#options .option{position:relative;width:50px;height:50px}header div#options .option .optionArea{position:absolute;width:0%;height:0%;left:50%;top:50%;border-radius:50%;background-color:rgba(255,255,255,.1);transition:all .2s}header div#options .option svg{position:relative;width:34px;height:34px;padding:8px 8px;fill:#fff;z-index:1}header div#options .option svg:hover~.optionArea{width:100%;height:100%;left:0;top:0;border-radius:0}header div#options .optDropDown{position:absolute;width:260px;height:auto;right:0;top:50px;padding:8px 0;background-color:#fff;box-shadow:-2px 2px 8px rgba(0,0,0,.15);cursor:pointer;display:none}header div#options .optDropDown div.optDropDownItem{position:relative;width:100%;padding:12px 20px;text-align:center;box-sizing:border-box;display:flex}header div#options .optDropDown div.optDropDownItem:hover{background-color:rgba(0,0,0,.1)}header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown{display:flex}header div#options .optDropDown div.optDropDownItem .optMoreDisabled{color:#aaa}header div#options .optDropDown div.optDropDownItem .optMoreDisabled:hover{background-color:#fff}header div#options .optDropDown div.optDropDownItem .optMoreDisabled svg{fill:#aaa}header div#options .optDropDown div.optDropDownItem .optMoreDisabled p small{color:#ddd}header div#options .optDropDown div.optDropDownItem svg{width:25px;height:25px;margin-right:12px}header div#options .optDropDown div.optDropDownItem p{margin-top:2px}header div#options .optDropDown div.optDropDownItem p small{color:#aaa;margin-left:12px}header div#options .optDropDown .optChainDropdown{position:absolute;width:220px;margin-left:-240px;top:-8px;padding:8px 0;background-color:#fff;box-shadow:2px 2px 8px rgba(0,0,0,.1);flex-direction:column;display:none}main{position:absolute;width:100%;height:100%;top:0;padding-top:50px;box-sizing:border-box}main #errorReporting{position:fixed;right:0;z-index:1}main #errorReporting .errorItem{position:relative;max-width:400px;padding:10px 35px;margin:10px 18px;background-color:rgba(255,68,68,.8);box-shadow:-2px 2px 8px rgba(0,0,0,.1);display:flex;justify-content:center}main #errorReporting .errorItem svg{width:30px;height:30px;fill:#fff}main #errorReporting .errorItem p{color:#fff;font-size:13pt;padding:5px 12px}main #shadow{position:fixed;width:100%;height:100%;background-color:rgba(0,0,0,.1);display:none;z-index:1}main #mainCenter{position:relative;width:100%;height:100%;display:flex}main #mainCenter aside{position:relative;width:320px;margin-left:0;height:100%;background-color:#8eacbc;display:flex;flex-direction:column;transition:margin-left .4s}main #mainCenter aside #asideFavorites{position:relative;width:100%;height:auto;max-height:190px;box-shadow:-2px 2px 4px rgba(120,144,156,.4)}main #mainCenter aside #asideFavorites #favTitle{justify-content:space-between}main #mainCenter aside #asideFavorites #favTitle div{display:flex;flex-direction:row}main #mainCenter aside #asideFavorites #favTitle #favCount{padding:0 15px}main #mainCenter aside #asideFavorites #asideFavBody{padding:4px 0 8px;overflow:auto;max-height:143px}main #mainCenter aside #asideFavorites #asideFavBody .favFolder{padding:3px 10px;box-sizing:border-box;cursor:pointer}main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover{background-color:#fff}main #mainCenter aside #asideFavorites #asideFavBody .favFolder small{font-size:10pt;font-weight:300;font-style:italic;margin-left:12px;color:#444}main #mainCenter aside #asideTree{position:relative;width:100%;height:auto}main #mainCenter aside .asideTitle{position:relative;width:100%;height:30px;margin-top:8px;display:flex;flex-direction:row;cursor:default}main #mainCenter aside .asideTitle svg{width:25px;height:25px;fill:#222;margin:2px 8px}main #mainCenter aside .asideTitle p{margin:5px 0}main #mainCenter section{position:relative;width:100%;height:100%;overflow:auto}main #mainCenter section #itemArea{position:relative;width:100%;height:auto;display:flex;flex-wrap:wrap;color:#34515f}main #mainCenter section #itemArea #emptyFolder{padding:25px 50px}main #mainCenter section #itemArea .item{position:relative;padding:0 12px;overflow:hidden;box-sizing:border-box;box-shadow:2px 2px 8px rgba(0,0,0,.1);display:flex}main #mainCenter section #itemArea .item:hover{background-color:rgba(0,0,0,.1)}main #mainCenter section #itemArea .itemHidden{opacity:.4}main #mainCenter section #itemArea .itemActive{background-color:rgba(0,0,0,.1)}main #mainCenter section #itemArea .itemMosaic{width:16.6666666667%;height:60px}main #mainCenter section #itemArea .itemMosaic .itemLogo{position:relative;width:60px;height:100%;padding:0;display:flex;justify-content:center;align-items:center}main #mainCenter section #itemArea .itemMosaic .itemLogo img,main #mainCenter section #itemArea .itemMosaic .itemLogo svg{height:42px}main #mainCenter section #itemArea .itemMosaic .itemText{position:relative;width:100%;height:100%;display:flex;align-items:center;margin-left:12px}main #mainCenter section #itemArea .itemMosaic .itemText p{font-size:13pt;margin:8px 0;word-wrap:break-word;cursor:default}main #mainCenter section #itemArea .itemMosaic .itemText p[split-lines]{white-space:pre-wrap}main #mainCenter section #itemArea .itemMosaic .itemFilesize,main #mainCenter section #itemArea .itemMosaic .itemFiletype{display:none}main #mainCenter section #itemArea .itemList{width:100%;height:60px}main #mainCenter section #itemArea .itemList .itemLogo{position:relative;width:60px;height:60px;margin-left:4px;display:flex;justify-content:center;align-items:center}main #mainCenter section #itemArea .itemList .itemLogo img,main #mainCenter section #itemArea .itemList .itemLogo svg{height:42px}main #mainCenter section #itemArea .itemList .itemText{position:relative;width:100%;height:100%;margin-left:18px;display:flex;align-items:center}main #mainCenter section #itemArea .itemList .itemText p{font-size:13pt;margin:8px 0;word-wrap:break-word;cursor:default}main #mainCenter section #itemArea .itemList .itemText p[split-lines]{white-space:pre-wrap}main #mainCenter section #itemArea .itemList .itemFiletype{position:relative;width:200px;height:100%;display:flex;align-items:center}main #mainCenter section #itemArea .itemList .itemFiletype p{font-size:13pt;margin:8px 0;cursor:default}main #mainCenter section #itemArea .itemList .itemFilesize{position:relative;width:200px;height:100%;margin-right:20%;display:flex;align-items:center}main #mainCenter section #itemArea .itemList .itemFilesize p{font-size:13pt;margin:8px 0;cursor:default}main #mainCenter section #itemArea .itemWall{width:auto;height:auto;flex-direction:column}main #mainCenter section #itemArea .itemWall .itemLogo{position:relative;width:50px;height:50px;padding:9px;display:flex;justify-content:center;margin:0 auto}main #mainCenter section #itemArea .itemWall .itemLogo img,main #mainCenter section #itemArea .itemWall .itemLogo svg{width:50px;height:50px}main #mainCenter section #itemArea .itemWall .itemText{position:relative;width:100%;height:100%;display:flex;align-items:center}main #mainCenter section #itemArea .itemWall .itemText p{font-size:13pt;margin:8px 0;margin:8px auto;word-wrap:break-word;cursor:default}main #mainCenter section #itemArea .itemWall .itemText p[split-lines]{white-space:pre-wrap}main #mainCenter section #itemArea .itemWall .itemFilesize,main #mainCenter section #itemArea .itemWall .itemFiletype{display:none}main #mainCenter section #folderInfo{position:fixed;right:0;bottom:0;font-size:11pt;padding:3px 7px 4px;background-color:rgba(0,0,0,.1)}details{margin:0;color:#444;padding:5px;cursor:default;-webkit-transition:all .1s}details[open]{animation-name:slideDown;animation-duration:.2s;animation-timing-function:ease-in}details:hover{background-color:#fff}details details{border:0;margin-left:12px}details summary p.linkTree{color:#333}summary p.linkTree{text-decoration:none}summary p.linkTree:hover{color:#2196f3}summary p.linkTree:focus{text-decoration:none}details#activo>summary>p.linkTree{color:#2196f3}summary{outline:0}details summary::-webkit-details-marker{display:none}summary::before{position:relative;float:left;content:"+";color:#444;margin-right:0;padding-right:12px;margin-top:-5px;font-size:18pt}summary:hover::before{color:#2196f3}details[open]>summary::before{position:relative;float:left;content:"-";margin-left:0;padding-left:2px;margin-right:0;padding-right:14px;margin-top:-10px;font-size:22pt}@keyframes slideDown{0%{opacity:0;height:0}100%{opacity:1;height:20px}}aside ::selection{background-color:transparent}.spinner{margin:100px auto;width:80px;height:80px;position:relative;text-align:center;-webkit-animation:sk-rotate 2s infinite linear;animation:sk-rotate 2s infinite linear}.dot1,.dot2{width:60%;height:60%;display:inline-block;position:absolute;top:0;background-color:#cfd8dc;border-radius:100%;-webkit-animation:sk-bounce 2s infinite ease-in-out;animation:sk-bounce 2s infinite ease-in-out}.dot2{top:auto;bottom:0;-webkit-animation-delay:-1s;animation-delay:-1s}@-webkit-keyframes sk-rotate{100%{-webkit-transform:rotate(360deg)}}@keyframes sk-rotate{100%{transform:rotate(360deg);-webkit-transform:rotate(360deg)}}@-webkit-keyframes sk-bounce{0%,100%{-webkit-transform:scale(0)}50%{-webkit-transform:scale(1)}}@keyframes sk-bounce{0%,100%{transform:scale(0);-webkit-transform:scale(0)}50%{transform:scale(1);-webkit-transform:scale(1)}}@media screen and (max-width:2100px){main #mainCenter section #itemArea .itemMosaic{width:20%}}@media screen and (max-width:1750px){main #mainCenter section #itemArea .itemMosaic{width:25%}}@media screen and (max-width:1300px){main #mainCenter section #itemArea .itemMosaic{width:33.33333333%}}@media screen and (max-width:1050px){main #mainCenter section #itemArea .itemMosaic{width:50%}}@media screen and (max-width:750px){main #mainCenter section #itemArea .itemMosaic{width:100%}}@media screen and (max-width:420px){main #mainCenter aside{margin-left:-320px}}#dialogBack{position:fixed;width:100%;height:100%;top:0;padding-top:25px;background-color:rgba(0,0,0,.1);align-items:center;display:none}#dialogBack .dialog{position:relative;width:950px;height:520px;margin:0 auto;background-color:#fff;box-shadow:2px 2px 8px rgba(0,0,0,.1);display:none}#dialogBack .dialog .dialogTitleBar{position:relative;width:100%;height:50px;box-shadow:2px 2px 8px rgba(0,0,0,.1);display:flex;justify-content:space-between;z-index:1}#dialogBack .dialog .dialogTitleBar h2{padding:10px 20px;font-weight:300;display:flex}#dialogBack .dialog .dialogTitleBar svg{width:30px;height:30px;fill:#777;padding:10px 20px}#dialogBack .dialog .dialogTitleBar svg:hover{fill:#000}#dialogBack .dialog .dialogBody{position:absolute;width:100%;top:0;height:100%;padding-top:50px;box-sizing:border-box}#dialogBack .dialog .dialogBody .dialogBodyCenter{position:relative;width:100%;height:100%;overflow:auto}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem{position:relative;width:100%;height:auto;padding:16px 24px;box-sizing:border-box}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem:hover{background-color:rgba(0,0,0,.04)}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem:hover input[type=text]{background-color:rgba(0,0,0,0)}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem h3{color:#777;margin-bottom:8px;font-weight:300;cursor:default}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem label,#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem p,#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem span{color:#333}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem label{cursor:pointer}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div{padding:0 8px}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=checkbox],#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=radio]{vertical-align:middle;margin-right:8px}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div button{padding:6px 14px;margin:10px 5px;font-size:12pt;background-color:#ddd;border:0;outline:0;cursor:pointer}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div button:hover{background-color:#ccc}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemGeneral div{margin:6px 0}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemStartUp div form{margin:5px 0}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemStartUp div label{margin:0 10px}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemPriority p{margin:8px 0 5px}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText{width:50%;margin:6px 0}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText .settingsInputEffect{position:relative;width:0%;left:50%;padding:0;border-bottom:2px solid;transition:all .2s}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input{width:100%;color:#333;height:40px;font-size:13pt;padding:0 10px;border:0;outline:0;box-sizing:border-box}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input:hover~.settingsInputEffect{width:100%;left:0;border-color:#ccc}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input:focus~.settingsInputEffect{width:100%;left:0;border-color:#34515f}#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText input[disabled]{color:#999}#dialogBack .dialog .dialogBody .dialogBodyCenter #settingsVersion{position:relative;right:12px;bottom:4px;margin-top:8px;text-align:right;font-size:11pt;color:#777}#dialogBack .dialog #historyBody{position:absolute;width:100%;height:100%;top:0;padding-top:50px;box-sizing:border-box}#dialogBack .dialog #historyBody #historyPaths{position:relative;width:100%;height:100%;overflow:auto}#dialogBack .dialog #historyBody #historyPaths .historyItem{position:relative;width:100%;height:50px;padding:4px 20px;box-sizing:border-box;border-bottom:1px solid #f2f2f2;display:flex}#dialogBack .dialog #historyBody #historyPaths .historyItem p{min-width:130px;padding:12px 40px}#dialogBack .dialog #historyBody #historyPaths .historyItem p:last-child{color:#999}#dialogBack .dialog #historyBody #historyPaths .historyItem svg{position:absolute;right:30px;width:30px;height:30px;fill:#6f6f6f;padding:7px 25px}#dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover{fill:#222}#dialogBack .dialog #historyBody #historyPaths .historyActive{color:#34515f;background-color:rgba(0,0,0,.06)}@media screen and (max-width:1080px){#dialogBack .dialog{width:92%}}@media screen and (max-width:800px){#dialogBack .dialog{width:100%}}@media screen and (max-height:620px){#dialogBack{padding-top:50px}#dialogBack .dialog{height:100%}}body.darkMode .screen{background-color:#212121;color:#fff}body.darkMode header{background-color:#484848}body.darkMode main #mainCenter aside{background:#303030;color:#fff}body.darkMode #mainCenter aside .asideTitle svg{fill:#fff}body.darkMode details summary p.linkTree{color:#fff}body.darkMode summary::before{color:#fff}body.darkMode header div#options .optDropDown{color:#000}body.darkMode #dialogBack .dialog{background-color:#444}body.darkMode main #mainCenter section #itemArea{color:#9eb9c6}body.darkMode main #mainCenter section #itemArea .item:hover{background-color:rgba(255,255,255,.06)}body.darkMode main #mainCenter section #folderInfo{background-color:rgba(255,255,255,.06)}body.darkMode main #mainCenter aside #asideFavorites{box-shadow:-2px 2px 4px rgba(120,120,120,.2)}body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small{color:#bbb}body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover{color:#222}body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small{color:#777}body.darkMode #dialogBack .dialog .dialogTitleBar{background-color:#545454}body.darkMode #dialogBack .dialog .dialogTitleBar svg{fill:#888}body.darkMode #dialogBack .dialog .dialogTitleBar svg:hover{fill:#bbb}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem h3{color:#fff}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem label,body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem p,body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem span{color:#ddd}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover input[type=text]{background-color:#606060}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input{color:#eee;background-color:#606060}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:hover~.settingsInputEffect{border-color:#bbb}body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:focus~.settingsInputEffect{border-color:#fff}body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem{border-bottom:1px solid #5f5f5f}body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyActive{color:#2196f3}body.darkMode details:hover summary p.linkTree{color:#000}body.darkMode details:hover summary::before{color:#444}body.darkMode main #mainCenter section #itemArea .item{box-shadow:2px 2px 8px rgba(0,0,0,.15)}body.darkMode header div#options .optDropDown{color:#fff;background-color:#555}body.darkMode header div#options .optDropDown div.optDropDownItem svg{fill:#fff}body.darkMode header div#options .optDropDown div.optDropDownItem:hover{background-color:rgba(255,255,255,.1)}body.darkMode header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown{background-color:#606060}body.darkMode #context{background-color:#555;box-shadow:2px 2px 7px #333}body.darkMode #context ul li{color:#f0f0f0}body.darkMode #context ul li:hover{background-color:#9eb9c6}#context{position:absolute;width:180px;height:auto;background-color:#fff;box-shadow:2px 2px 7px #ccc;overflow:hidden;opacity:.8;cursor:default;display:none;z-index:15;-webkit-transition:left .5s,top .5s,opacity .4s;-moz-transition:left .5s,top .5s,opacity .4s;-o-transition:left .5s,top .5s,opacity .4s;-ms-transition:left .5s,top .5s,opacity .4s}#context:hover{opacity:1}#context ul{position:relative;width:100%;height:auto;margin:5px 0;padding:0;list-style-type:none}#context ul li{position:relative;width:100%;height:auto;color:#282828;font-size:12pt;border-radius:50%;padding:12px 0;text-align:center;box-sizing:border-box}#context ul li:hover{border-radius:0;color:#fff;background-color:#2177ff}#context ul li.disabled{color:rgba(40,40,40,.5)}#context ul li.disabled:hover{color:#fff;background-color:#b4b4b4}::-webkit-scrollbar{width:10px;height:10px}::-webkit-scrollbar-thumb{background:#aaa}::-webkit-scrollbar-track{background:rgba(0,0,0,.05)}
     </style>
+    <script type="text/javascript">var langs = <?php echo $langJson; ?>;</script>
     <script type="text/javascript" src="js/jquery-3.1.1.min.js">
     </script>
     <script type="text/javascript">
     // global variables
-    var version = '3.2.0';
+    var version = '3.2.1';
     var allowedAccess = false; // indica si el usuario esta autenticado
     var path = './'; // ruta actual del eplorador
     var favorites = []; // almacena las rutas favoritas
@@ -261,6 +272,7 @@ if (isset($_GET['token'])) {
     var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
     var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
     var defaultSettings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'dbpath':'http://localhost/phpmyadmin/','firstLoad':false}; // configuracion por defecto de la aplicacion
+    var lang = getCookie('elcano-lang');
 
     if (localStorage.getItem('elcano-settings') == null) {
         var settings = defaultSettings;
@@ -356,10 +368,10 @@ if (isset($_GET['token'])) {
         });
 
         if (settings.tree) { // set startup state of the aside tree
-            $('#optMoreDesplExplorer p').html('Ocultar Explorador<small>alt+x</small>');
+            $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreHideExpl+'<small>alt+x</small>');
         } else {
             $('aside').css('margin-left','-320px');
-            $('#optMoreDesplExplorer p').html('Mostrar Explorador<small>alt+x</small>');
+            $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreShowExpl+'<small>alt+x</small>');
         }
 
         $('#shadow').on('click', function() {
@@ -389,7 +401,7 @@ if (isset($_GET['token'])) {
 
         var tokenCheck = Math.random();
 
-        $.get( "", { user: authUser,pass: authPass,token: tokenCheck } )
+        $.get( "auth.php", { user: authUser,pass: authPass,token: tokenCheck } )
             .done(function( data ) {
                 //console.log(data);
                 var response = JSON.parse(data);
@@ -401,6 +413,7 @@ if (isset($_GET['token'])) {
                         enableExplorer();
                     } else {
                         disableExplorer();
+                        $('#signInError').html('<p>'+response.message+'</p>');
                     }
                 } else {
                     disableExplorer();
@@ -434,6 +447,7 @@ if (isset($_GET['token'])) {
         $('.screen').hide();
         $('#blocked').show();
         $('#signInUser,#signInPass').val('');
+        $('#signInError').html('');
         $('#signInUser').focus();
     }
 
@@ -458,7 +472,7 @@ if (isset($_GET['token'])) {
                 $('#optNotFavorite').show();
             }
 
-            $.post( "", { ruta: url, listDir: true } )
+            $.post( "listDirectory.php", { ruta: url, listDir: true } )
                 .done(function( data ) {
                     if (settings.debug){console.log(data)};
                     var response = JSON.parse(data);
@@ -476,7 +490,7 @@ if (isset($_GET['token'])) {
                         var directories = 0;
 
                         if (response.dir.length == 0 && response.files.length == 0) {
-                            $('#itemArea').html('<div id="emptyFolder"><p>Esta carpeta está vacia</p></div>');
+                            $('#itemArea').html('<div id="emptyFolder"><p>'+langs[lang].section.noResults+'</p></div>');
                         }
                         for (i in response.dir) {
                             if (settings.ignoreFiles.indexOf(response.dir[i].fileName) == -1) {
@@ -504,7 +518,7 @@ if (isset($_GET['token'])) {
 
                         setLaunchOptions(response);
 
-                        $('#folderInfo p').text(directories+' carpetas y '+files+' archivos');
+                        $('#folderInfo p').text(directories+' '+langs[lang].section.sectionFolder+', '+files+' '+langs[lang].section.sectionFiles);
                     }
                     settings.firstLoad = false;
             });
@@ -777,12 +791,12 @@ if (isset($_GET['token'])) {
         if (settings.tree) {
             $('aside').css('margin-left','-320px');
             settings.tree = false;
-            $('#optMoreDesplExplorer p').html('Mostrar Explorador<small>alt+x</small>');
+            $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreShowExpl+'<small>alt+x</small>');
             localStorage.setItem('elcano-settings',JSON.stringify(settings));
         } else {
             $('aside').css('margin-left','0px');
             settings.tree = true;
-            $('#optMoreDesplExplorer p').html('Ocultar Explorador<small>alt+x</small>');
+            $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreHideExpl+'<small>alt+x</small>');
             localStorage.setItem('elcano-settings',JSON.stringify(settings));
         }
         $('#optMoreDespl').slideUp(200);
@@ -792,7 +806,7 @@ if (isset($_GET['token'])) {
 
     function loadTree() { // carga los datos del árbol de directorios
         if (allowedAccess) {
-            $.post( "", { ruta: path, dirTree: true } )
+            $.post( "directoryTree.php", { ruta: path, dirTree: true } )
                 .done(function( data ) {
                     $('#asideTreeBody').html(data);
                     if (settings.debug){console.log("tree loaded")};
@@ -881,7 +895,7 @@ if (isset($_GET['token'])) {
         for (i in timeline) {
             var folderName = timeline[i].path.split('/');
             if (folderName.length==2) {
-                folderName2 = 'Pagina de Inicio';
+                folderName2 = langs[lang].history.historyHome;
             } else {
                 folderName2 = folderName[folderName.length-2];
             }
@@ -1488,10 +1502,10 @@ if (isset($_GET['token'])) {
             if (target.parents('.item').length) { // detecta si elemento sobre el que se hace click es hijo de .item
                 $('#context>ul').html('');
                 if (target.parents('.itemDir').length) {
-                    $('#context>ul').append('<li id="contextExplore" onclick="changePath('+target.closest('.item').attr('onclick')+')">Explorar</li>'); // CLOSEST: obtener el primer elemento padre con una clase determinada
-                    $('#context>ul').append('<li id="contextAddFav" onclick="addFavorite('+target.closest('.item').attr('onclick').substring(target.closest('.item').attr('onclick').indexOf('(')+1, target.closest('.item').attr('onclick').indexOf(')'))+')">Agregar a favoritos</li>');
+                    $('#context>ul').append('<li id="contextExplore" onclick="changePath('+target.closest('.item').attr('onclick')+')">'+langs[lang].context.contextExplore+'</li>'); // CLOSEST: obtener el primer elemento padre con una clase determinada
+                    $('#context>ul').append('<li id="contextAddFav" onclick="addFavorite('+target.closest('.item').attr('onclick').substring(target.closest('.item').attr('onclick').indexOf('(')+1, target.closest('.item').attr('onclick').indexOf(')'))+')">'+langs[lang].context.contextFavorites+'</li>');
                 } else {
-                    $('#context>ul').append('<li id="contextOpen" onclick="readFich('+target.closest('.item').attr('onclick')+')">Abrir</li>');
+                    $('#context>ul').append('<li id="contextOpen" onclick="readFich('+target.closest('.item').attr('onclick')+')">'+langs[lang].context.contextOpen+'</li>');
                 }
 
                 menu.css({'display':'block', 'left':e.pageX, 'top':e.pageY});
@@ -1546,23 +1560,23 @@ if (isset($_GET['token'])) {
         <div id="blockedBack">
             <div id="signIn">
                 <div id="signInTitle">
-                    <h1>Inicio de Sesión</h1>
+                    <h1><?php echo $langTxt[$lang]['login']['title']; ?></h1>
                 </div>
                 <div id="signInBody">
                     <div id="signInError"></div>
                     <form id="signInForm">
                         <div class="signInBodyItem">
-                            <input id="signInUser" type="text" placeholder="usuario" autocomplete="off" spellcheck="false" autofocus />
+                            <input id="signInUser" type="text" placeholder="<?php echo $langTxt[$lang]['login']['user']; ?>" autocomplete="off" spellcheck="false" autofocus />
                             <svg class="signInIcons" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v1c0 .55.45 1 1 1h14c.55 0 1-.45 1-1v-1c0-2.66-5.33-4-8-4z"/></svg>
                             <div class="signInInputEffect"></div>
                         </div>
                         <div class="signInBodyItem">
-                            <input id="signInPass" type="password" placeholder="password" />
+                            <input id="signInPass" type="password" placeholder="<?php echo $langTxt[$lang]['login']['pass']; ?>" />
                             <svg class="signInIcons" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.65 10C11.7 7.31 8.9 5.5 5.77 6.12c-2.29.46-4.15 2.29-4.63 4.58C.32 14.57 3.26 18 7 18c2.61 0 4.83-1.67 5.65-4H17v2c0 1.1.9 2 2 2s2-.9 2-2v-2c1.1 0 2-.9 2-2s-.9-2-2-2h-8.35zM7 14c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
                             <div class="signInInputEffect"></div>
                         </div>
                         <div class="signInBodyItem">
-                            <input id="signInSubmit" type="submit" name="login" value="Continuar" />
+                            <input id="signInSubmit" type="submit" name="login" value="<?php echo $langTxt[$lang]['login']['submit']; ?>" />
                         </div>
                     </form>
                 </div>
@@ -1585,69 +1599,69 @@ if (isset($_GET['token'])) {
                 <div class="navItem"><p>folder4</p></div>-->
             </nav>
             <div id="options">
-                <div class="option" id="optMore" title="Más opciones">
+                <div class="option" id="optMore" title="<?php echo $langTxt[$lang]['header']['headMore']; ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M6 10c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm12 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm-6 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
                     <div class="optionArea"></div>
                 </div>
                 <div class="optDropDown" id="optMoreDespl">
                     <div class="optDropDownItem" id="optMoreHistory">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M13 3c-4.97 0-9 4.03-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42C8.27 19.99 10.51 21 13 21c4.97 0 9-4.03 9-9s-4.03-9-9-9zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"/></svg>
-                        <p>Historial<small>alt+h</small></p>
+                        <p><?php echo $langTxt[$lang]['header']['headMoreHistory']; ?><small>alt+h</small></p>
                         <div class="optChainDropdown">
                             <div class="optDropDownItem" id="optMorePrevPath">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12.5 8c-2.65 0-5.05.99-6.9 2.6L3.71 8.71C3.08 8.08 2 8.52 2 9.41V15c0 .55.45 1 1 1h5.59c.89 0 1.34-1.08.71-1.71l-1.91-1.91c1.39-1.16 3.16-1.88 5.12-1.88 3.16 0 5.89 1.84 7.19 4.5.27.56.91.84 1.5.64.71-.23 1.07-1.04.75-1.72C20.23 10.42 16.65 8 12.5 8z"/></svg>
-                                <p>Atrás<small>alt+flch izq</small></p>
+                                <p><?php echo $langTxt[$lang]['header']['headMoreHistoryPrev']; ?><small>alt+flch izq</small></p>
                             </div>
                             <div class="optDropDownItem" id="optMoreNextPath">
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M18.4 10.6C16.55 8.99 14.15 8 11.5 8c-4.65 0-8.58 3.03-9.96 7.22L3.9 16c1.05-3.19 4.05-5.5 7.6-5.5 1.95 0 3.73.72 5.12 1.88L13 16h9V7l-3.6 3.6z"/></svg>
-                                <p>Adelante<small>alt+flch der</small></p>
+                                <p><?php echo $langTxt[$lang]['header']['headMoreHistoryNext']; ?><small>alt+flch der</small></p>
                             </div>
                         </div>
                     </div>
                     <div class="optDropDownItem" id="optMoreDesplExplorer" onclick="showTree()">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M12 10.9c-.61 0-1.1.49-1.1 1.1s.49 1.1 1.1 1.1c.61 0 1.1-.49 1.1-1.1s-.49-1.1-1.1-1.1zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm2.19 12.19L6 18l3.81-8.19L18 6l-3.81 8.19z"/></svg>
-                        <p>Mostrar Explorador<small>alt+x</small></p>
+                        <p><?php echo $langTxt[$lang]['header']['headMoreShowExpl']; ?><small>alt+x</small></p>
                     </div>
                     <div class="optDropDownItem" id="optMoreSettings" onclick="showSettings(true)">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z"/></svg>
-                        <p>Configuración<small>alt+s</small></p>
+                        <p><?php echo $langTxt[$lang]['header']['headMoreSettings']; ?><small>alt+s</small></p>
                     </div>
                     <div class="optDropDownItem" id="optMoreLogout" onclick="logout()">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M10.79 16.29c.39.39 1.02.39 1.41 0l3.59-3.59c.39-.39.39-1.02 0-1.41L12.2 7.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L12.67 11H4c-.55 0-1 .45-1 1s.45 1 1 1h8.67l-1.88 1.88c-.39.39-.38 1.03 0 1.41zM19 3H5c-1.11 0-2 .9-2 2v3c0 .55.45 1 1 1s1-.45 1-1V6c0-.55.45-1 1-1h12c.55 0 1 .45 1 1v12c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-2c0-.55-.45-1-1-1s-1 .45-1 1v3c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2z"/></svg>
-                        <p>Cerrar Sesión</p>
+                        <p><?php echo $langTxt[$lang]['header']['headMoreLogout']; ?></p>
                     </div>
                 </div>
-                <div class="option" id="optView" title="Cambiar la vista">
+                <div class="option" id="optView" title="<?php echo $langTxt[$lang]['header']['headView']; ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 11h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm0 7h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm6 0h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm6 0h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm-6-7h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm5-5v4c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1z"/></svg>
                     <div class="optionArea"></div>
                 </div>
                 <div class="optDropDown" id="optViewDespl">
                     <div class="optDropDownItem" id="optViewDesplMosaic" onclick="changeView('Mosaic')">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 11h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm0 7h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1H5c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm6 0h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm6 0h3c.55 0 1-.45 1-1v-4c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm-6-7h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1v4c0 .55.45 1 1 1zm5-5v4c0 .55.45 1 1 1h3c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1h-3c-.55 0-1 .45-1 1z"/></svg>
-                        <p>Mosaico</p>
+                        <p><?php echo $langTxt[$lang]['header']['headViewMosaic']; ?></p>
                     </div>
                     <div class="optDropDownItem" id="optViewDesplList" onclick="changeView('List')">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none" opacity=".87"/><path d="M4 14h2c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1zm0 5h2c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1zM4 9h2c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1zm5 5h10c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1zm0 5h10c.55 0 1-.45 1-1v-2c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1v2c0 .55.45 1 1 1zM8 6v2c0 .55.45 1 1 1h10c.55 0 1-.45 1-1V6c0-.55-.45-1-1-1H9c-.55 0-1 .45-1 1z"/></svg>
-                        <p>Lista</p>
+                        <p><?php echo $langTxt[$lang]['header']['headViewList']; ?></p>
                     </div>
                     <div class="optDropDownItem" id="optViewDesplWall" onclick="changeView('Wall')">
                         <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M5 15h14c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1 .45-1 1s.45 1 1 1zm0 4h14c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1 .45-1 1s.45 1 1 1zm0-8h14c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1 .45-1 1s.45 1 1 1zM4 6c0 .55.45 1 1 1h14c.55 0 1-.45 1-1s-.45-1-1-1H5c-.55 0-1 .45-1 1z"/></svg>
-                        <p>Muro</p>
+                        <p><?php echo $langTxt[$lang]['header']['headViewWall']; ?></p>
                     </div>
                 </div>
-                <div class="option" id="optFavorite" title="Quitar de Favoritos">
+                <div class="option" id="optFavorite" title="<?php echo $langTxt[$lang]['header']['headNotFavorite']; ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M13.35 20.13c-.76.69-1.93.69-2.69-.01l-.11-.1C5.3 15.27 1.87 12.16 2 8.28c.06-1.7.93-3.33 2.34-4.29 2.64-1.8 5.9-.96 7.66 1.1 1.76-2.06 5.02-2.91 7.66-1.1 1.41.96 2.28 2.59 2.34 4.29.14 3.88-3.3 6.99-8.55 11.76l-.1.09z"/></svg>
                     <div class="optionArea"></div>
                 </div>
-                <div class="option" id="optNotFavorite" title="Añadir a Favoritos">
+                <div class="option" id="optNotFavorite" title="<?php echo $langTxt[$lang]['header']['headFavorite']; ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.66 3.99c-2.64-1.8-5.9-.96-7.66 1.1-1.76-2.06-5.02-2.91-7.66-1.1-1.4.96-2.28 2.58-2.34 4.29-.14 3.88 3.3 6.99 8.55 11.76l.1.09c.76.69 1.93.69 2.69-.01l.11-.1c5.25-4.76 8.68-7.87 8.55-11.75-.06-1.7-.94-3.32-2.34-4.28zM12.1 18.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
                     <div class="optionArea"></div>
                 </div>
-                <div class="option" id="optDatabase" title="Acceder a la base de datos">
+                <div class="option" id="optDatabase" title="<?php echo $langTxt[$lang]['header']['headDataBase']; ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19 13H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-4c0-1.1-.9-2-2-2zM7 19c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM19 3H5c-1.1 0-2 .9-2 2v4c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM7 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
                     <div class="optionArea"></div>
                 </div>
-                <div class="option" id="optLaunch" title="Ejecutar el índice del directorio">
+                <div class="option" id="optLaunch" title="<?php echo $langTxt[$lang]['header']['headStartUp']; ?>">
                     <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18 19H6c-.55 0-1-.45-1-1V6c0-.55.45-1 1-1h5c.55 0 1-.45 1-1s-.45-1-1-1H5c-1.11 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2v-6c0-.55-.45-1-1-1s-1 .45-1 1v5c0 .55-.45 1-1 1zM14 4c0 .55.45 1 1 1h2.59l-9.13 9.13c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L19 6.41V9c0 .55.45 1 1 1s1-.45 1-1V3h-6c-.55 0-1 .45-1 1z"/></svg>
                     <div class="optionArea"></div>
                 </div>
@@ -1662,7 +1676,7 @@ if (isset($_GET['token'])) {
                         <div id="favTitle" class="asideTitle">
                             <div>
                                 <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M19.66 3.99c-2.64-1.8-5.9-.96-7.66 1.1-1.76-2.06-5.02-2.91-7.66-1.1-1.4.96-2.28 2.58-2.34 4.29-.14 3.88 3.3 6.99 8.55 11.76l.1.09c.76.69 1.93.69 2.69-.01l.11-.1c5.25-4.76 8.68-7.87 8.55-11.75-.06-1.7-.94-3.32-2.34-4.28zM12.1 18.55l-.1.1-.1-.1C7.14 14.24 4 11.39 4 8.5 4 6.5 5.5 5 7.5 5c1.54 0 3.04.99 3.57 2.36h1.87C13.46 5.99 14.96 5 16.5 5c2 0 3.5 1.5 3.5 3.5 0 2.89-3.14 5.74-7.9 10.05z"/></svg>
-                                <p>Favoritos</p>
+                                <p><?php echo $langTxt[$lang]['aside']['asideFav']; ?></p>
                             </div>
                             <p id="favCount">0</p>
                         </div>
@@ -1671,7 +1685,7 @@ if (isset($_GET['token'])) {
                     <div id="asideTree">
                         <div class="asideTitle">
                             <svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0z" fill="none"/><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
-                            <p>Directorios</p>
+                            <p><?php echo $langTxt[$lang]['aside']['asideDir']; ?></p>
                         </div>
                         <div class="asideBody" id="asideTreeBody">
                             <div class="spinner">
@@ -1701,74 +1715,74 @@ if (isset($_GET['token'])) {
         <div id="dialogBack">
             <div id="settings" class="dialog">
                 <div class="dialogTitleBar">
-                    <h2>Configuración</h2>
+                    <h2><?php echo $langTxt[$lang]['header']['headMoreSettings']; ?></h2>
                     <svg onclick="showSettings(false)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </div>
                 <div class="dialogBody">
                     <div class="dialogBodyCenter">
                         <div class="settingsItem" id="settingsItemGeneral">
-                            <h3>General</h3>
-                            <div><label><input id="darkModeCheckbox" type="checkbox" />Activar el modo oscuro</label></div>
-                            <div><label><input id="showHiddenCheckbox" type="checkbox" />Mostrar archivos ocultos</label></div>
-                            <div><label><input id="showExtensionCheckbox" type="checkbox" />Mostrar extensión de los archivos</label></div>
+                            <h3><?php echo $langTxt[$lang]['settings']['general']; ?></h3>
+                            <div><label><input id="darkModeCheckbox" type="checkbox" /><?php echo $langTxt[$lang]['settings']['darkMode']; ?></label></div>
+                            <div><label><input id="showHiddenCheckbox" type="checkbox" /><?php echo $langTxt[$lang]['settings']['showHiddenFiles']; ?></label></div>
+                            <div><label><input id="showExtensionCheckbox" type="checkbox" /><?php echo $langTxt[$lang]['settings']['showfileExtensions']; ?></label></div>
                         </div>
                         <div class="settingsItem" id="settingsItemStartUp">
-                            <h3>Estado Inicial</h3>
+                            <h3><?php echo $langTxt[$lang]['settings']['startUp']; ?></h3>
                             <div>
-                                <p>Vista activa por defecto</p>
+                                <p><?php echo $langTxt[$lang]['settings']['startUpDescrip']; ?></p>
                                 <form>
-                                    <label><input class="defaultView" id="defaultViewMosaic" type="radio" name="viewOption" value="Mosaic" />Mosaico</label>
-                                    <label><input class="defaultView" id="defaultViewList" type="radio" name="viewOption" value="List" />Lista</label>
-                                    <label><input class="defaultView" id="defaultViewWall" type="radio" name="viewOption" value="Icons" />Muro</label>
-                                    <label><input class="defaultView" id="defaultViewLast" type="radio" name="viewOption" value="last" />Último activo</label>
+                                    <label><input class="defaultView" id="defaultViewMosaic" type="radio" name="viewOption" value="Mosaic" /><?php echo $langTxt[$lang]['header']['headViewMosaic']; ?></label>
+                                    <label><input class="defaultView" id="defaultViewList" type="radio" name="viewOption" value="List" /><?php echo $langTxt[$lang]['header']['headViewList']; ?></label>
+                                    <label><input class="defaultView" id="defaultViewWall" type="radio" name="viewOption" value="Icons" /><?php echo $langTxt[$lang]['header']['headViewWall']; ?></label>
+                                    <label><input class="defaultView" id="defaultViewLast" type="radio" name="viewOption" value="last" /><?php echo $langTxt[$lang]['settings']['startUpLast']; ?></label>
                                 </form>
                             </div>
                         </div>
                         <div class="settingsItem" id="settingsItemIgnore">
-                            <h3>Omitir archivos</h3>
+                            <h3><?php echo $langTxt[$lang]['settings']['hideFiles']; ?></h3>
                             <div>
-                                <p>nombres de archivos y extensiones separados por comas</p>
+                                <p><?php echo $langTxt[$lang]['settings']['hideFilesDescrip']; ?></p>
                                 <div class="settingsInputText">
-                                    <input id="ignoreFilesInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="ficheros ignorados" />
+                                    <input id="ignoreFilesInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="<?php echo $langTxt[$lang]['settings']['hideFilesPlaceholder'] ?>" />
                                     <div class="settingsInputEffect"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="settingsItem" id="settingsItemPriority">
-                            <h3>Prioridad de Índices</h3>
+                            <h3><?php echo $langTxt[$lang]['settings']['priority']; ?></h3>
                             <div>
-                                <div><label><input id="systemIndexPriority" type="checkbox" />Índice predeterminado del sistema</label></div>
-                                <p>Lista de prioridad de ejecución para los directorios</p>
+                                <div><label><input id="systemIndexPriority" type="checkbox" /><?php echo $langTxt[$lang]['settings']['defaultPriority']; ?></label></div>
+                                <p><?php echo $langTxt[$lang]['settings']['priorityDescrip']; ?></p>
                                 <div class="settingsInputText">
-                                    <input id="indexPriorityInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="orden de prioridad de archivos" />
+                                    <input id="indexPriorityInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="<?php echo $langTxt[$lang]['settings']['priorityPlaceholder'] ?>" />
                                     <div class="settingsInputEffect"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="settingsItem" id="settingsItemDatabase">
-                            <h3>Base de datos</h3>
+                            <h3><?php echo $langTxt[$lang]['settings']['database']; ?></h3>
                             <div>
-                                <p>Ruta de acceso a la base de datos</p>
+                                <p><?php echo $langTxt[$lang]['settings']['databaseDescrip']; ?></p>
                                 <div class="settingsInputText">
-                                    <input id="databasePathInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="ruta de la base de datos" />
+                                    <input id="databasePathInput" type="text" name="" value="" spellcheck="false" autocomplete="off" placeholder="<?php echo $langTxt[$lang]['settings']['databasePlaceholder'] ?>" />
                                     <div class="settingsInputEffect"></div>
                                 </div>
                             </div>
                         </div>
                         <div class="settingsItem" id="settingsItemReset">
-                            <h3>Configuración predeterminada</h3>
+                            <h3><?php echo $langTxt[$lang]['settings']['default']; ?></h3>
                             <div>
-                                <button id="resetSettingsButton">Reestablecer</button>
-                                <span>Volver a la configuración por defecto</span>
+                                <button id="resetSettingsButton"><?php echo $langTxt[$lang]['settings']['defaultButton']; ?></button>
+                                <span><?php echo $langTxt[$lang]['settings']['defaultDescrip']; ?></span>
                             </div>
                         </div>
-                        <p id="settingsVersion">beta v3.1.7</p>
+                        <p id="settingsVersion"></p>
                     </div>
                 </div>
             </div>
             <div id="history" class="dialog">
                 <div class="dialogTitleBar">
-                    <h2>Historial</h2>
+                    <h2><?php echo $langTxt[$lang]['header']['headMoreHistory']; ?></h2>
                     <svg onclick="showHistory(false)" xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 0 24 24" width="24"><path d="M0 0h24v24H0V0z" fill="none"/><path d="M18.3 5.71c-.39-.39-1.02-.39-1.41 0L12 10.59 7.11 5.7c-.39-.39-1.02-.39-1.41 0-.39.39-.39 1.02 0 1.41L10.59 12 5.7 16.89c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0L12 13.41l4.89 4.89c.39.39 1.02.39 1.41 0 .39-.39.39-1.02 0-1.41L13.41 12l4.89-4.89c.38-.38.38-1.02 0-1.4z"/></svg>
                 </div>
                 <div class="dialogBody" id="historyBody">
