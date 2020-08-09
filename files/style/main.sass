@@ -1,0 +1,1189 @@
+$primaryColor: #34515f
+
+*
+	padding: 0px
+	margin: 0px
+	font-family: 'Roboto', sans-serif
+
+
+body
+	overflow: overlay
+
+.screen
+	position: fixed
+	width: 100%
+	height: 100%
+	background-color: #fff
+	display: none
+
+#startUp
+	display: block
+
+#blocked
+	display: none
+	z-index: 15
+
+	#blockedBack
+		position: absolute
+		width: 100%
+		height: 100%
+		display: flex
+		justify-content: center
+		align-items: center
+
+		#signIn
+			position: relative
+			width: 340px
+			height: auto
+			box-shadow: 2px 2px 8px rgba(#000,.1)
+
+			#signInTitle
+				position: relative
+				width: 100%
+				height: auto
+				padding: 25px 0px
+				text-align: center
+				color: #fff
+				background-color: $primaryColor
+
+				h1
+					font-weight: 300
+
+			#signInBody
+				position: relative
+				width: 100%
+				height: auto
+
+				#signInError
+					position: relative
+					width: 100%
+					min-height: 30px
+					padding: 15px 0px
+					text-align: center
+					color: #f00
+
+				.signInBodyItem
+					position: relative
+					margin: 0px 40px 28px
+
+					#signInUser, #signInPass
+						width: 100%
+						height: 40px
+						font-size: 13pt
+						padding-left: 40px
+						border: 0px
+						outline: 0
+						box-sizing: border-box
+
+						&:hover ~ .signInInputEffect
+							width: 100%
+							left: 0%
+							border-color: #ccc
+
+						&:focus ~ .signInInputEffect
+							width: 100%
+							left: 0%
+							border-color: $primaryColor
+
+						&:focus ~ .signInIcons
+							fill: #444
+
+					.signInIcons
+						position: absolute
+						width: 25px
+						height: 25px
+						left: 6px
+						top: 8px
+						fill: #777
+
+					.signInInputEffect
+						position: absolute
+						width: 0%
+						left: 50%
+						bottom: 0px
+						border-bottom: 2px solid
+						transition: all .2s
+
+					#signInSubmit
+						width: 100%
+						height: 50px
+						color: $primaryColor
+						font-size: 13pt
+						margin-top: 15px
+						text-align: center
+						border: 0px
+						outline: 0
+						background-color: #fff
+
+						&:hover, &:focus
+							background-color: #f4f4f4
+		
+		#loginLang
+			position: absolute
+			right: 15px
+			bottom: 12px
+
+			select
+				width: 150px
+				height: 32px
+				color: #777
+				outline: 0
+				font-size: 13pt
+				padding: 0px 10px
+				border: 0px solid #ccc
+
+header
+	position: relative
+	width: 100%
+	height: 50px
+	top: 0px
+	background-color: $primaryColor
+	display: flex
+	justify-content: space-between
+	z-index: 10
+	transition: background-color .4s
+
+	div#headerTitle
+		position: relative
+		width: auto
+		height: 100%
+		display: flex
+		padding-right: 50px
+
+		#headerLogo
+			position: relative
+			width: 40px
+			height: 40px
+			top: 5px
+			left: 20px
+
+		h1
+			color: #fff
+			padding: 4px 0px
+			margin-left: 30px
+			cursor: default
+			font-weight: 300
+
+	nav
+		position: relative
+		width: 100%
+		height: 100%
+		display: flex
+
+		.navItem
+			position: relative
+			height: 34px
+			color: #fff
+			margin: 8px 0px
+			padding: 8px 10px
+			box-sizing: border-box
+			cursor: pointer
+
+			&:hover
+				background-color: rgba(#fff, .1)
+
+			.navHomeItem
+				position: relative
+				display: flex
+
+				svg
+					width: 25px
+					height: 25px
+					margin-top: -3px
+					fill: #fff
+
+				i
+					margin-top: 0px
+					margin-left: 5px
+					font-style: normal
+
+		.navSeparator
+			position: relative
+			margin: 8px 0px
+			padding: 8px 6px
+			font-size: 11pt
+			color: #999
+			cursor: default
+
+	div#options
+		position: relative
+		width: 200px
+		height: 100%
+		padding-left: 50px
+		padding-right: 20px
+		display: flex
+		flex-direction: row-reverse
+
+		.option
+			position: relative
+			width: 50px
+			height: 50px
+
+			.optionArea
+				position: absolute
+				width: 0%
+				height: 0%
+				left: 50%
+				top: 50%
+				border-radius: 50%
+				background-color: rgba(#fff,.1)
+				transition: all .2s
+
+			svg
+				position: relative
+				width: 34px
+				height: 34px
+				padding: 8px 8px
+				fill: #fff
+				z-index: 1
+
+				&:hover ~ .optionArea
+					width: 100%
+					height: 100%
+					left: 0%
+					top: 0%
+					border-radius: 0%
+
+		.optDropDown
+			position: absolute
+			width: 260px
+			height: auto
+			right: 0px
+			top: 50px
+			padding: 8px 0px
+			background-color: #fff
+			box-shadow: -2px 2px 8px rgba(#000,.15)
+			cursor: pointer
+			display: none
+
+			.optViewDesplActive
+				background-color: rgba(#000,.1)
+
+			div.optDropDownItem
+				position: relative
+				width: 100%
+				padding: 12px 20px
+				text-align: center
+				box-sizing: border-box
+				display: flex
+
+				&:hover
+					background-color: rgba(#000,.1)
+
+				&:hover .optChainDropdown
+					display: flex
+
+				.optMoreDisabled
+					color: #aaa
+
+					&:hover
+						background-color: #fff
+
+					svg
+						fill: #aaa
+
+					p small
+						color: #ddd
+
+				svg
+					width: 25px
+					height: 25px
+					margin-right: 12px
+
+				p
+					margin-top: 2px
+
+					small
+						color: #aaa
+						margin-left: 12px
+
+			.optChainDropdown
+				position: absolute
+				width: 220px
+				margin-left: -240px
+				top: -8px
+				padding: 8px 0px
+				background-color: #fff
+				box-shadow: 2px 2px 8px rgba(0,0,0,.1)
+				flex-direction: column
+				display: none
+
+main
+	position: absolute
+	width: 100%
+	height: 100%
+	top: 0px
+	padding-top: 50px
+	box-sizing: border-box
+
+	#errorReporting
+		position: fixed
+		right: 0px
+		z-index: 1
+
+		.errorItem
+			position: relative
+			max-width: 400px
+			padding: 10px 35px
+			margin: 10px 18px
+			background-color: rgba(#f44,.8)
+			box-shadow: -2px 2px 8px rgba(#000,.1)
+			display: flex
+			justify-content: center
+
+			svg
+				width: 30px
+				height: 30px
+				fill: #fff
+
+			p
+				color: #fff
+				font-size: 13pt
+				padding: 5px 12px
+
+	#shadow
+		position: fixed
+		width: 100%
+		height: 100%
+		background-color: rgba(0,0,0,.1)
+		display: none
+		z-index: 1
+
+	#mainCenter
+		position: relative
+		width: 100%
+		height: 100%
+		display: flex
+
+		aside
+			position: relative
+			width: 320px
+			margin-left: 0px
+			height: 100%
+			background-color: #8eacbc
+			display: flex
+			flex-direction: column
+			transition: margin-left .4s
+
+			#asideFavorites
+				position: relative
+				width: 100%
+				height: auto
+				max-height: 190px
+				box-shadow: -2px 2px 4px rgba(120,144,156,.4)
+
+				#favTitle
+					justify-content: space-between
+
+					div
+						display: flex
+						flex-direction: row
+
+					#favCount
+						padding: 0px 15px
+
+				#asideFavBody
+					padding: 4px 0px 8px
+					overflow: auto
+					max-height: 143px
+
+					.favFolder
+						padding: 3px 10px
+						box-sizing: border-box
+						cursor: pointer
+
+						&:hover
+							background-color: #fff
+
+						small
+							font-size: 10pt
+							font-weight: 300
+							font-style: italic
+							margin-left: 12px
+							color: #444
+
+			#asideTree
+				position: relative
+				width: 100%
+				height: auto
+
+			.asideTitle
+				position: relative
+				width: 100%
+				height: 30px
+				margin-top: 8px
+				display: flex
+				flex-direction: row
+				cursor: default
+
+				svg
+					width: 25px
+					height: 25px
+					fill: #222
+					margin: 2px 8px
+
+				p
+					margin: 5px 0px
+
+		section
+			position: relative
+			width: 100%
+			height: 100%
+			overflow: auto
+
+			#itemArea
+				position: relative
+				width: 100%
+				height: auto
+				display: flex
+				flex-wrap: wrap
+				color: $primaryColor
+
+				#emptyFolder
+					padding: 25px 50px
+
+				.item
+					position: relative
+					padding: 0px 12px
+					overflow: hidden
+					box-sizing: border-box
+					box-shadow: 2px 2px 8px rgba(#000,.1)
+					display: flex
+
+					&:hover
+						background-color: rgba(#000,.1)
+
+				.itemHidden
+					opacity: .4
+
+				.itemActive
+					background-color: rgba(#000,.1)
+
+				/* estilos para las distintas vistas */
+
+				// mosaic
+				.itemMosaic
+					width: 16.66666666667%
+					height: 60px
+
+					.itemLogo
+						position: relative
+						width: 60px
+						height: 100%
+						padding: 0px
+						display: flex
+						justify-content: center
+						align-items: center
+
+						svg, img
+							height: 42px
+
+					.itemText
+						position: relative
+						width: 100%
+						height: 100%
+						display: flex
+						align-items: center
+						margin-left: 12px
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							word-wrap: break-word
+							cursor: default
+
+						p[split-lines]
+							white-space: pre-wrap
+
+					.itemFiletype, .itemFilesize
+						display: none
+
+				// list
+				.itemList
+					width: 100%
+					height: 60px
+
+					.itemLogo
+						position: relative
+						width: 60px
+						height: 60px
+						margin-left: 4px
+						display: flex
+						justify-content: center
+						align-items: center
+
+						svg, img
+							height: 42px
+
+					.itemText
+						position: relative
+						width: 100%
+						height: 100%
+						margin-left: 18px
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							word-wrap: break-word
+							cursor: default
+
+						p[split-lines]
+							white-space: pre-wrap
+
+					.itemFiletype
+						position: relative
+						width: 200px
+						height: 100%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							cursor: default
+
+					.itemFilesize
+						position: relative
+						width: 200px
+						height: 100%
+						margin-right: 20%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							cursor: default
+
+				// wall
+				.itemWall
+					width: auto
+					height: auto
+					flex-direction: column
+
+					.itemLogo
+						position: relative
+						width: 50px
+						height: 50px
+						padding: 9px
+						display: flex
+						justify-content: center
+						margin: 0 auto
+
+						svg, img
+							width: 50px
+							height: 50px
+
+					.itemText
+						position: relative
+						width: 100%
+						height: 100%
+						display: flex
+						align-items: center
+
+						p
+							font-size: 13pt
+							margin: 8px 0px
+							margin: 8px auto
+							word-wrap: break-word
+							cursor: default
+
+						p[split-lines]
+							white-space: pre-wrap
+
+					.itemFiletype, .itemFilesize
+						display: none
+
+			#folderInfo
+				position: fixed
+				right: 0px
+				bottom: 0px
+				font-size: 11pt
+				padding: 3px 7px 4px
+				background-color: rgba(#000,.1)
+
+/* ----- aside ----- */
+
+details
+	margin: 0px
+	color: #444444
+	padding: 5px
+	cursor: default
+	-webkit-transition: all 0.1s
+
+details[open]
+	animation-name: slideDown
+	animation-duration: 200ms
+	animation-timing-function: ease-in
+
+details:hover
+	background-color: #fff
+
+details details
+	border: 0px
+	margin-left: 12px
+
+details summary p.linkTree
+	color: #333333
+
+summary p.linkTree
+	text-decoration: none
+
+summary p.linkTree:hover
+	color: #2196f3
+
+summary p.linkTree:focus
+	text-decoration: none
+
+details#activo > summary > p.linkTree
+	color: #2196f3
+
+summary
+	outline: 0
+
+details summary::-webkit-details-marker
+	display: none
+
+summary::before
+	position: relative
+	float: left
+	content: "+"
+	color: #444
+	margin-right: 0px
+	padding-right: 12px
+	margin-top: -5px
+	font-size: 18pt
+
+summary:hover::before
+	color: #2196f3
+
+details[open] > summary::before
+	position: relative
+	float: left
+	content: "-"
+	margin-left: 0px
+	padding-left: 2px
+	margin-right: 0px
+	padding-right: 14px
+	margin-top: -10px
+	font-size: 22pt
+
+@keyframes slideDown
+	0%
+		opacity: 0
+		height: 0
+	100%
+		opacity: 1
+		height: 20px
+
+aside ::selection
+	background-color: transparent
+
+/* ----- aside spinner ----- */
+
+.spinner
+	margin: 100px auto
+	width: 80px
+	height: 80px
+	position: relative
+	text-align: center
+
+	-webkit-animation: sk-rotate 2.0s infinite linear
+	animation: sk-rotate 2.0s infinite linear
+
+
+.dot1, .dot2
+	width: 60%
+	height: 60%
+	display: inline-block
+	position: absolute
+	top: 0
+	background-color: #cfd8dc
+	border-radius: 100%
+
+	-webkit-animation: sk-bounce 2.0s infinite ease-in-out
+	animation: sk-bounce 2.0s infinite ease-in-out
+
+.dot2
+	top: auto
+	bottom: 0
+	-webkit-animation-delay: -1.0s
+	animation-delay: -1.0s
+
+@-webkit-keyframes sk-rotate
+	100%
+		-webkit-transform: rotate(360deg)
+
+@keyframes sk-rotate
+	100%
+		transform: rotate(360deg)
+		-webkit-transform: rotate(360deg)
+
+@-webkit-keyframes sk-bounce
+	0%, 100%
+		-webkit-transform: scale(0.0)
+	50%
+		-webkit-transform: scale(1.0)
+
+@keyframes sk-bounce
+	0%, 100%
+		transform: scale(0.0)
+		-webkit-transform: scale(0.0)
+	50%
+		transform: scale(1.0)
+		-webkit-transform: scale(1.0)
+
+/* ----- section media queries ----- */
+// no cambiar los valores sin modificar los keyCodes de las flechas de dirección verticales
+
+@media screen and (max-width: 2100px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 20%
+
+@media screen and (max-width: 1750px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 25%
+
+@media screen and (max-width: 1300px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 33.33333333%
+
+@media screen and (max-width: 1050px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 50%
+
+@media screen and (max-width: 750px)
+	main #mainCenter section #itemArea .itemMosaic
+		width: 100%
+
+@media screen and (max-width: 420px)
+	main #mainCenter aside
+		margin-left: -320px
+
+/* ----- settings tab ----- */
+
+#dialogBack
+	position: fixed
+	width: 100%
+	height: 100%
+	top: 0px
+	padding-top: 25px
+	background-color: rgba(#000,.1)
+	align-items: center
+	display: none
+
+	#settings, #history
+		//width: 950px
+		//height: 500px
+
+	.dialog
+		position: relative
+		width: 950px
+		height: 520px
+		margin: 0px auto
+		background-color: #fff
+		box-shadow: 2px 2px 8px rgba(#000,.1)
+		display: none
+
+		.dialogTitleBar
+			position: relative
+			width: 100%
+			height: 50px
+			box-shadow: 2px 2px 8px rgba(#000,.1)
+			display: flex
+			justify-content: space-between
+			z-index: 1
+
+			h2
+				padding: 10px 20px
+				font-weight: 300
+				display: flex
+
+			svg
+				width: 30px
+				height: 30px
+				fill: #777
+				padding: 10px 20px
+
+				&:hover
+					fill: #000
+
+		.dialogBody
+			position: absolute
+			width: 100%
+			top: 0px
+			height: 100%
+			padding-top: 50px
+			box-sizing: border-box
+
+			.dialogBodyCenter
+				position: relative
+				width: 100%
+				height: 100%
+				overflow: auto
+
+				.settingsItem
+					position: relative
+					width: 100%
+					height: auto
+					padding: 16px 24px
+					box-sizing: border-box
+
+					&:hover
+						background-color: rgba(0,0,0,.04)
+
+						input[type=text]
+							background-color: rgba(0,0,0,0)
+
+					h3
+						color: #777
+						margin-bottom: 8px
+						font-weight: 300
+						cursor: default
+
+					p, label, span
+						color: #333
+
+					label
+						cursor: pointer
+
+					select
+						width: 200px
+						height: 32px
+						font-size: 13pt
+						color: #555
+						border: 0px
+						outline: 0
+						padding: 0px 12px
+						margin: 10px 0px
+						background-color: transparent
+
+						&:focus
+							background-color: #fff
+
+					div
+						padding: 0px 8px
+
+						input[type=checkbox], input[type=radio]
+							vertical-align: middle
+							margin-right: 8px
+
+						button
+							padding: 6px 14px
+							margin: 10px 5px
+							font-size: 12pt
+							background-color: #ddd
+							border: 0px
+							outline: 0
+							cursor: pointer
+
+							&:hover
+								background-color: #ccc
+
+				#settingsItemGeneral div
+					margin: 6px 0px
+
+				#settingsItemStartUp div
+					form
+						margin: 5px 0px
+
+					label
+						margin: 0px 10px
+
+				#settingsItemPriority p
+					margin: 8px 0px 5px
+
+				.settingsInputText
+					width: 50%
+					margin: 6px 0px
+
+					.settingsInputEffect
+						position: relative
+						width: 0%
+						left: 50%
+						padding: 0px
+						border-bottom: 2px solid
+						transition: all .2s
+
+					input
+						width: 100%
+						color: #333
+						height: 40px
+						font-size: 13pt
+						padding: 0px 10px
+						border: 0px
+						outline: 0
+						box-sizing: border-box
+
+						&:hover ~ .settingsInputEffect
+							width: 100%
+							left: 0%
+							border-color: #ccc
+
+						&:focus ~ .settingsInputEffect
+							width: 100%
+							left: 0%
+							border-color: $primaryColor
+
+					input[disabled]
+						color: #999
+
+				#settingsVersion
+					position: relative
+					right: 12px
+					bottom: 4px
+					margin-top: 8px
+					text-align: right
+					font-size: 11pt
+					color: #777
+					cursor: default
+
+		#historyBody
+			position: absolute
+			width: 100%
+			height: 100%
+			top: 0px
+			padding-top: 50px
+			box-sizing: border-box
+
+			#historyPaths
+				position: relative
+				width: 100%
+				height: 100%
+				overflow: auto
+
+				.historyItem
+					position: relative
+					width: 100%
+					height: 50px
+					padding: 4px 20px
+					box-sizing: border-box
+					border-bottom: 1px solid #f2f2f2
+					display: flex
+
+					p
+						min-width: 130px
+						padding: 12px 40px
+
+						&:last-child
+							color: #999
+
+					svg
+						position: absolute
+						right: 30px
+						width: 30px
+						height: 30px
+						fill: #6f6f6f
+						padding: 7px 25px
+
+						&:hover
+							fill: #222
+
+				.historyActive
+					color: #34515f
+					background-color: rgba(#000,.06)
+
+@media screen and (max-width: 1080px)
+	#dialogBack .dialog
+		width: 92%
+
+@media screen and (max-width: 800px)
+	#dialogBack .dialog
+		width: 100%
+
+@media screen and (max-height: 620px)
+	#dialogBack
+		padding-top: 50px
+
+		.dialog
+			height: 100%
+
+/* ----- dark mode ----- */
+
+body.darkMode .screen
+	background-color: #212121
+	color: #fff
+
+body.darkMode header
+	background-color: #484848
+
+body.darkMode main #mainCenter aside
+	background: #303030
+	color: #fff
+
+body.darkMode #mainCenter aside .asideTitle svg
+	fill: #fff
+
+body.darkMode details summary p.linkTree
+	color: #fff
+
+body.darkMode summary::before
+	color: #fff
+
+body.darkMode header div#options .optDropDown
+	color: #000
+
+body.darkMode #dialogBack .dialog
+	background-color: #444
+
+body.darkMode main #mainCenter section #itemArea
+	color: #9eb9c6
+
+body.darkMode main #mainCenter section #itemArea .item:hover
+	background-color: rgba(255,255,255,.06)
+
+body.darkMode main #mainCenter section #folderInfo
+	background-color: rgba(255,255,255,.06)
+
+body.darkMode main #mainCenter aside #asideFavorites
+	box-shadow: -2px 2px 4px rgba(120, 120, 120, 0.2)
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small
+	color: #bbb
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover
+	color: #222
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small
+	color: #777
+
+body.darkMode #dialogBack .dialog
+	.dialogTitleBar
+		background-color: #545454
+
+		svg
+			fill: #888
+
+			&:hover
+				fill: #bbb
+
+	.dialogBodyCenter
+		.settingsItem
+			h3
+				color: #fff
+
+			p, label, span
+				color: #ddd
+
+			&:hover input[type=text]
+				background-color: #606060
+
+			select
+				color: #eee
+
+				&:focus
+					color: #555
+
+		.settingsInputText input
+			color: #eee
+			background-color: #606060
+
+			&:hover ~ .settingsInputEffect
+				border-color: #bbb
+
+			&:focus ~ .settingsInputEffect
+				border-color: #fff
+
+	#historyBody #historyPaths .historyItem
+		border-bottom: 1px solid #5f5f5f
+
+	#historyBody #historyPaths .historyActive
+		color: #2196f3
+
+body.darkMode details:hover summary p.linkTree
+	color: #000
+
+body.darkMode details:hover summary::before
+	color: #444
+
+body.darkMode main #mainCenter section #itemArea .item
+	box-shadow: 2px 2px 8px rgba(0,0,0,.15)
+
+body.darkMode header div#options .optDropDown
+	color: #fff
+	background-color: #555
+
+	div.optDropDownItem svg
+		fill: #fff
+
+	div.optDropDownItem:hover
+		background-color: rgba(255,255,255,.1)
+
+		.optChainDropdown
+			background-color: #606060
+
+body.darkMode #context
+	background-color: #555
+	box-shadow: 2px 2px 7px #333
+
+	ul li
+		color: #f0f0f0
+
+		&:hover
+			background-color: #9eb9c6
+
+/* ---- context menu ---- */
+
+#context
+	position: absolute
+	width: 180px
+	height: auto
+	background-color: #fff
+	box-shadow: 2px 2px 7px #ccc
+	overflow: hidden
+	opacity: 0.8
+	cursor: default
+	display: none
+	z-index: 15
+	-webkit-transition: left 0.5s, top 0.5s, opacity 0.4s
+	-moz-transition: left 0.5s, top 0.5s, opacity 0.4s
+	-o-transition: left 0.5s, top 0.5s, opacity 0.4s
+	-ms-transition: left 0.5s, top 0.5s, opacity 0.4s
+
+	&:hover
+		opacity: 1
+
+	ul
+		position: relative
+		width: 100%
+		height: auto
+		margin: 5px 0px
+		padding: 0px
+		list-style-type: none
+
+		li
+			position: relative
+			width: 100%
+			height: auto
+			color: #282828
+			font-size: 12pt
+			border-radius: 50%
+			padding: 12px 0px
+			text-align: center
+			box-sizing: border-box
+
+			&:hover
+				border-radius: 0px
+				color: #fff
+				background-color: #2177ff
+
+		li.disabled
+			color: rgba(40,40,40,0.5)
+
+			&:hover
+				color: #ffffff
+				background-color: #b4b4b4
+
+/* ----- scroll ----- */
+
+::-webkit-scrollbar
+	width: 10px
+	height: 10px
+
+::-webkit-scrollbar-thumb
+	background: #aaa
+
+::-webkit-scrollbar-track
+	background: rgba(#000, 0.05)
