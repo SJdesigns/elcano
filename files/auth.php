@@ -1,32 +1,12 @@
 <?php
 
-/*$userList2 = '{ "users": {
-"0": {
-    "user": "sergio",
-    "pass": "admin"
-},
-"1": {
-    "user": "javier",
-    "pass": "admin"
-}
-}}';
-
-$arrayList2 = json_decode($userList2);
-
-echo '<pre>';
-print_r($arrayList2);
-echo '</pre>';*/
-
-// Usuarios Habilitados
-// ----------------------------------------------------
-// $userList = array('user'=>'pass')
 $userList = array(
-    'root' => 'admin',
-    'user1' => 'adminAccess1',
-    'user2' => 'adminAccess2',
-    'user3' => 'adminAccess3'
-);
+// LIST OF USERS
 // ----------------------------------------------------
+// type your users here in the format 'user' => 'password',
+    'root' => 'admin',
+// ----------------------------------------------------
+);
 
 if (isset($_GET['token'])) {
 

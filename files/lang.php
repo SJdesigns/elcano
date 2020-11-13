@@ -148,6 +148,76 @@ $langTxt = [
         'error' => [
         ]
     ],
+    'fr' => [
+        'langName' => 'Français',
+        'login' => [
+            'title' => 'Se Connecter',
+            'user' => 'Nom d\'utilisateur',
+            'pass' => 'mot de passe',
+            'submit' => 'Se Connecter'
+        ],
+        'header' => [
+            'headStartUp' => 'Exécuter l\'index du répertoire',
+            'headDataBase' => 'Accéder à la base de données',
+            'headFavorite' => 'Ajouter aux favoris',
+            'headNotFavorite' => 'Supprimer des favoris',
+            'headView' => 'Change de vue',
+            'headMore' => 'plus d\' options',
+            'headViewMosaic' => 'Mosaïque',
+            'headViewList' => 'Liste',
+            'headViewWall' => 'Mur',
+            'headMoreHistory' => 'Revue de l\' Histoire',
+            'headMoreHistoryPrev' => 'Prev',
+            'headMoreHistoryNext' => 'Prochain',
+            'headMoreShowExpl' => 'Montrer l\' explorateur',
+            'headMoreHideExpl' => 'Chacher l\' explorateur',
+            'headMoreSettings' => 'réglages',
+            'headMoreLogout' => 'Se déconnecter'
+        ],
+        'aside' => [
+            'asideFav' => 'Favoris',
+            'asideDir' => 'Arborescence de directories',
+        ],
+        'section' => [
+            'sectionFolder' => 'dossiers',
+            'sectionFiles' => 'fichiers',
+            'noResults' => 'ce dossier est vide',
+        ],
+        'context' => [
+            'contextExplore' => 'Explorer',
+            'contextOpen' => 'Ouvrir',
+            'contextFavorites' => 'Ajouter aux favoris',
+        ],
+        'history' => [
+            'historyHome' => 'Accueil',
+        ],
+        'settings' => [
+            'general' => 'Général',
+            'darkMode' => 'Activer le mode sombre',
+            'showHiddenFiles' => 'montrer les fichiers cachés',
+            'showfileExtensions' => 'Afficher les extensions de fichier',
+            'startUp' => 'Start Up',
+            'startUpDescrip' => 'Vue active par défaut',
+            'startUpLast' => 'Dernier actif',
+            'hideFiles' => 'Fichiers ignorés',
+            'hideFilesDescrip' => 'Noms de fichiers et extensions séparés par des virgules',
+            'hideFilesPlaceholder' => 'fichiers ignorés',
+            'priority' => 'priorités d\'index',
+            'defaultPriority' => 'Index système par défaut',
+            'priorityDescrip' => 'Liste des priorités d\'exécution pour les dossiers',
+            'priorityPlaceholder' => 'ordre de priorité des fichiers',
+            'database' => 'base de données',
+            'databaseDescrip' => 'chemin de la base de données',
+            'databasePlaceholder' => 'chemin de la base de données',
+            'lang' => 'langue',
+            'langDescrip' => 'Sélectionnez la langue de l\'application',
+            'default' => 'paramètres par défaut',
+            'defaultButton' => 'réinitialiser',
+            'defaultDescrip' => 'Revenir aux paramètres par défaut'
+        ],
+        'error' => [
+        ]
+    ],
 ];
 
 if (isset($_COOKIE['elcano-lang'])) {

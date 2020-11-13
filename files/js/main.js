@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.0 - beta 2.2 ---- */
+/* ---- elcano Explorer v3.0 - beta 2.3 ---- */
 
 // global variables
-var version = '3.2.2';
+var version = '3.2.3';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del explorador
 var favorites = []; // almacena las rutas favoritas
@@ -416,8 +416,11 @@ function showFavorites() { // recarga la lista de favoritos en el aside
 	if (favorites.length>0) {
 		var favs = '';
 		for (x in favorites) {
-			favs += '<div class="favFolder" onclick="changePath(\'' + favorites[x].path + '\')"><p>' + favorites[x].title + '<small>' + favorites[x].path + '</small></p></div>';
-            favCount++;
+            var filePath = location.pathname;
+            if (favorites[x].root == filePath) {
+    			favs += '<div class="favFolder" onclick="changePath(\'' + favorites[x].path + '\')"><p>' + favorites[x].title + '<small>' + favorites[x].path + '</small></p></div>';
+                favCount++;
+            }
 		}
         $('#favCount').text(favCount);
 		$('#asideFavBody').html(favs);
@@ -432,10 +435,11 @@ function addFavorite(current=null) {
     var titFav = prompt('Título del favorito: ','');
     if (titFav!=null && titFav!='') {
         if (settings.debug){console.log(path)};
+        var filePath = location.pathname;
         if (current==null) {
-            favorites.push({'path':path,'title':titFav});
+            favorites.push({'root':filePath,'path':path,'title':titFav});
         } else {
-            favorites.push({'path':current,'title':titFav});
+            favorites.push({'root':filePath,'path':current,'title':titFav});
         }
         localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
         if (settings.debug){console.log(favorites)};

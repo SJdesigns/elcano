@@ -182,7 +182,7 @@ header nav .navItem {
   cursor: pointer;
 }
 header nav .navItem:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(50, 150, 255, 0.15);
 }
 header nav .navItem .navHomeItem {
   position: relative;
@@ -264,7 +264,7 @@ header div#options .optDropDown .optViewDesplActive {
 header div#options .optDropDown div.optDropDownItem {
   position: relative;
   width: 100%;
-  padding: 12px 20px;
+  padding: 12px 18px;
   text-align: center;
   box-sizing: border-box;
   display: flex;
@@ -409,6 +409,7 @@ main #mainCenter aside #asideTree {
   position: relative;
   width: 100%;
   height: auto;
+  overflow: auto;
 }
 main #mainCenter aside .asideTitle {
   position: relative;

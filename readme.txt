@@ -1,4 +1,4 @@
-elcano Explorer v3.0 - beta 2.2
+elcano Explorer v3.0 - beta 2.3
 --------------------------------------------------------------
 
 To start using elcano first add a user next to the line 7.
