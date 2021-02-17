@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.0 - beta 2.3 ---- */
+/* ---- elcano Explorer v3.0 - beta 2.4 ---- */
 
 // global variables
-var version = '3.2.3';
+var version = '3.2.4';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del explorador
 var favorites = []; // almacena las rutas favoritas
