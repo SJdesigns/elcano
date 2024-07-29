@@ -12,3 +12,4 @@ DON'T FORGET THE COMMA AT THE END
 
 You only need the explorer.php file to use the app
 The files folder contains the development code in different files while the explorer.php contains everthing in one file.
+# elcano
