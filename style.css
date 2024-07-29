@@ -1,0 +1,148 @@
+:root {
+	/*--headerNewColor: #FB8C00*/
+	--primary: #0288D1;
+	--asideColor: #f4f4f4;
+	--sectionColor: #f8f8f8;
+	--shadow: rgba(0,0,0, .1);
+}
+
+* {
+	padding: 0px;
+	margin: 0px;
+	font-family: 'Roboto', sans-serif;
+}
+
+header {
+	position: relative;
+	width: 100%;
+	height: 50px;
+	top: 0px;
+	padding: 0px 40px;
+	box-sizing: border-box;
+	background-color: var(--primary);
+	display: flex;
+	justify-content: space-between;
+	z-index: 10;
+}
+
+#headerLeft {
+	position: relative;
+	width: auto;
+	height: 100%;
+	display: flex;
+	align-items: center;
+	padding-right: 50px;
+}
+
+#headerLogo {
+	position: relative;
+	width: 28px;
+	height: 28px;
+	left: 20px;
+}
+
+#logoBack {
+	fill: transparent;
+}
+
+#logoBorder {
+	fill: #ffb300;
+	fill: #fff;
+}
+
+h1 {
+	color: #fff;
+	margin-left: 30px;
+	cursor: default;
+	font-weight: normal;
+}
+
+nav {
+	display: flex;
+	align-items: center;
+}
+
+.navItem {
+	padding: 0px 20px;
+	color: #fff;
+	cursor: pointer;
+}
+
+.navItemDisabled {
+	color: #ccc;
+}
+
+section {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	top: 0px;
+	padding-top: 50px;
+	box-sizing: border-box;
+}
+
+#sectionBackground {
+	position: absolute;
+	width: 100%;
+	height: 55%;
+	background-color: var(--primary);
+}
+
+#sectionCenter {
+	position: relative;
+	margin: 30px auto;
+	width: 1000px;
+	height: 500px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+#sectionCenter h1 {
+	font-size: 36pt;
+	margin-bottom: 40px;
+}
+
+#sectionCenter img {
+	width: 100%;
+	border-radius: 12px;
+	box-shadow: 2px 2px 80px rgba(0,0,0,.2);
+}
+
+#tryit {
+	position: relative;
+	padding: 20px 70px;
+	margin: 50px 0px 30px;
+	border-radius: 16px;
+	color: #fff;
+	font-size: 18pt;
+	background-color: var(--primary);
+	cursor: pointer;
+}
+
+#tryit:hover {
+	box-shadow: 2px 2px 8px rgba(0,0,0,.2);
+}
+
+#copy {
+	position: relative;
+	color: #bbb;
+	margin-top: 20px;
+	padding-bottom: 30px;
+	display: block;
+}
+
+/* ----- scroll ----- */
+
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+	background: #aaa;
+}
+
+::-webkit-scrollbar-track {
+	background: rgba(#000, 0.05);
+}

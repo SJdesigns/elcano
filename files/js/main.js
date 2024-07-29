@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.0 - beta 2.4 ---- */
+/* ---- elcano Explorer v3.2.5 ---- */
 
 // global variables
-var version = '3.2.4';
+var version = '3.2.5';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del explorador
 var favorites = []; // almacena las rutas favoritas
@@ -15,6 +15,8 @@ var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en 
 var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
 var defaultSettings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'dbpath':'http://localhost/phpmyadmin/','firstLoad':false}; // configuracion por defecto de la aplicacion
 var lang = getCookie('elcano-lang');
+var directoryTree = {};
+var searchPanelShown = false;
 
 if (localStorage.getItem('elcano-settings') == null) {
     var settings = defaultSettings;
@@ -175,7 +177,7 @@ function authorize(authUser,authPass) {
                     enableExplorer();
                 } else {
                     disableExplorer();
-                    $('#signInError').html('<p>'+response.message+'</p>');
+                    $('#signInError').html('<p>'+langs[lang].login.error[response.message]+'</p>');
                 }
             } else {
                 disableExplorer();
@@ -199,6 +201,7 @@ function enableExplorer() {
     showFavorites();
     loadTree();
     setSettings();
+
     $('.screen').hide();
     $('#explorer').fadeIn(200);
 }
@@ -344,6 +347,7 @@ function changePath(url,tlPos = null) { // cambia la ruta actual. tlPos indica q
     if (settings.debug){console.log('changePath to: '+url+' | tlPos = '+tlPos)};
     if (url.substring(0,2) == './' && url.indexOf('../') == -1) {
     	getFolder(url);
+        if (searchPanelShown) { closeSearchArea(); }
     	document.title = 'elcano ' + url;
         if (tlPos == null) {
             if (timeline.length>0) {
@@ -364,7 +368,17 @@ function changePath(url,tlPos = null) { // cambia la ruta actual. tlPos indica q
 
 function readFich(url) {
 	//console.log('reading ' + url);
-	window.open(url,'_blank');
+
+    let fExt = url.split('.').pop();
+    let imageTypes = ['jpg','jpeg','gif','png','webp','bmp','tiff','svg'];
+
+    if (imageTypes.includes(fExt)) {
+        showImageViewer(true,url);
+    } else if (fExt == 'txt') {
+        showTextfileViewer(true,url);
+    } else {
+        window.open(url,'_blank');
+    }
 }
 
 function explodePath(url) { // actualiza los directorios del nav
@@ -581,11 +595,50 @@ function showTree() { // muestra u oculta el árbol de directorios lateral
 function loadTree() { // carga los datos del árbol de directorios
     if (allowedAccess) {
         $.post( "directoryTree.php", { ruta: path, dirTree: true } )
-    		.done(function( data ) {
-    			$('#asideTreeBody').html(data);
-    			if (settings.debug){console.log("tree loaded")};
-    	});
+            .done(function( data ) {
+                directoryTree = data;
+                const container = document.getElementById('asideTreeBody'); // El contenedor en tu HTML
+                createDirectoryTree(JSON.parse(data), container);
+
+                $('#searchBox').attr('disabled',false);
+
+                $('#searchBarForm').on('submit',function(e) {
+                    e.preventDefault();
+                    searchFile($('#searchBox').val());
+                });
+        });
     }
+}
+
+function createDirectoryTree(data, container) {
+    // Función recursiva para construir el árbol de directorios
+    function buildTree(items, parentElement) {
+        items.forEach(item => {
+            if (item.type == 'dir') {
+                const details = document.createElement('details');
+                const summary = document.createElement('summary');
+                const summaryText = document.createElement('p');
+
+                summaryText.classList.add('linkTree');
+                summaryText.setAttribute('onclick',"changePath('"+item.path+"/')");
+                summaryText.textContent = item.name;
+                summary.appendChild(summaryText);
+                details.appendChild(summary);
+
+                parentElement.appendChild(details);
+
+                if (item.content.length > 0) {
+                    buildTree(item.content, details);
+                }
+            } else if (item.type == 'file') {
+            }
+
+            $('.spinner').hide();
+        });
+    }
+
+    // Inicializar el árbol
+    buildTree(data, container);
 }
 
 function ignoreThisFile(path,file,filename) {
@@ -603,6 +656,7 @@ function showSettings(op) { // muestra u oculta la ventana de configuración
         $('#dialogBack').css('display','flex');
         $('.dialog').hide();
         $('#settings').fadeIn(200);
+        $('.dialogBodyCenter').scrollTop(0);
     } else {
         $('#settings').fadeOut(200);
         $('#dialogBack').css('display','none');
@@ -651,6 +705,7 @@ function showHistory(op) {
         $('#dialogBack').css('display','flex');
         $('.dialog').hide();
         $('#history').fadeIn(200);
+        $('.dialogBodyCenter').scrollTop(0);
     } else {
         $('#history').fadeOut(200);
         $('#dialogBack').css('display','none');
@@ -912,7 +967,7 @@ function setSettings() {
         changePath(path);
     });
 
-    $('#settingsVersion').text('beta '+version);
+    $('#settingsVersion').text(version);
 }
 
 function upgradeSettings() { // actualiza los datos del localStorage si el usuario tiene una versión diferente
@@ -987,6 +1042,154 @@ function upgradeSettings() { // actualiza los datos del localStorage si el usuar
         localStorage.setItem('elcano-settings',JSON.stringify(newSettings));
         settings = newSettings;
     }
+}
+
+function showImageViewer(op, url) {
+    if (settings.debug){console.log('showing image viewer : '+url)};
+
+    if (op) {
+        $('#dialogBack').css('display','flex');
+        $('.dialog').hide();
+        $('#imageViewer').fadeIn(200);
+        $('#imageViewerUrl').text(url);
+
+        $('#imageViewerImageCanvas').html('<img src="'+url+'" />');
+        $('#imageViewerOpen').attr('onclick','openImageNewTab("'+url+'")');
+    } else {
+        $('#imageViewer').fadeOut(200);
+        $('#dialogBack').css('display','none');
+    }
+}
+
+function openImageNewTab(url) {
+    window.open(url, '_blank');
+}
+
+function showTextfileViewer(op, url) {
+    if (settings.debug){console.log('showing text viewer : '+url)};
+
+    if (op) {
+        $('#dialogBack').css('display','flex');
+        $('.dialog').hide();
+        $('#textfileViewer').fadeIn(200);
+        $('#textfileViewerUrl').text(url);
+
+        $('#textfileViewerOpen').attr('onclick','openTextfileNewTab("'+url+'")');
+
+        $.post( "readFile.php", { ruta: url } )
+            .done(function( data ) {
+                var fileLines = '';
+
+                for (i in data) {
+                    if (data[i] == '\r\n') {
+                        fileLines += '<br />';
+                    } else {
+                        fileLines += '<p>'+data[i]+'</p>';
+                    }
+                }
+                $('#textfileViewerCanvas').html(fileLines);
+        });
+    } else {
+        $('#textfileViewer').fadeOut(200);
+        $('#dialogBack').css('display','none');
+    }
+}
+
+function openTextfileNewTab(url) {
+    window.open(url, '_blank');
+}
+
+function searchFile(q) {
+    console.log('search file: '+q);
+
+    if (q == '') {
+        closeSearchArea();
+    } else {
+        searchPanelShown = true;
+        var searchResults = filterByPath(JSON.parse(directoryTree),q);
+        $('#folderBackground').hide();
+        $('#itemArea').hide();
+        console.log(searchResults);
+
+        var htmlSearchRes = '';
+        var countResults = 0;
+        for (i in searchResults) {
+            countResults++;
+            var nameSplitted = searchResults[i].name.split('.');
+            var fileExtension = nameSplitted[nameSplitted.length-1];
+            if (searchResults[i].type == 'dir') {
+                htmlSearchRes += '<div class="item itemDir itemList" onclick="changePathSearch(\''+searchResults[i].path+'/\')">';
+                    htmlSearchRes += '<div class="itemLogo">'+setItemIcon('folder', searchResults[i].path)+'</div>';
+                    htmlSearchRes += '<div class="itemText">';
+                        htmlSearchRes += '<p split-lines>'+searchResults[i].name+'</p>';
+                    htmlSearchRes += '</div>';
+                    htmlSearchRes += '<div class="itemPath">'+searchResults[i].path+'</div>';
+                htmlSearchRes += '</div>';
+            } else if (searchResults[i].type == 'file') {
+                htmlSearchRes += '<div class="item itemFich itemList" onclick="readFich(\''+searchResults[i].path+'\')">';
+                    htmlSearchRes += '<div class="itemLogo">'+setItemIcon(fileExtension, searchResults[i].path)+'</div>';
+                    htmlSearchRes += '<div class="itemText">';
+                        htmlSearchRes += '<p split-lines>'+searchResults[i].name+'</p>';
+                    htmlSearchRes += '</div>';
+                    htmlSearchRes += '<div class="itemPath">'+searchResults[i].path+'</div>';
+                htmlSearchRes += '</div>';
+            }
+        }
+
+        if (countResults==0) {
+            htmlSearchRes += '<p id="searchNoResults">'+noResultsTxt+'</p>';
+        }
+
+        $('#searchAreaContent').html(htmlSearchRes);
+
+        $('#searchBox').focus();
+        $('#searchAreaHeaderLeftTerm').text($('#searchBox').val());
+        $('#searchArea').css('display','flex');
+    }
+}
+
+function changePathSearch(path) {
+    changePath(path);
+    closeSearchArea();
+}
+
+function closeSearchArea() {
+    searchPanelShown = false;
+    $('#folderBackground').show();
+    $('#itemArea').show();
+    $('#searchArea').fadeOut(100);
+    $('#searchBox').val('');
+}
+
+function filterByPath(data, searchText) {
+    // Check if searchText is a string
+    if (typeof searchText !== 'string') {
+        throw new Error('searchText must be a string');
+    }
+
+    // Convert searchText to lowercase for case-insensitive search
+    searchText = searchText.toLowerCase();
+
+    const filteredData = [];
+
+    function traverse(item) {
+        // Check for files and directories
+        if (item.type === 'file' || item.type === 'dir') {
+            // Check if path (lowercase) includes searchText (lowercase)
+            if (item.path.toLowerCase().includes(searchText)) {
+                filteredData.push(item);
+            }
+        }
+
+        // Recursively search content of directories
+        if (item.content) {
+            item.content.forEach(traverse);
+        }
+    }
+
+    data.forEach(traverse);
+
+    return filteredData;
 }
 
 function availableLanguages() {
@@ -1192,6 +1395,15 @@ document.onkeydown = function() {
     if (window.event.keyCode == 37) { if (event.altKey) { event.preventDefault(); prevPath() } } // alt+flecha izquierda
     if (window.event.keyCode == 39) { if (event.altKey) { event.preventDefault(); nextPath() } } // alt+flecha derecha
 
+    if (window.event.keyCode == 70) {
+        console.log('tecla f');
+        var searchBoxItem = document.getElementById('searchBox');
+        if (document.activeElement !== searchBoxItem) {
+            window.event.preventDefault();
+            $('#searchBox').focus();
+        }
+    }
+
 	if (window.event.keycode == 8) {
 		if (settings.debug){console.log('backspace')};
 	}
@@ -1315,10 +1527,10 @@ $(function() {
         if (target.parents('.item').length) { // detecta si elemento sobre el que se hace click es hijo de .item
 			$('#context>ul').html('');
             if (target.parents('.itemDir').length) {
-                $('#context>ul').append('<li id="contextExplore" onclick="changePath('+target.closest('.item').attr('onclick')+')">'+langs[lang].context.contextExplore+'</li>'); // CLOSEST: obtener el primer elemento padre con una clase determinada
+                $('#context>ul').append('<li id="contextExplore" onclick="'+target.closest('.item').attr('onclick')+'">'+langs[lang].context.contextExplore+'</li>'); // CLOSEST: obtener el primer elemento padre con una clase determinada
     			$('#context>ul').append('<li id="contextAddFav" onclick="addFavorite('+target.closest('.item').attr('onclick').substring(target.closest('.item').attr('onclick').indexOf('(')+1, target.closest('.item').attr('onclick').indexOf(')'))+')">'+langs[lang].context.contextFavorites+'</li>');
             } else {
-                $('#context>ul').append('<li id="contextOpen" onclick="readFich('+target.closest('.item').attr('onclick')+')">'+langs[lang].context.contextOpen+'</li>');
+                $('#context>ul').append('<li id="contextOpen" onclick="'+target.closest('.item').attr('onclick')+'">'+langs[lang].context.contextOpen+'</li>');
             }
 
 			menu.css({'display':'block', 'left':e.pageX, 'top':e.pageY});

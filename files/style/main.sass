@@ -1,5 +1,28 @@
 $primaryColor: #34515f
 
+:root
+	/*--headerNewColor: #FB8C00*/
+	--primary: #0288D1
+	--asideColor: #f4f4f4
+	--sectionColor: #f8f8f8
+	--shadow: rgba(0,0,0, .1)
+	--lightSeparator: #ccc
+	--itemHover: rgba(2,136,209,.18)
+	--itemTxt: #34515f
+
+	--darkPrimary: #1a1625
+	--darkAside: #2f2b3a
+	--darkSection: #2f2b3a
+
+	--darkPrimary: #101214
+	--darkAside: #1D2125
+	--darkSection: #1D2125
+	--darkShadow: rgba(255,255,255,.15)
+	--darkSeparator: #333
+	--darkItemHover: rgba(255,255,255,.08)
+	--darkDropdown: #282828
+	--darkDialogShadow: rgba(0,255,255,.1)
+
 *
 	padding: 0px
 	margin: 0px
@@ -28,8 +51,36 @@ body
 		width: 100%
 		height: 100%
 		display: flex
+		flex-direction: column
 		justify-content: center
 		align-items: center
+
+		#signInBrand
+			width: 340px
+			padding: 24px 0px
+			display: flex
+			margin-top: -30px
+			align-items: center
+			justify-content: center
+
+			#signInLogo
+				position: relative
+				width: 40px
+				height: 40px
+
+				#brandBack
+					fill: transparent
+
+				#brandBorder
+					fill: var(--primary)
+
+			h1
+				color: var(--primary)
+				margin-left: 20px
+				cursor: default
+				font-size: 32pt
+				font-weight: normal
+
 
 		#signIn
 			position: relative
@@ -44,7 +95,7 @@ body
 				padding: 25px 0px
 				text-align: center
 				color: #fff
-				background-color: $primaryColor
+				background-color: var(--primary)
 
 				h1
 					font-weight: 300
@@ -83,7 +134,7 @@ body
 						&:focus ~ .signInInputEffect
 							width: 100%
 							left: 0%
-							border-color: $primaryColor
+							border-color: var(--primary)
 
 						&:focus ~ .signInIcons
 							fill: #444
@@ -107,16 +158,17 @@ body
 					#signInSubmit
 						width: 100%
 						height: 50px
-						color: $primaryColor
+						color: var(--primary)
 						font-size: 13pt
 						margin-top: 15px
+						border-radius: 12px
 						text-align: center
 						border: 0px
 						outline: 0
 						background-color: #fff
 
 						&:hover, &:focus
-							background-color: #f4f4f4
+							background-color: var(--itemHover)
 		
 		#loginLang
 			position: absolute
@@ -137,7 +189,7 @@ header
 	width: 100%
 	height: 50px
 	top: 0px
-	background-color: $primaryColor
+	background-color: var(--primary)
 	display: flex
 	justify-content: space-between
 	z-index: 10
@@ -148,21 +200,27 @@ header
 		width: auto
 		height: 100%
 		display: flex
+		align-items: center
 		padding-right: 50px
 
 		#headerLogo
 			position: relative
-			width: 40px
-			height: 40px
-			top: 5px
+			width: 28px
+			height: 28px
 			left: 20px
+
+			#logoBack
+				fill: transparent
+
+			#logoBorder
+				fill: #ffb300
+				fill: #fff
 
 		h1
 			color: #fff
-			padding: 4px 0px
 			margin-left: 30px
 			cursor: default
-			font-weight: 300
+			font-weight: normal
 
 	nav
 		position: relative
@@ -174,13 +232,15 @@ header
 			position: relative
 			height: 34px
 			color: #fff
+			border-radius: 8px
+			font-weight: 300
 			margin: 8px 0px
 			padding: 8px 10px
 			box-sizing: border-box
 			cursor: pointer
 
 			&:hover
-				background-color: rgba(50,150,255, .15)
+				background-color: var(--shadow)
 
 			.navHomeItem
 				position: relative
@@ -202,7 +262,7 @@ header
 			margin: 8px 0px
 			padding: 8px 6px
 			font-size: 11pt
-			color: #999
+			color: #fff
 			cursor: default
 
 	div#options
@@ -213,6 +273,43 @@ header
 		padding-right: 20px
 		display: flex
 		flex-direction: row-reverse
+
+		#searchBar
+			position: relative
+			width: auto
+			height: 50px
+			padding: 0px 10px
+			display: flex
+			align-items: center
+
+			#searchBox
+				width: 240px
+				font-size: 13pt
+				padding: 0px 10px 0px 28px
+				box-sizing: border-box
+				border: 0px
+				color: #ddd
+				outline: 0
+				height: 32px
+				background-color: transparent
+
+				&:placeholder-shown ~ #searchBarIcon, &:placeholder-shown ~ #searchBarIcon
+					fill: rgba(255,255,255,.5)
+
+				&:not(:placeholder-shown) ~ #searchBarIcon, &:not(:placeholder-shown) ~ #searchBarIcon
+					fill: #ddd
+
+			label
+				position: absolute
+				width: 22px
+				height: 22px
+
+				#searchBarIcon
+					position: absolute
+					width: 22px
+					height: 22px
+					fill: rgba(255,255,255,.5)
+					cursor: text
 
 		.option
 			position: relative
@@ -226,7 +323,7 @@ header
 				left: 50%
 				top: 50%
 				border-radius: 50%
-				background-color: rgba(#fff,.1)
+				background-color: var(--shadow)
 				transition: all .2s
 
 			svg
@@ -262,7 +359,7 @@ header
 			div.optDropDownItem
 				position: relative
 				width: 100%
-				padding: 12px 18px
+				padding: 12px 14px
 				text-align: center
 				box-sizing: border-box
 				display: flex
@@ -300,13 +397,16 @@ header
 			.optChainDropdown
 				position: absolute
 				width: 220px
-				margin-left: -240px
+				margin-left: -236px
 				top: -8px
 				padding: 8px 0px
 				background-color: #fff
 				box-shadow: 2px 2px 8px rgba(0,0,0,.1)
 				flex-direction: column
 				display: none
+
+#searchBox::-webkit-input-placeholder
+	color: rgba(255,255,255,.5)
 
 main
 	position: absolute
@@ -345,9 +445,9 @@ main
 		position: fixed
 		width: 100%
 		height: 100%
-		background-color: rgba(0,0,0,.1)
+		background-color: var(--shadow)
 		display: none
-		z-index: 1
+		z-index: 2
 
 	#mainCenter
 		position: relative
@@ -361,16 +461,20 @@ main
 			margin-left: 0px
 			height: 100%
 			background-color: #8eacbc
+			background-color: var(--asideColor)
 			display: flex
 			flex-direction: column
 			transition: margin-left .4s
+			box-shadow: 2px 2px 8px rgba(#000,.08)
+			z-index: 1
 
 			#asideFavorites
 				position: relative
 				width: 100%
 				height: auto
 				max-height: 190px
-				box-shadow: -2px 2px 4px rgba(120,144,156,.4)
+				border-bottom: 1px solid var(--lightSeparator)
+				/*box-shadow: -2px 2px 4px rgba(120,144,156,.4)*/
 
 				#favTitle
 					justify-content: space-between
@@ -393,7 +497,7 @@ main
 						cursor: pointer
 
 						&:hover
-							background-color: #fff
+							background-color: var(--shadow)
 
 						small
 							font-size: 10pt
@@ -431,6 +535,7 @@ main
 			width: 100%
 			height: 100%
 			overflow: auto
+			background-color: var(--sectionColor)
 
 			#itemArea
 				position: relative
@@ -438,27 +543,30 @@ main
 				height: auto
 				display: flex
 				flex-wrap: wrap
-				color: $primaryColor
+				color: var(--itemTxt)
+				padding-bottom: 40px
 
 				#emptyFolder
-					padding: 25px 50px
+					padding: 30px 60px
+					cursor: default
 
 				.item
 					position: relative
 					padding: 0px 12px
 					overflow: hidden
 					box-sizing: border-box
-					box-shadow: 2px 2px 8px rgba(#000,.1)
+					//border-right: 1px solid #eee
+					//border-bottom: 1px solid #eee
 					display: flex
 
 					&:hover
-						background-color: rgba(#000,.1)
+						background-color: var(--itemHover)
 
 				.itemHidden
 					opacity: .4
 
 				.itemActive
-					background-color: rgba(#000,.1)
+					background-color: var(--itemHover)
 
 				/* estilos para las distintas vistas */
 
@@ -597,13 +705,110 @@ main
 					.itemFiletype, .itemFilesize
 						display: none
 
+			#searchArea
+				position: absolute
+				width: 100%
+				height: 100%
+				top: 0px
+				font-size: 13pt
+				background-color: var(--sectionColor)
+				display: none
+				flex-direction: column
+
+				#searchAreaHeader
+					position: relative
+					width: 100%
+					min-height: 80px
+					padding: 0px 100px
+					overflow: auto
+					box-sizing: border-box
+					border-bottom: 1px solid #ddd
+					display: flex
+					align-items: center
+					justify-content: space-between
+
+					svg
+						width: 28px
+						height: 28px
+
+						&:hover
+							fill: #f00
+
+				#searchAreaContent
+					position: relative
+					width: 100%
+					flex: 1
+
+					#searchNoResults
+						padding: 26px 50px
+
+					.item
+						position: relative
+						padding: 0px 12px
+						overflow: hidden
+						box-sizing: border-box
+						display: flex
+						cursor: default
+
+						&:hover
+							background-color: var(--itemHover)
+
+						.itemLogo
+							position: relative
+							width: 60px
+							height: 100%
+							padding: 0px
+							display: flex
+							justify-content: center
+							align-items: center
+
+							svg
+								height: 42px
+
+						.itemText
+							position: relative
+							min-width: 300px
+							height: 100%
+							display: flex
+							align-items: center
+							margin-left: 12px
+
+						.itemPath
+							position: relative
+							width: 400px
+							height: 100%
+							display: flex
+							align-items: center
+							color: #888
+
+					.itemList
+						width: 100%
+						height: 60px
+
+			#folderBackground
+				position: fixed
+				width: 500px
+				height: 500px
+				right: 10px
+				bottom: 0px
+
+				svg
+					position: absolute
+					width: 500px
+					height: 500px
+					right: 20px
+					bottom: 14px
+					fill: #f2f2f2
+
 			#folderInfo
 				position: fixed
-				right: 0px
-				bottom: 0px
+				right: 14px
+				bottom: 8px
+				border-radius: 8px
 				font-size: 11pt
 				padding: 3px 7px 4px
-				background-color: rgba(#000,.1)
+				background-color: rgba(#000,.07)
+				cursor: default
 
 /* ----- aside ----- */
 
@@ -620,7 +825,7 @@ details[open]
 	animation-timing-function: ease-in
 
 details:hover
-	background-color: #fff
+	background-color: #ddd
 
 details details
 	border: 0px
@@ -631,9 +836,6 @@ details summary p.linkTree
 
 summary p.linkTree
 	text-decoration: none
-
-summary p.linkTree:hover
-	color: #2196f3
 
 summary p.linkTree:focus
 	text-decoration: none
@@ -646,6 +848,10 @@ summary
 
 details summary::-webkit-details-marker
 	display: none
+	list-style: none
+
+details > summary
+	list-style: none
 
 summary::before
 	position: relative
@@ -656,9 +862,6 @@ summary::before
 	padding-right: 12px
 	margin-top: -5px
 	font-size: 18pt
-
-summary:hover::before
-	color: #2196f3
 
 details[open] > summary::before
 	position: relative
@@ -702,6 +905,7 @@ aside ::selection
 	position: absolute
 	top: 0
 	background-color: #cfd8dc
+	background-color: var(--primary)
 	border-radius: 100%
 
 	-webkit-animation: sk-bounce 2.0s infinite ease-in-out
@@ -770,20 +974,25 @@ aside ::selection
 	width: 100%
 	height: 100%
 	top: 0px
-	padding-top: 25px
 	background-color: rgba(#000,.1)
 	align-items: center
+	justify-content: center
+	z-index: 12
 	display: none
 
 	#settings, #history
 		//width: 950px
 		//height: 500px
 
+	#imageViewer
+		height: 560px
+
 	.dialog
 		position: relative
 		width: 950px
 		height: 520px
-		margin: 0px auto
+		border-radius: 8px
+		margin-top: 50px
 		background-color: #fff
 		box-shadow: 2px 2px 8px rgba(#000,.1)
 		display: none
@@ -794,22 +1003,40 @@ aside ::selection
 			height: 50px
 			box-shadow: 2px 2px 8px rgba(#000,.1)
 			display: flex
+			align-items: center
 			justify-content: space-between
 			z-index: 1
 
-			h2
-				padding: 10px 20px
-				font-weight: 300
+			div
 				display: flex
+				align-items: center
 
-			svg
-				width: 30px
-				height: 30px
-				fill: #777
+				.settingsTitleIcon
+					width: 30px
+					height: 30px
+					fill: #555
+					padding-left: 26px
+
+				h2
+					padding: 0px 14px
+					font-weight: normal
+					display: flex
+					cursor: default
+					align-items: center
+
+					#imageViewerUrl, #textfileViewerUrl
+						color: #aaa
+						font-size: 15pt
+						margin-left: 20px
+
+			.settingsClose
+				width: 32px
+				height: 32px
+				fill: #888
 				padding: 10px 20px
 
 				&:hover
-					fill: #000
+					fill: #f00
 
 		.dialogBody
 			position: absolute
@@ -847,6 +1074,9 @@ aside ::selection
 					p, label, span
 						color: #333
 
+					#settFormStartUp
+						display: flex
+
 					label
 						cursor: pointer
 
@@ -864,18 +1094,89 @@ aside ::selection
 						&:focus
 							background-color: #fff
 
+					.hiddenCheckbox
+						display: none
+
+					#darkModeCheckbox:checked ~ div #settCheckLabelDarkMode .settCheckboxIconOff
+						display: none
+
+					#darkModeCheckbox:checked ~ div #settCheckLabelDarkMode .settCheckboxIconOn
+						display: block
+
+					#showHiddenCheckbox:checked ~ div #settCheckLabelShowHidden .settCheckboxIconOff
+						display: none
+
+					#showHiddenCheckbox:checked ~ div #settCheckLabelShowHidden .settCheckboxIconOn
+						display: block
+
+					#showExtensionCheckbox:checked ~ div #settCheckLabelShowExt .settCheckboxIconOff
+						display: none
+
+					#showExtensionCheckbox:checked ~ div #settCheckLabelShowExt .settCheckboxIconOn
+						display: block
+
+					#systemIndexPriority:checked ~ div #settCheckLabelIndexPriority .settCheckboxIconOff
+						display: none
+
+					#systemIndexPriority:checked ~ div #settCheckLabelIndexPriority .settCheckboxIconOn
+						display: block
+
+					#defaultViewMosaic:checked ~ #settRadioLabelMosaic .settRadioIconOff
+						display: none
+
+					#defaultViewMosaic:checked ~ #settRadioLabelMosaic .settRadioIconOn
+						display: block
+
+					#defaultViewList:checked ~ #settRadioLabelList .settRadioIconOff
+						display: none
+
+					#defaultViewList:checked ~ #settRadioLabelList .settRadioIconOn
+						display: block
+
+					#defaultViewWall:checked ~ #settRadioLabelWall .settRadioIconOff
+						display: none
+
+					#defaultViewWall:checked ~ #settRadioLabelWall .settRadioIconOn
+						display: block
+
+					#defaultViewLast:checked ~ #settRadioLabelLast .settRadioIconOff
+						display: none
+
+					#defaultViewLast:checked ~ #settRadioLabelLast .settRadioIconOn
+						display: block
+
 					div
 						padding: 0px 8px
+
+						.settCheckLabel
+							width: 320px
+							display: flex
+							align-items: center
+
+						.settRadioLabel
+							width: auto
+							display: flex
+							align-items: center
+
+						.settCheckboxIconOff, .settRadioIconOff
+							margin-right: 6px
+							display: block
+
+						.settCheckboxIconOn, .settRadioIconOn
+							margin-right: 6px
+							fill: var(--primary)
+							display: none
 
 						input[type=checkbox], input[type=radio]
 							vertical-align: middle
 							margin-right: 8px
 
 						button
-							padding: 6px 14px
+							padding: 8px 16px
 							margin: 10px 5px
 							font-size: 12pt
 							background-color: #ddd
+							border-radius: 8px
 							border: 0px
 							outline: 0
 							cursor: pointer
@@ -969,7 +1270,7 @@ aside ::selection
 						padding: 12px 40px
 
 						&:last-child
-							color: #999
+							color: var(--primary)
 
 					svg
 						position: absolute
@@ -978,44 +1279,143 @@ aside ::selection
 						height: 30px
 						fill: #6f6f6f
 						padding: 7px 25px
+						cursor: pointer
 
 						&:hover
-							fill: #222
+							fill: var(--primary)
 
 				.historyActive
-					color: #34515f
-					background-color: rgba(#000,.06)
+					color: var(--primary)
+					background-color: var(--itemHover)
+					border-top: 1px solid var(--primary)
+					border-bottom: 1px solid var(--primary)
+
+		#imageViewerBody, #textfileViewerBody
+			position: absolute
+			width: 100%
+			height: 100%
+			top: 0px
+			padding-top: 50px
+			box-sizing: border-box
+			display: flex
+			justify-content: center
+			align-items: center
+
+			#imageViewerImageCanvas
+				position: relative
+				width: 100%
+				height: 100%
+				padding: 20px 28px
+				box-sizing: border-box
+				display: flex
+				align-items: center
+				justify-content: center
+
+				img
+					max-width: 100%
+					max-height: 100%
+					object-fit: contain
+
+			#textfileViewerCanvas
+				position: relative
+				width: 100%
+				height: 100%
+				padding: 10px 18px
+				box-sizing: border-box
+				overflow: auto
+
+			#imageViewerOptions, #textfileViewerOptions
+				position: absolute
+				right: 28px
+				bottom: 16px
+
+				svg
+					width: 28px
+					height: 28px
+					fill: #999
+
+					&:hover
+						fill: var(--primary)
 
 @media screen and (max-width: 1080px)
 	#dialogBack .dialog
 		width: 92%
 
+	#dialogBack #imageViewer
+		width: 92%
+
 @media screen and (max-width: 800px)
-	#dialogBack .dialog
-		width: 100%
+	#dialogBack
+		padding: 20px
+		box-sizing: border-box
+
+		.dialog
+			width: 100%
+
+		#imageViewer
+			width: 100%
 
 @media screen and (max-height: 620px)
 	#dialogBack
-		padding-top: 50px
+		padding: 20px
+		box-sizing: border-box
 
 		.dialog
+			height: 100%
+			margin-top: 0px
+
+		#imageViewer
 			height: 100%
 
 /* ----- dark mode ----- */
 
 body.darkMode .screen
-	background-color: #212121
+	background-color: var(--darkSection)
 	color: #fff
+
+body.darkMode #dialogBack
+	background-color: rgba(0,0,0,.5)
+
+body.darkMode #dialogBack .dialog #textfileViewerBody #textfileViewerCanvas
+	color: #ccc
 
 body.darkMode header
-	background-color: #484848
+	background-color: var(--darkPrimary)
+
+body.darkMode header #headerTitle #headerLogo #logoBorder
+	fill: var(--primary)
+
+body.darkMode header nav .navItem:hover
+	background-color: var(--darkShadow)
+
+body.darkMode header div#options .option .optionArea
+	background-color: var(--darkShadow)
 
 body.darkMode main #mainCenter aside
-	background: #303030
+	background: var(--darkAside)
+	border-right: 1px solid var(--darkSeparator)
 	color: #fff
 
-body.darkMode #mainCenter aside .asideTitle svg
+body.darkMode main #mainCenter aside .asideTitle svg
 	fill: #fff
+	
+body.darkMode main #mainCenter aside #asideFavorites
+	border-bottom: 1px solid var(--darkSeparator)
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody
+	.favFolder small
+		color: #aaa
+
+	.favFolder:hover
+		background-color: #555
+		color: #fff
+
+		small
+			color: #ccc
+
+body.darkMode details:hover
+	color: #fff
+	background-color: #555
 
 body.darkMode details summary p.linkTree
 	color: #fff
@@ -1027,49 +1427,90 @@ body.darkMode header div#options .optDropDown
 	color: #000
 
 body.darkMode #dialogBack .dialog
-	background-color: #444
+	background-color: #333
 
 body.darkMode main #mainCenter section #itemArea
 	color: #9eb9c6
 
 body.darkMode main #mainCenter section #itemArea .item:hover
-	background-color: rgba(255,255,255,.06)
+	background-color: var(--darkItemHover)
 
-body.darkMode main #mainCenter section #folderInfo
-	background-color: rgba(255,255,255,.06)
-
-body.darkMode main #mainCenter aside #asideFavorites
-	box-shadow: -2px 2px 4px rgba(120, 120, 120, 0.2)
-
-body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small
+body.darkMode main #mainCenter section #itemArea .itemText
 	color: #bbb
 
-body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover
-	color: #222
+body.darkMode main #mainCenter section #folderInfo
+	color: #ddd
+	background-color: rgba(255,255,255,.07)
 
-body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small
-	color: #777
+body.darkMode main #mainCenter section
+	background-color: var(--darkSection)
+
+body.darkMode main #mainCenter section #folderBackground svg
+	fill: #22272c
+
+body.darkMode main #mainCenter section #itemArea #emptyFolder
+	color: #ccc
+
+body.darkMode main #mainCenter section #searchArea
+	background-color: var(--darkSection)
+
+	#searchAreaHeader
+		border-bottom: 1px solid var(--darkSeparator)
+
+		#searchAreaHeaderLeft
+			color: #bbb
+
+		#searchAreaHeaderRight
+			fill: #ddd
+
+	#searchAreaContent #searchNoResults
+		color: #bbb
+
+	#searchAreaContent .item
+		.itemText
+			color: #bbb
+
+
 
 body.darkMode #dialogBack .dialog
 	.dialogTitleBar
-		background-color: #545454
+		border-radius: 8px 8px 0px 0px
+		background-color: var(--darkDropdown)
 
-		svg
+		.settingsTitleIcon
+			fill: #fff
+
+		.settingsClose
 			fill: #888
 
 			&:hover
-				fill: #bbb
+				fill: #FF1744
 
 	.dialogBodyCenter
 		.settingsItem
+			&:hover
+				background-color: var(--darkDialogShadow)
+
 			h3
 				color: #fff
 
 			p, label, span
 				color: #ddd
 
+			div .settCheckboxIconOff, div .settRadioIconOff
+				fill: #ddd
+
 			&:hover input[type=text]
-				background-color: #606060
+				background-color: transparent
+
+			&:hover input[type=text]:hover
+				background-color: rgba(0,255,255,.05)
+
+			&:hover select:hover
+				background-color: rgba(0,255,255,.05)
+
+			&:hover select:focus
+				background-color: #fff
 
 			select
 				color: #eee
@@ -1079,7 +1520,7 @@ body.darkMode #dialogBack .dialog
 
 		.settingsInputText input
 			color: #eee
-			background-color: #606060
+			background-color: #333
 
 			&:hover ~ .settingsInputEffect
 				border-color: #bbb
@@ -1087,24 +1528,37 @@ body.darkMode #dialogBack .dialog
 			&:focus ~ .settingsInputEffect
 				border-color: #fff
 
+		::-webkit-input-placeholder
+			color: #aaa
+
 	#historyBody #historyPaths .historyItem
-		border-bottom: 1px solid #5f5f5f
+		color: #ccc
+		border-bottom: 1px solid #444
+
+		p:last-child
+			color: #ddd
+
+		svg
+			fill: #bbb
+
+			&:hover
+				fill: var(--primary)
 
 	#historyBody #historyPaths .historyActive
-		color: #2196f3
+		color: #ddd
+		background-color: var(--darkDialogShadow)
+		border-top: 1px solid var(--darkDialogShadow)
+		border-bottom: 1px solid var(--darkDialogShadow)
 
 body.darkMode details:hover summary p.linkTree
-	color: #000
+	color: #fff
 
 body.darkMode details:hover summary::before
-	color: #444
-
-body.darkMode main #mainCenter section #itemArea .item
-	box-shadow: 2px 2px 8px rgba(0,0,0,.15)
+	color: #fff
 
 body.darkMode header div#options .optDropDown
 	color: #fff
-	background-color: #555
+	background-color: var(--darkDropdown)
 
 	div.optDropDownItem svg
 		fill: #fff
@@ -1113,17 +1567,53 @@ body.darkMode header div#options .optDropDown
 		background-color: rgba(255,255,255,.1)
 
 		.optChainDropdown
-			background-color: #606060
+			background-color: var(--darkDropdown)
 
 body.darkMode #context
-	background-color: #555
-	box-shadow: 2px 2px 7px #333
+	background-color: var(--darkDropdown)
+	box-shadow: 2px 2px 7px rgba(0,0,0,.15)
+	border: 1px solid #383838
 
 	ul li
-		color: #f0f0f0
+		color: #fff
 
 		&:hover
-			background-color: #9eb9c6
+			background-color: rgba(255,255,255,.12)
+
+body.darkMode #blocked
+	#blockedBack
+		#signIn
+			border: 1px solid #444
+
+			#signInTitle
+				background-color: #333
+
+			#signInBody
+				.signInBodyItem #signInUser, .signInBodyItem #signInPass
+					color: #ddd
+					background-color: transparent
+
+				svg
+					fill: #ddd
+
+				.signInBodyItem #signInUser:focus ~ .signInInputEffect, .signInBodyItem #signInPass:focus ~ .signInInputEffect
+					border-color: #fff
+
+				.signInBodyItem #signInSubmit
+					color: #ddd
+					background-color: rgba(255,255,255,.1)
+
+					&:hover, &:focus
+						background-color: rgba(255,255,255,.4)
+
+		#loginLang
+			select
+				color: #ddd
+				background-color: transparent
+
+				&:focus
+					color: #222
+					background-color: #fff
 
 /* ---- context menu ---- */
 

@@ -1,3 +1,25 @@
+:root {
+  /*--headerNewColor: #FB8C00*/
+  --primary: #0288D1;
+  --asideColor: #f4f4f4;
+  --sectionColor: #f8f8f8;
+  --shadow: rgba(0,0,0, .1);
+  --lightSeparator: #ccc;
+  --itemHover: rgba(2,136,209,.18);
+  --itemTxt: #34515f;
+  --darkPrimary: #1a1625;
+  --darkAside: #2f2b3a;
+  --darkSection: #2f2b3a;
+  --darkPrimary: #101214;
+  --darkAside: #1D2125;
+  --darkSection: #1D2125;
+  --darkShadow: rgba(255,255,255,.15);
+  --darkSeparator: #333;
+  --darkItemHover: rgba(255,255,255,.08);
+  --darkDropdown: #282828;
+  --darkDialogShadow: rgba(0,255,255,.1);
+}
+
 * {
   padding: 0px;
   margin: 0px;
@@ -29,8 +51,35 @@ body {
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
+}
+#blocked #blockedBack #signInBrand {
+  width: 340px;
+  padding: 24px 0px;
+  display: flex;
+  margin-top: -30px;
+  align-items: center;
+  justify-content: center;
+}
+#blocked #blockedBack #signInBrand #signInLogo {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+#blocked #blockedBack #signInBrand #signInLogo #brandBack {
+  fill: transparent;
+}
+#blocked #blockedBack #signInBrand #signInLogo #brandBorder {
+  fill: var(--primary);
+}
+#blocked #blockedBack #signInBrand h1 {
+  color: var(--primary);
+  margin-left: 20px;
+  cursor: default;
+  font-size: 32pt;
+  font-weight: normal;
 }
 #blocked #blockedBack #signIn {
   position: relative;
@@ -45,7 +94,7 @@ body {
   padding: 25px 0px;
   text-align: center;
   color: #fff;
-  background-color: #34515f;
+  background-color: var(--primary);
 }
 #blocked #blockedBack #signIn #signInTitle h1 {
   font-weight: 300;
@@ -84,7 +133,7 @@ body {
 #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInInputEffect, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInInputEffect {
   width: 100%;
   left: 0%;
-  border-color: #34515f;
+  border-color: var(--primary);
 }
 #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInIcons, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInIcons {
   fill: #444;
@@ -108,16 +157,17 @@ body {
 #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit {
   width: 100%;
   height: 50px;
-  color: #34515f;
+  color: var(--primary);
   font-size: 13pt;
   margin-top: 15px;
+  border-radius: 12px;
   text-align: center;
   border: 0px;
   outline: 0;
   background-color: #fff;
 }
 #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:hover, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:focus {
-  background-color: #f4f4f4;
+  background-color: var(--itemHover);
 }
 #blocked #blockedBack #loginLang {
   position: absolute;
@@ -139,7 +189,7 @@ header {
   width: 100%;
   height: 50px;
   top: 0px;
-  background-color: #34515f;
+  background-color: var(--primary);
   display: flex;
   justify-content: space-between;
   z-index: 10;
@@ -150,21 +200,27 @@ header div#headerTitle {
   width: auto;
   height: 100%;
   display: flex;
+  align-items: center;
   padding-right: 50px;
 }
 header div#headerTitle #headerLogo {
   position: relative;
-  width: 40px;
-  height: 40px;
-  top: 5px;
+  width: 28px;
+  height: 28px;
   left: 20px;
+}
+header div#headerTitle #headerLogo #logoBack {
+  fill: transparent;
+}
+header div#headerTitle #headerLogo #logoBorder {
+  fill: #ffb300;
+  fill: #fff;
 }
 header div#headerTitle h1 {
   color: #fff;
-  padding: 4px 0px;
   margin-left: 30px;
   cursor: default;
-  font-weight: 300;
+  font-weight: normal;
 }
 header nav {
   position: relative;
@@ -176,13 +232,15 @@ header nav .navItem {
   position: relative;
   height: 34px;
   color: #fff;
+  border-radius: 8px;
+  font-weight: 300;
   margin: 8px 0px;
   padding: 8px 10px;
   box-sizing: border-box;
   cursor: pointer;
 }
 header nav .navItem:hover {
-  background-color: rgba(50, 150, 255, 0.15);
+  background-color: var(--shadow);
 }
 header nav .navItem .navHomeItem {
   position: relative;
@@ -204,7 +262,7 @@ header nav .navSeparator {
   margin: 8px 0px;
   padding: 8px 6px;
   font-size: 11pt;
-  color: #999;
+  color: #fff;
   cursor: default;
 }
 header div#options {
@@ -215,6 +273,43 @@ header div#options {
   padding-right: 20px;
   display: flex;
   flex-direction: row-reverse;
+}
+header div#options #searchBar {
+  position: relative;
+  width: auto;
+  height: 50px;
+  padding: 0px 10px;
+  display: flex;
+  align-items: center;
+}
+header div#options #searchBar #searchBox {
+  width: 240px;
+  font-size: 13pt;
+  padding: 0px 10px 0px 28px;
+  box-sizing: border-box;
+  border: 0px;
+  color: #ddd;
+  outline: 0;
+  height: 32px;
+  background-color: transparent;
+}
+header div#options #searchBar #searchBox:placeholder-shown ~ #searchBarIcon, header div#options #searchBar #searchBox:placeholder-shown ~ #searchBarIcon {
+  fill: rgba(255, 255, 255, 0.5);
+}
+header div#options #searchBar #searchBox:not(:placeholder-shown) ~ #searchBarIcon, header div#options #searchBar #searchBox:not(:placeholder-shown) ~ #searchBarIcon {
+  fill: #ddd;
+}
+header div#options #searchBar label {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+}
+header div#options #searchBar label #searchBarIcon {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  fill: rgba(255, 255, 255, 0.5);
+  cursor: text;
 }
 header div#options .option {
   position: relative;
@@ -228,7 +323,7 @@ header div#options .option .optionArea {
   left: 50%;
   top: 50%;
   border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--shadow);
   transition: all 0.2s;
 }
 header div#options .option svg {
@@ -264,7 +359,7 @@ header div#options .optDropDown .optViewDesplActive {
 header div#options .optDropDown div.optDropDownItem {
   position: relative;
   width: 100%;
-  padding: 12px 18px;
+  padding: 12px 14px;
   text-align: center;
   box-sizing: border-box;
   display: flex;
@@ -302,13 +397,17 @@ header div#options .optDropDown div.optDropDownItem p small {
 header div#options .optDropDown .optChainDropdown {
   position: absolute;
   width: 220px;
-  margin-left: -240px;
+  margin-left: -236px;
   top: -8px;
   padding: 8px 0px;
   background-color: #fff;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   flex-direction: column;
   display: none;
+}
+
+#searchBox::-webkit-input-placeholder {
+  color: rgba(255, 255, 255, 0.5);
 }
 
 main {
@@ -348,9 +447,9 @@ main #shadow {
   position: fixed;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--shadow);
   display: none;
-  z-index: 1;
+  z-index: 2;
 }
 main #mainCenter {
   position: relative;
@@ -364,16 +463,20 @@ main #mainCenter aside {
   margin-left: 0px;
   height: 100%;
   background-color: #8eacbc;
+  background-color: var(--asideColor);
   display: flex;
   flex-direction: column;
   transition: margin-left 0.4s;
+  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.08);
+  z-index: 1;
 }
 main #mainCenter aside #asideFavorites {
   position: relative;
   width: 100%;
   height: auto;
   max-height: 190px;
-  box-shadow: -2px 2px 4px rgba(120, 144, 156, 0.4);
+  border-bottom: 1px solid var(--lightSeparator);
+  /*box-shadow: -2px 2px 4px rgba(120,144,156,.4)*/
 }
 main #mainCenter aside #asideFavorites #favTitle {
   justify-content: space-between;
@@ -396,7 +499,7 @@ main #mainCenter aside #asideFavorites #asideFavBody .favFolder {
   cursor: pointer;
 }
 main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover {
-  background-color: #fff;
+  background-color: var(--shadow);
 }
 main #mainCenter aside #asideFavorites #asideFavBody .favFolder small {
   font-size: 10pt;
@@ -434,6 +537,7 @@ main #mainCenter section {
   width: 100%;
   height: 100%;
   overflow: auto;
+  background-color: var(--sectionColor);
 }
 main #mainCenter section #itemArea {
   position: relative;
@@ -441,28 +545,29 @@ main #mainCenter section #itemArea {
   height: auto;
   display: flex;
   flex-wrap: wrap;
-  color: #34515f;
+  color: var(--itemTxt);
+  padding-bottom: 40px;
   /* estilos para las distintas vistas */
 }
 main #mainCenter section #itemArea #emptyFolder {
-  padding: 25px 50px;
+  padding: 30px 60px;
+  cursor: default;
 }
 main #mainCenter section #itemArea .item {
   position: relative;
   padding: 0px 12px;
   overflow: hidden;
   box-sizing: border-box;
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
 }
 main #mainCenter section #itemArea .item:hover {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--itemHover);
 }
 main #mainCenter section #itemArea .itemHidden {
   opacity: 0.4;
 }
 main #mainCenter section #itemArea .itemActive {
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: var(--itemHover);
 }
 main #mainCenter section #itemArea .itemMosaic {
   width: 16.6666666667%;
@@ -596,13 +701,110 @@ main #mainCenter section #itemArea .itemWall .itemText p[split-lines] {
 main #mainCenter section #itemArea .itemWall .itemFiletype, main #mainCenter section #itemArea .itemWall .itemFilesize {
   display: none;
 }
+main #mainCenter section #searchArea {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  font-size: 13pt;
+  background-color: var(--sectionColor);
+  display: none;
+  flex-direction: column;
+}
+main #mainCenter section #searchArea #searchAreaHeader {
+  position: relative;
+  width: 100%;
+  min-height: 80px;
+  padding: 0px 100px;
+  overflow: auto;
+  box-sizing: border-box;
+  border-bottom: 1px solid #ddd;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+main #mainCenter section #searchArea #searchAreaHeader svg {
+  width: 28px;
+  height: 28px;
+}
+main #mainCenter section #searchArea #searchAreaHeader svg:hover {
+  fill: #f00;
+}
+main #mainCenter section #searchArea #searchAreaContent {
+  position: relative;
+  width: 100%;
+  flex: 1;
+}
+main #mainCenter section #searchArea #searchAreaContent #searchNoResults {
+  padding: 26px 50px;
+}
+main #mainCenter section #searchArea #searchAreaContent .item {
+  position: relative;
+  padding: 0px 12px;
+  overflow: hidden;
+  box-sizing: border-box;
+  display: flex;
+  cursor: default;
+}
+main #mainCenter section #searchArea #searchAreaContent .item:hover {
+  background-color: var(--itemHover);
+}
+main #mainCenter section #searchArea #searchAreaContent .item .itemLogo {
+  position: relative;
+  width: 60px;
+  height: 100%;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+main #mainCenter section #searchArea #searchAreaContent .item .itemLogo svg {
+  height: 42px;
+}
+main #mainCenter section #searchArea #searchAreaContent .item .itemText {
+  position: relative;
+  min-width: 300px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-left: 12px;
+}
+main #mainCenter section #searchArea #searchAreaContent .item .itemPath {
+  position: relative;
+  width: 400px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  color: #888;
+}
+main #mainCenter section #searchArea #searchAreaContent .itemList {
+  width: 100%;
+  height: 60px;
+}
+main #mainCenter section #folderBackground {
+  position: fixed;
+  width: 500px;
+  height: 500px;
+  right: 10px;
+  bottom: 0px;
+}
+main #mainCenter section #folderBackground svg {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  right: 20px;
+  bottom: 14px;
+  fill: #f2f2f2;
+}
 main #mainCenter section #folderInfo {
   position: fixed;
-  right: 0px;
-  bottom: 0px;
+  right: 14px;
+  bottom: 8px;
+  border-radius: 8px;
   font-size: 11pt;
   padding: 3px 7px 4px;
-  background-color: rgba(0, 0, 0, 0.1);
+  background-color: rgba(0, 0, 0, 0.07);
+  cursor: default;
 }
 
 /* ----- aside ----- */
@@ -621,7 +823,7 @@ details[open] {
 }
 
 details:hover {
-  background-color: #fff;
+  background-color: #ddd;
 }
 
 details details {
@@ -635,10 +837,6 @@ details summary p.linkTree {
 
 summary p.linkTree {
   text-decoration: none;
-}
-
-summary p.linkTree:hover {
-  color: #2196f3;
 }
 
 summary p.linkTree:focus {
@@ -655,6 +853,11 @@ summary {
 
 details summary::-webkit-details-marker {
   display: none;
+  list-style: none;
+}
+
+details > summary {
+  list-style: none;
 }
 
 summary::before {
@@ -666,10 +869,6 @@ summary::before {
   padding-right: 12px;
   margin-top: -5px;
   font-size: 18pt;
-}
-
-summary:hover::before {
-  color: #2196f3;
 }
 
 details[open] > summary::before {
@@ -716,6 +915,7 @@ aside ::selection {
   position: absolute;
   top: 0;
   background-color: #cfd8dc;
+  background-color: var(--primary);
   border-radius: 100%;
   -webkit-animation: sk-bounce 2s infinite ease-in-out;
   animation: sk-bounce 2s infinite ease-in-out;
@@ -794,16 +994,21 @@ aside ::selection {
   width: 100%;
   height: 100%;
   top: 0px;
-  padding-top: 25px;
   background-color: rgba(0, 0, 0, 0.1);
   align-items: center;
+  justify-content: center;
+  z-index: 12;
   display: none;
+}
+#dialogBack #imageViewer {
+  height: 560px;
 }
 #dialogBack .dialog {
   position: relative;
   width: 950px;
   height: 520px;
-  margin: 0px auto;
+  border-radius: 8px;
+  margin-top: 50px;
   background-color: #fff;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   display: none;
@@ -814,22 +1019,40 @@ aside ::selection {
   height: 50px;
   box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   display: flex;
+  align-items: center;
   justify-content: space-between;
   z-index: 1;
 }
-#dialogBack .dialog .dialogTitleBar h2 {
-  padding: 10px 20px;
-  font-weight: 300;
+#dialogBack .dialog .dialogTitleBar div {
   display: flex;
+  align-items: center;
 }
-#dialogBack .dialog .dialogTitleBar svg {
+#dialogBack .dialog .dialogTitleBar div .settingsTitleIcon {
   width: 30px;
   height: 30px;
-  fill: #777;
+  fill: #555;
+  padding-left: 26px;
+}
+#dialogBack .dialog .dialogTitleBar div h2 {
+  padding: 0px 14px;
+  font-weight: normal;
+  display: flex;
+  cursor: default;
+  align-items: center;
+}
+#dialogBack .dialog .dialogTitleBar div h2 #imageViewerUrl, #dialogBack .dialog .dialogTitleBar div h2 #textfileViewerUrl {
+  color: #aaa;
+  font-size: 15pt;
+  margin-left: 20px;
+}
+#dialogBack .dialog .dialogTitleBar .settingsClose {
+  width: 32px;
+  height: 32px;
+  fill: #888;
   padding: 10px 20px;
 }
-#dialogBack .dialog .dialogTitleBar svg:hover {
-  fill: #000;
+#dialogBack .dialog .dialogTitleBar .settingsClose:hover {
+  fill: #f00;
 }
 #dialogBack .dialog .dialogBody {
   position: absolute;
@@ -867,6 +1090,9 @@ aside ::selection {
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem p, #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem label, #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem span {
   color: #333;
 }
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #settFormStartUp {
+  display: flex;
+}
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem label {
   cursor: pointer;
 }
@@ -884,18 +1110,89 @@ aside ::selection {
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem select:focus {
   background-color: #fff;
 }
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem .hiddenCheckbox {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #darkModeCheckbox:checked ~ div #settCheckLabelDarkMode .settCheckboxIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #darkModeCheckbox:checked ~ div #settCheckLabelDarkMode .settCheckboxIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #showHiddenCheckbox:checked ~ div #settCheckLabelShowHidden .settCheckboxIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #showHiddenCheckbox:checked ~ div #settCheckLabelShowHidden .settCheckboxIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #showExtensionCheckbox:checked ~ div #settCheckLabelShowExt .settCheckboxIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #showExtensionCheckbox:checked ~ div #settCheckLabelShowExt .settCheckboxIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #systemIndexPriority:checked ~ div #settCheckLabelIndexPriority .settCheckboxIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #systemIndexPriority:checked ~ div #settCheckLabelIndexPriority .settCheckboxIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewMosaic:checked ~ #settRadioLabelMosaic .settRadioIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewMosaic:checked ~ #settRadioLabelMosaic .settRadioIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewList:checked ~ #settRadioLabelList .settRadioIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewList:checked ~ #settRadioLabelList .settRadioIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewWall:checked ~ #settRadioLabelWall .settRadioIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewWall:checked ~ #settRadioLabelWall .settRadioIconOn {
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewLast:checked ~ #settRadioLabelLast .settRadioIconOff {
+  display: none;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #defaultViewLast:checked ~ #settRadioLabelLast .settRadioIconOn {
+  display: block;
+}
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div {
   padding: 0px 8px;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div .settCheckLabel {
+  width: 320px;
+  display: flex;
+  align-items: center;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div .settRadioLabel {
+  width: auto;
+  display: flex;
+  align-items: center;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div .settCheckboxIconOff, #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div .settRadioIconOff {
+  margin-right: 6px;
+  display: block;
+}
+#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div .settCheckboxIconOn, #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div .settRadioIconOn {
+  margin-right: 6px;
+  fill: var(--primary);
+  display: none;
 }
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=checkbox], #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div input[type=radio] {
   vertical-align: middle;
   margin-right: 8px;
 }
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem div button {
-  padding: 6px 14px;
+  padding: 8px 16px;
   margin: 10px 5px;
   font-size: 12pt;
   background-color: #ddd;
+  border-radius: 8px;
   border: 0px;
   outline: 0;
   cursor: pointer;
@@ -988,7 +1285,7 @@ aside ::selection {
   padding: 12px 40px;
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem p:last-child {
-  color: #999;
+  color: var(--primary);
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem svg {
   position: absolute;
@@ -997,50 +1294,157 @@ aside ::selection {
   height: 30px;
   fill: #6f6f6f;
   padding: 7px 25px;
+  cursor: pointer;
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover {
-  fill: #222;
+  fill: var(--primary);
 }
 #dialogBack .dialog #historyBody #historyPaths .historyActive {
-  color: #34515f;
-  background-color: rgba(0, 0, 0, 0.06);
+  color: var(--primary);
+  background-color: var(--itemHover);
+  border-top: 1px solid var(--primary);
+  border-bottom: 1px solid var(--primary);
+}
+#dialogBack .dialog #imageViewerBody, #dialogBack .dialog #textfileViewerBody {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0px;
+  padding-top: 50px;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+#dialogBack .dialog #imageViewerBody #imageViewerImageCanvas, #dialogBack .dialog #textfileViewerBody #imageViewerImageCanvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 20px 28px;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#dialogBack .dialog #imageViewerBody #imageViewerImageCanvas img, #dialogBack .dialog #textfileViewerBody #imageViewerImageCanvas img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+#dialogBack .dialog #imageViewerBody #textfileViewerCanvas, #dialogBack .dialog #textfileViewerBody #textfileViewerCanvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 10px 18px;
+  box-sizing: border-box;
+  overflow: auto;
+}
+#dialogBack .dialog #imageViewerBody #imageViewerOptions, #dialogBack .dialog #imageViewerBody #textfileViewerOptions, #dialogBack .dialog #textfileViewerBody #imageViewerOptions, #dialogBack .dialog #textfileViewerBody #textfileViewerOptions {
+  position: absolute;
+  right: 28px;
+  bottom: 16px;
+}
+#dialogBack .dialog #imageViewerBody #imageViewerOptions svg, #dialogBack .dialog #imageViewerBody #textfileViewerOptions svg, #dialogBack .dialog #textfileViewerBody #imageViewerOptions svg, #dialogBack .dialog #textfileViewerBody #textfileViewerOptions svg {
+  width: 28px;
+  height: 28px;
+  fill: #999;
+}
+#dialogBack .dialog #imageViewerBody #imageViewerOptions svg:hover, #dialogBack .dialog #imageViewerBody #textfileViewerOptions svg:hover, #dialogBack .dialog #textfileViewerBody #imageViewerOptions svg:hover, #dialogBack .dialog #textfileViewerBody #textfileViewerOptions svg:hover {
+  fill: var(--primary);
 }
 
 @media screen and (max-width: 1080px) {
   #dialogBack .dialog {
     width: 92%;
   }
+
+  #dialogBack #imageViewer {
+    width: 92%;
+  }
 }
 @media screen and (max-width: 800px) {
+  #dialogBack {
+    padding: 20px;
+    box-sizing: border-box;
+  }
   #dialogBack .dialog {
+    width: 100%;
+  }
+  #dialogBack #imageViewer {
     width: 100%;
   }
 }
 @media screen and (max-height: 620px) {
   #dialogBack {
-    padding-top: 50px;
+    padding: 20px;
+    box-sizing: border-box;
   }
   #dialogBack .dialog {
+    height: 100%;
+    margin-top: 0px;
+  }
+  #dialogBack #imageViewer {
     height: 100%;
   }
 }
 /* ----- dark mode ----- */
 body.darkMode .screen {
-  background-color: #212121;
+  background-color: var(--darkSection);
   color: #fff;
+}
+
+body.darkMode #dialogBack {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+body.darkMode #dialogBack .dialog #textfileViewerBody #textfileViewerCanvas {
+  color: #ccc;
 }
 
 body.darkMode header {
-  background-color: #484848;
+  background-color: var(--darkPrimary);
+}
+
+body.darkMode header #headerTitle #headerLogo #logoBorder {
+  fill: var(--primary);
+}
+
+body.darkMode header nav .navItem:hover {
+  background-color: var(--darkShadow);
+}
+
+body.darkMode header div#options .option .optionArea {
+  background-color: var(--darkShadow);
 }
 
 body.darkMode main #mainCenter aside {
-  background: #303030;
+  background: var(--darkAside);
+  border-right: 1px solid var(--darkSeparator);
   color: #fff;
 }
 
-body.darkMode #mainCenter aside .asideTitle svg {
+body.darkMode main #mainCenter aside .asideTitle svg {
   fill: #fff;
+}
+
+body.darkMode main #mainCenter aside #asideFavorites {
+  border-bottom: 1px solid var(--darkSeparator);
+}
+
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small {
+  color: #aaa;
+}
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover {
+  background-color: #555;
+  color: #fff;
+}
+body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small {
+  color: #ccc;
+}
+
+body.darkMode details:hover {
+  color: #fff;
+  background-color: #555;
 }
 
 body.darkMode details summary p.linkTree {
@@ -1056,7 +1460,7 @@ body.darkMode header div#options .optDropDown {
 }
 
 body.darkMode #dialogBack .dialog {
-  background-color: #444;
+  background-color: #333;
 }
 
 body.darkMode main #mainCenter section #itemArea {
@@ -1064,37 +1468,64 @@ body.darkMode main #mainCenter section #itemArea {
 }
 
 body.darkMode main #mainCenter section #itemArea .item:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--darkItemHover);
 }
 
-body.darkMode main #mainCenter section #folderInfo {
-  background-color: rgba(255, 255, 255, 0.06);
-}
-
-body.darkMode main #mainCenter aside #asideFavorites {
-  box-shadow: -2px 2px 4px rgba(120, 120, 120, 0.2);
-}
-
-body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder small {
+body.darkMode main #mainCenter section #itemArea .itemText {
   color: #bbb;
 }
 
-body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover {
-  color: #222;
+body.darkMode main #mainCenter section #folderInfo {
+  color: #ddd;
+  background-color: rgba(255, 255, 255, 0.07);
 }
 
-body.darkMode main #mainCenter aside #asideFavorites #asideFavBody .favFolder:hover small {
-  color: #777;
+body.darkMode main #mainCenter section {
+  background-color: var(--darkSection);
+}
+
+body.darkMode main #mainCenter section #folderBackground svg {
+  fill: #22272c;
+}
+
+body.darkMode main #mainCenter section #itemArea #emptyFolder {
+  color: #ccc;
+}
+
+body.darkMode main #mainCenter section #searchArea {
+  background-color: var(--darkSection);
+}
+body.darkMode main #mainCenter section #searchArea #searchAreaHeader {
+  border-bottom: 1px solid var(--darkSeparator);
+}
+body.darkMode main #mainCenter section #searchArea #searchAreaHeader #searchAreaHeaderLeft {
+  color: #bbb;
+}
+body.darkMode main #mainCenter section #searchArea #searchAreaHeader #searchAreaHeaderRight {
+  fill: #ddd;
+}
+body.darkMode main #mainCenter section #searchArea #searchAreaContent #searchNoResults {
+  color: #bbb;
+}
+body.darkMode main #mainCenter section #searchArea #searchAreaContent .item .itemText {
+  color: #bbb;
 }
 
 body.darkMode #dialogBack .dialog .dialogTitleBar {
-  background-color: #545454;
+  border-radius: 8px 8px 0px 0px;
+  background-color: var(--darkDropdown);
 }
-body.darkMode #dialogBack .dialog .dialogTitleBar svg {
+body.darkMode #dialogBack .dialog .dialogTitleBar .settingsTitleIcon {
+  fill: #fff;
+}
+body.darkMode #dialogBack .dialog .dialogTitleBar .settingsClose {
   fill: #888;
 }
-body.darkMode #dialogBack .dialog .dialogTitleBar svg:hover {
-  fill: #bbb;
+body.darkMode #dialogBack .dialog .dialogTitleBar .settingsClose:hover {
+  fill: #FF1744;
+}
+body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover {
+  background-color: var(--darkDialogShadow);
 }
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem h3 {
   color: #fff;
@@ -1102,8 +1533,20 @@ body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem h3 {
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem p, body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem label, body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem span {
   color: #ddd;
 }
+body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem div .settCheckboxIconOff, body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem div .settRadioIconOff {
+  fill: #ddd;
+}
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover input[type=text] {
-  background-color: #606060;
+  background-color: transparent;
+}
+body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover input[type=text]:hover {
+  background-color: rgba(0, 255, 255, 0.05);
+}
+body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover select:hover {
+  background-color: rgba(0, 255, 255, 0.05);
+}
+body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover select:focus {
+  background-color: #fff;
 }
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem select {
   color: #eee;
@@ -1113,7 +1556,7 @@ body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem select:focus {
 }
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input {
   color: #eee;
-  background-color: #606060;
+  background-color: #333;
 }
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:hover ~ .settingsInputEffect {
   border-color: #bbb;
@@ -1121,28 +1564,40 @@ body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:hov
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsInputText input:focus ~ .settingsInputEffect {
   border-color: #fff;
 }
+body.darkMode #dialogBack .dialog .dialogBodyCenter ::-webkit-input-placeholder {
+  color: #aaa;
+}
 body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem {
-  border-bottom: 1px solid #5f5f5f;
+  color: #ccc;
+  border-bottom: 1px solid #444;
+}
+body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem p:last-child {
+  color: #ddd;
+}
+body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem svg {
+  fill: #bbb;
+}
+body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover {
+  fill: var(--primary);
 }
 body.darkMode #dialogBack .dialog #historyBody #historyPaths .historyActive {
-  color: #2196f3;
+  color: #ddd;
+  background-color: var(--darkDialogShadow);
+  border-top: 1px solid var(--darkDialogShadow);
+  border-bottom: 1px solid var(--darkDialogShadow);
 }
 
 body.darkMode details:hover summary p.linkTree {
-  color: #000;
+  color: #fff;
 }
 
 body.darkMode details:hover summary::before {
-  color: #444;
-}
-
-body.darkMode main #mainCenter section #itemArea .item {
-  box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.15);
+  color: #fff;
 }
 
 body.darkMode header div#options .optDropDown {
   color: #fff;
-  background-color: #555;
+  background-color: var(--darkDropdown);
 }
 body.darkMode header div#options .optDropDown div.optDropDownItem svg {
   fill: #fff;
@@ -1151,18 +1606,51 @@ body.darkMode header div#options .optDropDown div.optDropDownItem:hover {
   background-color: rgba(255, 255, 255, 0.1);
 }
 body.darkMode header div#options .optDropDown div.optDropDownItem:hover .optChainDropdown {
-  background-color: #606060;
+  background-color: var(--darkDropdown);
 }
 
 body.darkMode #context {
-  background-color: #555;
-  box-shadow: 2px 2px 7px #333;
+  background-color: var(--darkDropdown);
+  box-shadow: 2px 2px 7px rgba(0, 0, 0, 0.15);
+  border: 1px solid #383838;
 }
 body.darkMode #context ul li {
-  color: #f0f0f0;
+  color: #fff;
 }
 body.darkMode #context ul li:hover {
-  background-color: #9eb9c6;
+  background-color: rgba(255, 255, 255, 0.12);
+}
+
+body.darkMode #blocked #blockedBack #signIn {
+  border: 1px solid #444;
+}
+body.darkMode #blocked #blockedBack #signIn #signInTitle {
+  background-color: #333;
+}
+body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser, body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass {
+  color: #ddd;
+  background-color: transparent;
+}
+body.darkMode #blocked #blockedBack #signIn #signInBody svg {
+  fill: #ddd;
+}
+body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus ~ .signInInputEffect, body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus ~ .signInInputEffect {
+  border-color: #fff;
+}
+body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit {
+  color: #ddd;
+  background-color: rgba(255, 255, 255, 0.1);
+}
+body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:hover, body.darkMode #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:focus {
+  background-color: rgba(255, 255, 255, 0.4);
+}
+body.darkMode #blocked #blockedBack #loginLang select {
+  color: #ddd;
+  background-color: transparent;
+}
+body.darkMode #blocked #blockedBack #loginLang select:focus {
+  color: #222;
+  background-color: #fff;
 }
 
 /* ---- context menu ---- */

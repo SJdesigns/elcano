@@ -2,10 +2,10 @@
 
 $userList = array(
 // LIST OF USERS
-// ----------------------------------------------------
+// --------------------------------------------------------
 // type your users here in the format 'user' => 'password',
-    'root' => 'admin',
-// ----------------------------------------------------
+    'user1' => 'pass1',
+// --------------------------------------------------------
 );
 
 if (isset($_GET['token'])) {
@@ -32,16 +32,16 @@ if (isset($_GET['token'])) {
         if ($existentUser==0) {
             $return['status'] = 400;
             $return['token'] = $token;
-            $return['message'] = 'Wrong User';
+            $return['message'] = 'WrongUser';
         } else {
             if ($credentialsCorrect>0) { // login successfull
                 $return['status'] = 200;
                 $return['token'] = $token;
-                $return['message'] = 'Access Granted';
+                $return['message'] = 'AccessGranted';
             } else { // wrong password
                 $return['status'] = 400;
                 $return['token'] = $token;
-                $return['message'] = 'Wrong Credentials';
+                $return['message'] = 'WrongCredentials';
             }
         }
 
@@ -52,13 +52,13 @@ if (isset($_GET['token'])) {
     } else { // missing login data
         $return['status'] = 400;
         $return['token'] = $token;
-        $return['message'] = 'missing data';
+        $return['message'] = 'missingData';
     }
 
 } else { // missing token
     $return['status'] = 400;
     $return['token'] = 'null';
-    $return['message'] = 'missing data';
+    $return['message'] = 'missingData';
 }
 
 echo json_encode($return);

@@ -1,5 +1,6 @@
 <?php
 // language support
+// this file must be copied into the index.php in it's designated area to apply any change
 
 if (!isset($_COOKIE['elcano-lang'])) {
     setcookie('elcano-lang', substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2), time()+60*60*24*365, '/', "", false, false);
@@ -14,9 +15,16 @@ $langTxt = [
             'title' => 'Inicio de Sesión',
             'user' => 'usuario',
             'pass' => 'contraseña',
-            'submit' => 'Continuar'
+            'submit' => 'Continuar',
+            'error' => [
+                'WrongUser' => 'Usuario erroneo',
+                'AccessGranted' => 'Acceso permitido',
+                'WrongCredentials' => 'Contraseña erronea',
+                'MissingData' => 'Falta Informacion',
+            ],
         ],
         'header' => [
+            'headSearch' => 'Buscar ficheros',
             'headStartUp' => 'Ejecutar el índice del directorio',
             'headDataBase' => 'Acceder a la base de datos',
             'headFavorite' => 'Añadir a favoritos',
@@ -42,6 +50,8 @@ $langTxt = [
             'sectionFolder' => 'carpetas',
             'sectionFiles' => 'archivos',
             'noResults' => 'Esta carpeta está vacia',
+            'searchResultsTitle' => 'Resultados de la búsqueda para',
+            'searchNoResults' => 'Ningún fichero contiene el término de búsqueda',
         ],
         'context' => [
             'contextExplore' => 'Explorar',
@@ -50,6 +60,10 @@ $langTxt = [
         ],
         'history' => [
             'historyHome' => 'Página de Inicio',
+        ],
+        'viewer' => [
+            'imageViewerTitle' => 'Visor de imágenes',
+            'textfileViewerTitle' => 'Visor de texto plano',
         ],
         'settings' => [
             'general' => 'General',
@@ -84,9 +98,16 @@ $langTxt = [
             'title' => 'Log In',
             'user' => 'user',
             'pass' => 'password',
-            'submit' => 'Continue'
+            'submit' => 'Continue',
+            'error' => [
+                'WrongUser' => 'Wrong user',
+                'AccessGranted' => 'Access granted',
+                'WrongCredentials' => 'Wrong credentials',
+                'MissingData' => 'Missing data',
+            ],
         ],
         'header' => [
+            'headSearch' => 'Search files',
             'headStartUp' => 'Run directory index',
             'headDataBase' => 'Access database',
             'headFavorite' => 'Add to favorites',
@@ -112,6 +133,8 @@ $langTxt = [
             'sectionFolder' => 'folders',
             'sectionFiles' => 'files',
             'noResults' => 'This folder is empty',
+            'searchResultsTitle' => 'Search results for',
+            'searchNoResults' => 'Your search didn\'t match any file',
         ],
         'context' => [
             'contextExplore' => 'Explore',
@@ -120,6 +143,10 @@ $langTxt = [
         ],
         'history' => [
             'historyHome' => 'Homepage',
+        ],
+        'viewer' => [
+            'imageViewerTitle' => 'Image viewer',
+            'textfileViewerTitle' => 'Plain text viewer',
         ],
         'settings' => [
             'general' => 'General',
@@ -154,9 +181,16 @@ $langTxt = [
             'title' => 'Se Connecter',
             'user' => 'Nom d\'utilisateur',
             'pass' => 'mot de passe',
-            'submit' => 'Se Connecter'
+            'submit' => 'Se Connecter',
+            'error' => [
+                'WrongUser' => 'Utilisateur inexistant',
+                'AccessGranted' => 'Accès autorisé',
+                'WrongCredentials' => 'mot de passe incorrect',
+                'MissingData' => 'Manque des informations',
+            ],
         ],
         'header' => [
+            'headSearch' => 'Rechercher des fichers',
             'headStartUp' => 'Exécuter l\'index du répertoire',
             'headDataBase' => 'Accéder à la base de données',
             'headFavorite' => 'Ajouter aux favoris',
@@ -176,12 +210,14 @@ $langTxt = [
         ],
         'aside' => [
             'asideFav' => 'Favoris',
-            'asideDir' => 'Arborescence de directories',
+            'asideDir' => 'Arbre des dossiers',
         ],
         'section' => [
             'sectionFolder' => 'dossiers',
             'sectionFiles' => 'fichiers',
             'noResults' => 'ce dossier est vide',
+            'searchResultsTitle' => 'Résultats de recherche pour',
+            'searchNoResults' => 'Votre recherche n\'a donné aucun résultat',
         ],
         'context' => [
             'contextExplore' => 'Explorer',
@@ -190,6 +226,10 @@ $langTxt = [
         ],
         'history' => [
             'historyHome' => 'Accueil',
+        ],
+        'viewer' => [
+            'imageViewerTitle' => 'Visionneuse d\'images',
+            'textfileViewerTitle' => 'Visionneuse de texte brut',
         ],
         'settings' => [
             'general' => 'Général',
