@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.2.5 ---- */
+/* ---- elcano Explorer v3.2.6 ---- */
 
 // global variables
-var version = '3.2.5';
+var version = '3.2.6';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del explorador
 var favorites = []; // almacena las rutas favoritas
@@ -13,7 +13,7 @@ var defaultDirectoryIndex = ['index.php','index.asp','index.html'];
 var ignoreFiles = [];
 var currentPathLaunch = false; // almacena el fichero ejecutable prioritario en el directorio actual (modificado por la funcion setLaunchOptions)
 var timelinePosition = 0; // es true cuando el directorio actual ha sido accedido volviendo atrás en el historial
-var defaultSettings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'dbpath':'http://localhost/phpmyadmin/','firstLoad':false}; // configuracion por defecto de la aplicacion
+var defaultSettings = {'version':version,'tree':true,'view':'Mosaic','darkMode':false,'showHidden':false,'showExtensions':true,'defaultView':'last','debug':true,'ignoreFiles':ignoreFiles,'systemIndex':true,'directoryIndex':defaultDirectoryIndex,'dbpath':'http://localhost/phpmyadmin/','videopath':'','firstLoad':false}; // configuracion por defecto de la aplicacion
 var lang = getCookie('elcano-lang');
 var directoryTree = {};
 var searchPanelShown = false;
@@ -371,9 +371,12 @@ function readFich(url) {
 
     let fExt = url.split('.').pop();
     let imageTypes = ['jpg','jpeg','gif','png','webp','bmp','tiff','svg'];
+    let videoTypes = ['mp4','mov','wmv','avi','mkv','webm','mpeg-2'];
 
     if (imageTypes.includes(fExt)) {
         showImageViewer(true,url);
+    } else if (videoTypes.includes(fExt)) {
+        openVideoFile(url);
     } else if (fExt == 'txt') {
         showTextfileViewer(true,url);
     } else {
@@ -946,6 +949,14 @@ function setSettings() {
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
     });
 
+    // video player
+    $('#videoplayerPathInput').val(settings.videopath);
+
+    $('#videoplayerPathInput').on('change',function() {
+        settings.videopath = $('#videoplayerPathInput').val();
+        localStorage.setItem('elcano-settings',JSON.stringify(settings));
+    });
+
     // lang
     if (langs[lang] != null) {
         $('#settingsSelectLang').val(lang);
@@ -1033,6 +1044,12 @@ function upgradeSettings() { // actualiza los datos del localStorage si el usuar
             newSettings.dbpath = defaultSettings.dbpath;
         }
 
+        if (!settings.videopath) {
+            newSettings.videopath = '';
+        } else {
+            newSettings.videopath = defaultSettings.videopath;
+        }
+
         if (settings.firstLoad == true || settings.firstLoad == false) {
             newSettings.firstLoad = settings.firstLoad;
         } else {
@@ -1096,7 +1113,37 @@ function showTextfileViewer(op, url) {
 }
 
 function openTextfileNewTab(url) {
+    console.log(url);
     window.open(url, '_blank');
+}
+
+function openVideoFile(url) {
+    console.log('openVideoFile('+url+')');
+
+    let base = window.location.href;
+    let baseSplit = base.split('/');
+    baseSplit.pop();
+    let baseJoin = baseSplit.join('/');
+
+    var fileUrl = url.split('/').slice(1).join('/');
+
+    /*console.log(base);
+    console.log(baseSplit);
+    console.log(baseJoin);
+    console.log(fileUrl);
+    console.log(baseJoin+'/'+fileUrl);*/
+
+    let fullUrl = baseJoin+'/'+fileUrl;
+
+    if (settings.videopath !== undefined) {
+        if (settings.videopath == '') {
+            window.open(url, '_blank');
+        } else {
+            window.open(settings.videopath+'?load='+fullUrl, '_blank');
+        }
+    } else {
+        window.open(url, '_blank');
+    }
 }
 
 function searchFile(q) {
