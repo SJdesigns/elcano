@@ -1,7 +1,7 @@
 /* ---- elcano Explorer js ---- */
 
 // global variables
-var version = '3.2.7';
+var version = '3.2.8';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del explorador
 var favorites = []; // almacena las rutas favoritas

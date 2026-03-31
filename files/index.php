@@ -1,6 +1,6 @@
 <?php
 /* -------- elcano Explorer -------- */
-/* -- version              3.2.7  -- */
+/* -- version              3.2.8  -- */
 /* -- updated          31/03/2026 -- */
 /* -- author           @SJdesigns -- */
 /* --------------------------------- */
@@ -11,6 +11,8 @@ if (isset($_GET['token'])) {
     // ## REF ## listDirectory.php
 } else if (isset($_POST['dirTree'])) {
     // ## REF ## directoryTree.php
+} else if (isset($_POST['ruta'])) {
+    // ## REF ## readfile.php
 } else {
     // ## REF ## lang.php
 

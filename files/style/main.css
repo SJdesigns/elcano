@@ -1451,6 +1451,7 @@ aside ::selection {
   height: auto;
   padding: 16px 24px;
   box-sizing: border-box;
+  border-bottom: 0px solid #eee;
 }
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem:hover {
   background-color: rgba(0, 0, 0, 0.04);
@@ -1799,14 +1800,15 @@ aside ::selection {
     height: 100%;
     margin-top: 0px;
   }
-  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
-    border-bottom: 1px solid #eee;
-  }
   #dialogBack #imageViewer {
     height: 100%;
   }
 }
 @media screen and (max-width: 550px) {
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
+    border-width: 1px;
+  }
+
   #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
     padding: 14px 12px;
   }
@@ -1935,7 +1937,7 @@ body.darkMode main #mainCenter section #audioPlayer #playPauseBtn:hover {
 }
 
 body.darkMode main #mainCenter section #audioPlayer #progressBar,
-main #mainCenter section #audioPlayer #volumeBar {
+body.darkMode main #mainCenter section #audioPlayer #volumeBar {
   background: #777;
 }
 
@@ -1987,6 +1989,9 @@ body.darkMode #dialogBack .dialog .dialogTitleBar .settingsClose {
 }
 body.darkMode #dialogBack .dialog .dialogTitleBar .settingsClose:hover {
   fill: #FF1744;
+}
+body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem {
+  border-bottom-color: #555;
 }
 body.darkMode #dialogBack .dialog .dialogBodyCenter .settingsItem:hover {
   background-color: var(--darkDialogShadow);

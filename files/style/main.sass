@@ -1409,6 +1409,7 @@ aside ::selection
 					height: auto
 					padding: 16px 24px
 					box-sizing: border-box
+					border-bottom: 0px solid #eee
 
 					&:hover
 						background-color: rgba(0,0,0,.04)
@@ -1750,13 +1751,13 @@ aside ::selection
 			height: 100%
 			margin-top: 0px
 
-			.dialogBody .dialogBodyCenter .settingsItem
-				border-bottom: 1px solid #eee
-
 		#imageViewer
 			height: 100%
 
 @media screen and (max-width: 550px)
+	#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem
+		border-width: 1px
+
 	#dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem
 		padding: 14px 12px
 
@@ -1860,7 +1861,7 @@ body.darkMode main #mainCenter section #audioPlayer #playPauseBtn:hover
 	background-color: rgba(255,255,255,.1)
 
 body.darkMode main #mainCenter section #audioPlayer #progressBar,
-main #mainCenter section #audioPlayer #volumeBar
+body.darkMode main #mainCenter section #audioPlayer #volumeBar
 	background: #777
 
 body.darkMode main #mainCenter section #folderInfo
@@ -1897,6 +1898,7 @@ body.darkMode main #mainCenter section #searchArea
 
 
 
+
 body.darkMode #dialogBack .dialog
 	.dialogTitleBar
 		border-radius: 8px 8px 0px 0px
@@ -1913,6 +1915,8 @@ body.darkMode #dialogBack .dialog
 
 	.dialogBodyCenter
 		.settingsItem
+			border-bottom-color: #555
+			
 			&:hover
 				background-color: var(--darkDialogShadow)
 
