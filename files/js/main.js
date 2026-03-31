@@ -1,7 +1,7 @@
-/* ---- elcano Explorer v3.2.6 ---- */
+/* ---- elcano Explorer js ---- */
 
 // global variables
-var version = '3.2.6';
+var version = '3.2.7';
 var allowedAccess = false; // indica si el usuario esta autenticado
 var path = './'; // ruta actual del explorador
 var favorites = []; // almacena las rutas favoritas
@@ -38,7 +38,7 @@ $(function() { // init
         storedAuth = JSON.parse(sessionStorage.getItem('elcano-access'));
         let storedUser = storedAuth.user;
         let storedPass = storedAuth.pass;
-        authorize(storedUser,storedPass);
+        authorize(storedUser,storedPass,true); // el parametro true le indica que se esta tratando de hacer login automatico desde los datos en sessionStorage
     } else {
         disableExplorer();
     }
@@ -64,6 +64,34 @@ $(function() { // init
     // aside tree loading circle
     $('#asideTreeBody').html('<div class="spinner"><div class="dot1"></div><div class="dot2"></div></div>');
 
+    // configuring searchBoxResponsive visibility if we have a small screen
+    if (window.innerWidth < 1000) {
+        $('#searchAreaResponsive').addClass('usable');
+    }
+
+    $(window).on('resize',function() {
+        if (window.innerWidth < 1000) {
+            $('#searchAreaResponsive').addClass('usable');
+        } else {
+            $('#searchAreaResponsive').removeClass('usable');
+        }
+
+        var asideWidth = $('aside').width();
+        var asideMarginLeft = parseInt($('aside').css('margin-left'));
+        if (asideMarginLeft < 0) {
+            $('#audioPlayer').css('width',window.innerWidth);
+        } else {
+            $('#audioPlayer').css('width',window.innerWidth - asideWidth);
+        }
+    });
+
+    $('#optSearch').on('click', function() {
+        if (window.innerWidth < 1000) {
+            $('#searchAreaResponsive.usable').show();
+            $('#searchBoxResponsive').focus();
+        }
+    });
+
     // options functionalities
     $('#optLaunch').on('click', function() {
         if (settings.systemIndex) {
@@ -77,7 +105,7 @@ $(function() { // init
 		window.open(settings.dbpath,'_blank');
 	});
 
-    $('#optFavorite').on('click', function() {
+    $('#optFavorite, #optMoreNotFavorites').on('click', function() {
         if (favorites.length>0) {
             for (x in favorites) {
 				if (favorites[x].path == path) {
@@ -85,13 +113,18 @@ $(function() { // init
 					localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
 				}
 			}
-			$('#optFavorite').hide();$('#optNotFavorite').show();
+			$('#optFavorite').hide();$('#optNotFavorite').css('display','flex');
+            $('#optMoreNotFavorites').hide();$('#optMoreFavorites').css('display','flex');
             showFavorites();
         }
     });
 
-    $('#optNotFavorite').on('click', function() {
+    $('#optNotFavorite, #optMoreFavorites').on('click', function() {
         addFavorite();
+
+        $('#optMoreDespl').slideUp(200);
+        $('#shadow').fadeOut(200);
+        optMoreDespl = false;
     });
 
     $('.optDropDownItem').removeClass('optViewDesplActive');
@@ -131,6 +164,10 @@ $(function() { // init
 		}
 	});
 
+    $('#audioPlayerClose').on('click', function() {
+        closeAudioPlayer();
+    });
+
     if (settings.tree) { // set startup state of the aside tree
         $('#optMoreDesplExplorer p').html(langs[lang].header.headMoreHideExpl+'<small>alt+x</small>');
     } else {
@@ -158,14 +195,14 @@ $(function() { // init
     });
 });
 
-function authorize(authUser,authPass) {
+function authorize(authUser,authPass,relogin) {
     // función que actúa tanto al rellenar el formulario de login como al cargar por primera vez la página si la contraseña está guardada en sessionStorage
     // la variable authPass contiene la contraseña a comprobar ya encriptada para enviar a PHP
     if (settings.debug){console.log('authorize')};
 
     var tokenCheck = Math.random();
 
-    $.get( "auth.php", { user: authUser,pass: authPass,token: tokenCheck } )
+    /* ## REF1 ## */ $.get( "auth.php", { user: authUser,pass: authPass,token: tokenCheck } )
 		.done(function( data ) {
             //console.log(data);
             var response = JSON.parse(data);
@@ -177,7 +214,9 @@ function authorize(authUser,authPass) {
                     enableExplorer();
                 } else {
                     disableExplorer();
-                    $('#signInError').html('<p>'+langs[lang].login.error[response.message]+'</p>');
+                    if (!relogin) {
+                        $('#signInError').html('<p>'+langs[lang].login.error[response.message]+'</p>');
+                    }
                 }
             } else {
                 disableExplorer();
@@ -230,14 +269,14 @@ function getFolder(url) { // recupera los ficheros y directorios existentes en l
     	}
 
     	if (coincidencia) {
-    		$('#optFavorite').show();
-    		$('#optNotFavorite').hide();
+    		$('#optFavorite').show();     $('#optMoreNotFavorites').css('display','flex');
+    		$('#optNotFavorite').hide();  $('#optMoreFavorites').hide();
     	} else {
-    		$('#optFavorite').hide();
-    		$('#optNotFavorite').show();
+    		$('#optFavorite').hide();     $('#optMoreNotFavorites').hide();
+    		$('#optNotFavorite').show();  $('#optMoreFavorites').css('display','flex');
     	}
 
-        $.post( "listDirectory.php", { ruta: url, listDir: true } )
+        /* ## REF2 ## */ $.post( "listDirectory.php", { ruta: url, listDir: true } )
     		.done(function( data ) {
                 if (settings.debug){console.log(data)};
                 var response = JSON.parse(data);
@@ -372,6 +411,7 @@ function readFich(url) {
     let fExt = url.split('.').pop();
     let imageTypes = ['jpg','jpeg','gif','png','webp','bmp','tiff','svg'];
     let videoTypes = ['mp4','mov','wmv','avi','mkv','webm','mpeg-2'];
+    let audioTypes = ['mp3','aac','wma','wav','aiff','dsd','']
 
     if (imageTypes.includes(fExt)) {
         showImageViewer(true,url);
@@ -379,6 +419,8 @@ function readFich(url) {
         openVideoFile(url);
     } else if (fExt == 'txt') {
         showTextfileViewer(true,url);
+    } else if (audioTypes.includes(fExt)) {
+        showAudioPlayer(url);
     } else {
         window.open(url,'_blank');
     }
@@ -461,7 +503,8 @@ function addFavorite(current=null) {
         localStorage.setItem('elcano-favorites',JSON.stringify(favorites));
         if (settings.debug){console.log(favorites)};
         if (current==null) { // cambia el icono de favorito de la barra superior solo si es en el directorio actual
-            $('#optFavorite').show();$('#optNotFavorite').hide();
+            $('#optFavorite').css('display','flex');$('#optNotFavorite').hide();
+            $('#optMoreNotFavorites').css('display','flex');$('#optMoreFavorites').hide();
         }
         showFavorites();
     }
@@ -597,7 +640,7 @@ function showTree() { // muestra u oculta el árbol de directorios lateral
 
 function loadTree() { // carga los datos del árbol de directorios
     if (allowedAccess) {
-        $.post( "directoryTree.php", { ruta: path, dirTree: true } )
+        /* ## REF3 ## */ $.post( "directoryTree.php", { ruta: path, dirTree: true } )
             .done(function( data ) {
                 directoryTree = data;
                 const container = document.getElementById('asideTreeBody'); // El contenedor en tu HTML
@@ -608,6 +651,19 @@ function loadTree() { // carga los datos del árbol de directorios
                 $('#searchBarForm').on('submit',function(e) {
                     e.preventDefault();
                     searchFile($('#searchBox').val());
+                });
+
+                $('#searchFormResponsive').on('submit',function(e) {
+                    e.preventDefault();
+                    searchFile($('#searchBoxResponsive').val());
+                });
+
+                $('#searchBox').on('input', function() {
+                    $('#searchBoxResponsive').val($(this).val());
+                });
+
+                $('#searchBoxResponsive').on('input', function() {
+                    $('#searchBox').val($(this).val());
                 });
         });
     }
@@ -908,6 +964,7 @@ function setSettings() {
         console.log('ignoreFiles change');
         settings.ignoreFiles = ($('#ignoreFilesInput').val()).split(',');
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        $('#ignoreFilesInput').blur();
         getFolder(path);
         console.log(settings.ignoreFiles);
     });
@@ -947,6 +1004,7 @@ function setSettings() {
     $('#databasePathInput').on('change',function() {
         settings.dbpath = $('#databasePathInput').val();
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        $('#databasePathInput').blur();
     });
 
     // video player
@@ -955,6 +1013,7 @@ function setSettings() {
     $('#videoplayerPathInput').on('change',function() {
         settings.videopath = $('#videoplayerPathInput').val();
         localStorage.setItem('elcano-settings',JSON.stringify(settings));
+        $('#videoplayerPathInput').blur();
     });
 
     // lang
@@ -1082,6 +1141,166 @@ function openImageNewTab(url) {
     window.open(url, '_blank');
 }
 
+function showAudioPlayer(url) {
+    if (settings.debug){console.log('showing audio player : '+url)};
+
+    var audio = document.getElementById('audioTag');
+    var fileName = url.substring(url.lastIndexOf('/')+1);
+    
+    // Stop and reset any currently playing audio
+    if (!audio.paused) {
+        audio.pause();
+        audio.currentTime = 0;
+    }
+    
+    // Set the new source and display
+    audio.src = url;
+    $('#audioFileName').text(fileName);
+    $('#audioPlayer').show();
+    $('#folderInfo').css('bottom','85px');
+    var asideWidth = $('aside').width();
+    var asideMarginLeft = parseInt($('aside').css('margin-left'));
+    if (asideMarginLeft < 0) {
+        $('#audioPlayer').css('width',window.innerWidth);
+    } else {
+        $('#audioPlayer').css('width',window.innerWidth - asideWidth);
+    }
+    
+    // Reset player UI
+    $('#playPauseBtn .icon-play').show();
+    $('#playPauseBtn .icon-pause').hide();
+    $('#progressBar').val(0);
+    $('#currentTime').text('0:00');
+    
+    // Initialize player events
+    initAudioPlayer();
+    
+    audio.play();
+}
+
+function closeAudioPlayer() {
+    var audio = document.getElementById('audioTag');
+    var playPauseBtn = document.getElementById('playPauseBtn');
+    var progressBar = document.getElementById('progressBar');
+    var volumeBar = document.getElementById('volumeBar');
+    
+    // Pause the audio
+    audio.pause();
+    
+    // Remove all event listeners by cloning and replacing the audio element
+    var audioClone = audio.cloneNode(true);
+    audio.parentNode.replaceChild(audioClone, audio);
+    
+    // Clear the src and hide
+    $('#audioTag').attr('src','');
+    $('#audioPlayer').hide();
+    $('#folderInfo').css('bottom','8px');
+    
+    // Remove click listeners from play/pause button by cloning
+    if (playPauseBtn) {
+        var btnClone = playPauseBtn.cloneNode(true);
+        playPauseBtn.parentNode.replaceChild(btnClone, playPauseBtn);
+    }
+    
+    // Remove listeners from progress bar
+    if (progressBar) {
+        var progressClone = progressBar.cloneNode(true);
+        progressBar.parentNode.replaceChild(progressClone, progressBar);
+    }
+    
+    // Remove listeners from volume bar
+    if (volumeBar) {
+        var volumeClone = volumeBar.cloneNode(true);
+        volumeBar.parentNode.replaceChild(volumeClone, volumeBar);
+    }
+}
+
+function initAudioPlayer() {
+    console.log('iniAudioPlayer');
+    var audio = document.getElementById('audioTag');
+    var playPauseBtn = document.getElementById('playPauseBtn');
+    var progressBar = document.getElementById('progressBar');
+    var volumeBar = document.getElementById('volumeBar');
+    
+    // Play/Pause button
+    if (playPauseBtn) {
+        playPauseBtn.addEventListener('click', function() {
+            if (audio.paused) {
+                audio.play();
+            } else {
+                audio.pause();
+            }
+        });
+    }
+    
+    // Update progress bar and time display
+    if (audio) {
+        audio.addEventListener('timeupdate', function() {
+            var currentTime = audio.currentTime;
+            var duration = audio.duration;
+            
+            if (progressBar) {
+                progressBar.max = duration || 100;
+                progressBar.value = currentTime;
+            }
+            
+            $('#currentTime').text(formatTime(currentTime));
+        });
+        
+        // Update total time when metadata loads
+        audio.addEventListener('loadedmetadata', function() {
+            $('#totalTime').text(formatTime(audio.duration));
+            if (progressBar) {
+                progressBar.max = audio.duration;
+            }
+        });
+        
+        // Detect when audio ends
+        audio.addEventListener('ended', function() {
+            $('#audioPlayer').fadeOut(300);
+            $('#folderInfo').css('bottom','0px');
+        });
+        
+        // Update play/pause icons
+        audio.addEventListener('play', function() {
+            $('#playPauseBtn .icon-play').hide();
+            $('#playPauseBtn .icon-pause').show();
+        });
+        
+        audio.addEventListener('pause', function() {
+            $('#playPauseBtn .icon-play').show();
+            $('#playPauseBtn .icon-pause').hide();
+        });
+    }
+    
+    // Progress bar seek
+    if (progressBar) {
+        progressBar.addEventListener('input', function() {
+            if (audio && audio.duration) {
+                audio.currentTime = progressBar.value;
+            }
+        });
+    }
+    
+    // Volume control
+    if (volumeBar && audio) {
+        volumeBar.addEventListener('input', function() {
+            audio.volume = volumeBar.value / 100;
+        });
+    }
+}
+
+function formatTime(seconds) {
+    if (isNaN(seconds) || seconds === undefined) {
+        return '0:00';
+    }
+    
+    var minutes = Math.floor(seconds / 60);
+    var secs = Math.floor(seconds % 60);
+    
+    return minutes + ':' + (secs < 10 ? '0' : '') + secs;
+}
+
 function showTextfileViewer(op, url) {
     if (settings.debug){console.log('showing text viewer : '+url)};
 
@@ -1093,7 +1312,7 @@ function showTextfileViewer(op, url) {
 
         $('#textfileViewerOpen').attr('onclick','openTextfileNewTab("'+url+'")');
 
-        $.post( "readFile.php", { ruta: url } )
+        /* ## REF4 ## */ $.post( "readFile.php", { ruta: url } )
             .done(function( data ) {
                 var fileLines = '';
 
@@ -1202,6 +1421,9 @@ function changePathSearch(path) {
 
 function closeSearchArea() {
     searchPanelShown = false;
+    $('#searchBoxResponsive').val('');
+    $('#searchAreaResponsive').hide();
+
     $('#folderBackground').show();
     $('#itemArea').show();
     $('#searchArea').fadeOut(100);
@@ -1472,83 +1694,96 @@ document.onkeydown = function() {
             showHistory(false);
         }
     } else {
+    	// Verificar si alguno de los searchBox está en focus
+    	var isSearchBoxFocused = document.activeElement.id === 'searchBox' || document.activeElement.id === 'searchBoxResponsive' || document.getElementById('searchArea').style.display == 'flex';
+    	
     	if (window.event.keyCode == 37) { // flecha izquierda
-    		$('.item').removeClass('itemActive');
-    		if (posSelect<=0) {
-    			posSelect=0;
-    		} else if (posSelect>=$('.item').length-1) {
-    			posSelect=$('.item').length-2;
-    		} else {
-    			posSelect--;
+    		if (!isSearchBoxFocused) {
+    			$('.item').removeClass('itemActive');
+    			if (posSelect<=0) {
+    				posSelect=0;
+    			} else if (posSelect>=$('.item').length-1) {
+    				posSelect=$('.item').length-2;
+    			} else {
+    				posSelect--;
+    			}
+    			$($('.item')[posSelect]).addClass('itemActive');
+    			if (settings.debug){console.log(posSelect)};
     		}
-    		$($('.item')[posSelect]).addClass('itemActive');
-    		if (settings.debug){console.log(posSelect)};
     	}
     	if (window.event.keyCode == 39) { // flecha derecha
-    		$('.item').removeClass('itemActive');
-    		if (posSelect==null) {
-    			posSelect=0;
-    		} else if (posSelect<=0) {
-    			posSelect=1;
-    		} else if (posSelect>=$('.item').length-1) {
-    			posSelect=$('.item').length-1;
-    		} else {
-    			posSelect++;
+    		if (!isSearchBoxFocused) {
+    			$('.item').removeClass('itemActive');
+    			if (posSelect==null) {
+    				posSelect=0;
+    			} else if (posSelect<=0) {
+    				posSelect=1;
+    			} else if (posSelect>=$('.item').length-1) {
+    				posSelect=$('.item').length-1;
+    			} else {
+    				posSelect++;
+    			}
+    			$($('.item')[posSelect]).addClass('itemActive');
+    			if (settings.debug){console.log(posSelect)};
     		}
-    		$($('.item')[posSelect]).addClass('itemActive');
-    		if (settings.debug){console.log(posSelect)};
     	}
         if (window.event.keyCode == 38) { // fecha arriba
-            $('.item').removeClass('itemActive');
-            if (posSelect==null) {
-                posSelect=0;
-            } else if (posSelect<=0) {
-                posSelect=0;
-            } else {
-                if (window.innerWidth < cols1) { // 1 columna
-                    if (posSelect-1>=0) { posSelect = posSelect-1; }
-                } else if (window.innerWidth < cols2) { // 2 columnas
-                    if (posSelect-2>=0) { posSelect = posSelect-2; }
-                } else if (window.innerWidth < cols3) { // 3 columnas
-                    if (posSelect-3>=0) { posSelect = posSelect-3; }
-                } else if (window.innerWidth < cols4) { // 4 columnas
-                    if (posSelect-4>=0) { posSelect = posSelect-4; }
-                } else if (window.innerWidth < cols5) { // 5 columnas
-                    if (posSelect-5>=0) { posSelect = posSelect-5; }
-                } else if (window.innerWidth >= cols5) { // 6 columnas
-                    if (posSelect-6>=0) { posSelect = posSelect-6; }
+        	if (!isSearchBoxFocused) {
+                $('.item').removeClass('itemActive');
+                if (posSelect==null) {
+                    posSelect=0;
+                } else if (posSelect<=0) {
+                    posSelect=0;
+                } else {
+                    if (window.innerWidth < cols1) { // 1 columna
+                        if (posSelect-1>=0) { posSelect = posSelect-1; }
+                    } else if (window.innerWidth < cols2) { // 2 columnas
+                        if (posSelect-2>=0) { posSelect = posSelect-2; }
+                    } else if (window.innerWidth < cols3) { // 3 columnas
+                        if (posSelect-3>=0) { posSelect = posSelect-3; }
+                    } else if (window.innerWidth < cols4) { // 4 columnas
+                        if (posSelect-4>=0) { posSelect = posSelect-4; }
+                    } else if (window.innerWidth < cols5) { // 5 columnas
+                        if (posSelect-5>=0) { posSelect = posSelect-5; }
+                    } else if (window.innerWidth >= cols5) { // 6 columnas
+                        if (posSelect-6>=0) { posSelect = posSelect-6; }
+                    }
                 }
-            }
-            $($('.item')[posSelect]).addClass('itemActive');
-    		if (settings.debug){console.log(posSelect)};
+                $($('.item')[posSelect]).addClass('itemActive');
+        		if (settings.debug){console.log(posSelect)};
+        	}
         }
         if (window.event.keyCode == 40) { // flecha abajo
-            $('.item').removeClass('itemActive');
-            if (posSelect==null) {
-                posSelect=0;
-            } else if (posSelect>=$('.item').length-1) {
-                posSelect=$('.item').length-1;
-            } else {
-                if (window.innerWidth < cols1) { // 1 columna
-                    if (posSelect+1<=$('.item').length-1) { posSelect = posSelect+1; }
-                } else if (window.innerWidth < cols2) { // 2 columnas
-                    if (posSelect+2<=$('.item').length-1) { posSelect = posSelect+2; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-                } else if (window.innerWidth < cols3) { // 3 columnas
-                    if (posSelect+3<=$('.item').length-1) { posSelect = posSelect+3; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-                } else if (window.innerWidth < cols4) { // 4 columnas
-                    if (posSelect+4<=$('.item').length-1) { posSelect = posSelect+4; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-                } else if (window.innerWidth < cols5) { // 5 columnas
-                    if (posSelect+5<=$('.item').length-1) { posSelect = posSelect+5; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
-                } else if (window.innerWidth >= cols5) { // 6 columnas
-                    if (posSelect+6<=$('.item').length-1) { posSelect = posSelect+6; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+        	if (!isSearchBoxFocused) {
+                $('.item').removeClass('itemActive');
+                if (posSelect==null) {
+                    posSelect=0;
+                } else if (posSelect>=$('.item').length-1) {
+                    posSelect=$('.item').length-1;
+                } else {
+                    if (window.innerWidth < cols1) { // 1 columna
+                        if (posSelect+1<=$('.item').length-1) { posSelect = posSelect+1; }
+                    } else if (window.innerWidth < cols2) { // 2 columnas
+                        if (posSelect+2<=$('.item').length-1) { posSelect = posSelect+2; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                    } else if (window.innerWidth < cols3) { // 3 columnas
+                        if (posSelect+3<=$('.item').length-1) { posSelect = posSelect+3; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                    } else if (window.innerWidth < cols4) { // 4 columnas
+                        if (posSelect+4<=$('.item').length-1) { posSelect = posSelect+4; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                    } else if (window.innerWidth < cols5) { // 5 columnas
+                        if (posSelect+5<=$('.item').length-1) { posSelect = posSelect+5; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                    } else if (window.innerWidth >= cols5) { // 6 columnas
+                        if (posSelect+6<=$('.item').length-1) { posSelect = posSelect+6; } else if (posSelect+1<=$('.item').length-1) { posSelect = $('.item').length-1; }
+                    }
                 }
-            }
-            $($('.item')[posSelect]).addClass('itemActive');
-    		if (settings.debug){console.log(posSelect)};
+                $($('.item')[posSelect]).addClass('itemActive');
+        		if (settings.debug){console.log(posSelect)};
+        	}
         }
     	if (window.event.keyCode == 13) { // intro
-    		if (posSelect!=null) {
-    			$($('.item')[posSelect]).click();
+    		if (!isSearchBoxFocused) {
+    			if (posSelect!=null) {
+    				$($('.item')[posSelect]).click();
+    			}
     		}
     	}
     }

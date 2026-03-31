@@ -1,0 +1,62 @@
+# ========================================
+# ARCHIVOS Y CARPETAS A IGNORAR EN GIT
+# ========================================
+# Este archivo previene que commitas archivos sensibles
+
+# ARCHIVOS DE CONFIGURACIÓN SENSIBLE
+config.php                      # Contiene credenciales de BD
+.env                           # Variables de entorno
+.env.local                      # Archivo .env local
+
+# ARCHIVOS DE SISTEMA
+.DS_Store                       # macOS
+Thumbs.db                       # Windows
+.vscode/                        # Configuración de VS Code
+.idea/                          # Configuración de IDE
+
+# CARPETAS DE LOGS
+logs/                           # Archivos de log
+*.log                           # Archivos de log individuales
+
+# CARPETAS DE DEPENDENCIAS (si usas Composer/Node)
+vendor/                         # Dependencias PHP (Composer)
+node_modules/                   # Dependencias Node.js
+composer.lock                   # Lock file de Composer (opcional)
+
+# ARCHIVOS TEMPORALES
+*.tmp                           # Archivos temporales
+*.temp                          # Archivos temporales
+tmp/                            # Carpeta temporal
+
+# BASE DE DATOS
+*.sql.bak                       # Backups de base de datos
+dump.sql                        # Dump de BD
+
+# ARCHIVOS DE DESARROLLO LOCAL
+.env.*.php                      # Archivos de configuración locales
+local-config.php               # Configuración local
+
+# BACKUPS
+*.backup                        # Archivos backup
+*.bak                           # Archivos bak
+
+# ARCHIVOS DEL EDITOR
+*.swp                           # Vim
+*.swo                           # Vim
+*~                              # Emacs
+.#*                             # Emacs
+
+# SISTEMAS OPERATIVOS
+.gitkeep                        # Marcador para carpetas vacías
+
+# ARCHIVOS DE CACHÉ
+cache/                          # Carpeta de caché
+*.cache                         # Archivos de caché
+
+# ARCHIVOS DE SESIÓN PHP
+sessions/                       # Sesiones de PHP
+*.sess                          # Archivos de sesión
+
+# ARCHIVOS DE AUDIO Y VIDEO
+*.mp3                           # Archivos de audio
+*.mp4                           # Archivos de video

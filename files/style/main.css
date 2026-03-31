@@ -122,8 +122,12 @@ body {
   font-size: 13pt;
   padding-left: 40px;
   border: 0px;
+  border-radius: 9px 9px 0px 0px;
   outline: 0;
   box-sizing: border-box;
+}
+#blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:focus, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:focus {
+  background-color: rgba(2, 136, 209, 0.1);
 }
 #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInUser:hover ~ .signInInputEffect, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInPass:hover ~ .signInInputEffect {
   width: 100%;
@@ -165,6 +169,7 @@ body {
   border: 0px;
   outline: 0;
   background-color: #fff;
+  cursor: pointer;
 }
 #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:hover, #blocked #blockedBack #signIn #signInBody .signInBodyItem #signInSubmit:focus {
   background-color: var(--itemHover);
@@ -273,6 +278,7 @@ header div#options {
   padding-right: 20px;
   display: flex;
   flex-direction: row-reverse;
+  transition: background-color 0.4s;
 }
 header div#options #searchBar {
   position: relative;
@@ -310,6 +316,9 @@ header div#options #searchBar label #searchBarIcon {
   height: 22px;
   fill: rgba(255, 255, 255, 0.5);
   cursor: text;
+}
+header div#options #optSearch {
+  display: none;
 }
 header div#options .option {
   position: relative;
@@ -394,10 +403,15 @@ header div#options .optDropDown div.optDropDownItem p small {
   color: #aaa;
   margin-left: 12px;
 }
+header div#options .optDropDown #optMoreDesplFav {
+  position: relative;
+  flex-direction: column;
+  display: none;
+}
 header div#options .optDropDown .optChainDropdown {
   position: absolute;
   width: 220px;
-  margin-left: -236px;
+  margin-left: -234px;
   top: -8px;
   padding: 8px 0px;
   background-color: #fff;
@@ -524,8 +538,8 @@ main #mainCenter aside .asideTitle {
   cursor: default;
 }
 main #mainCenter aside .asideTitle svg {
-  width: 25px;
-  height: 25px;
+  width: 24px;
+  height: 24px;
   fill: #222;
   margin: 2px 8px;
 }
@@ -538,6 +552,51 @@ main #mainCenter section {
   height: 100%;
   overflow: auto;
   background-color: var(--sectionColor);
+}
+main #mainCenter section #searchAreaResponsive {
+  position: relative;
+  width: 100%;
+  height: 54px;
+  background-color: rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid #bbb;
+  display: none;
+  justify-content: space-between;
+  align-items: center;
+}
+main #mainCenter section #searchAreaResponsive #searchContainerResp {
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  top: 0px;
+}
+main #mainCenter section #searchAreaResponsive #searchContainerResp #searchBoxResponsive {
+  width: 100%;
+  height: 54px;
+  font-size: 13pt;
+  padding: 0px 10px 0px 60px;
+  box-sizing: border-box;
+  border: 0px;
+  outline: 0;
+  background-color: transparent;
+}
+main #mainCenter section #searchAreaResponsive #searchContainerResp #searchRespIcon {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  left: 22px;
+  top: 15px;
+  fill: #888;
+}
+main #mainCenter section #searchAreaResponsive #searchContainerResp #searchRespClose {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  fill: #888;
+  top: 15px;
+  right: 30px;
+}
+main #mainCenter section #searchAreaResponsive #searchContainerResp #searchRespClose:hover {
+  fill: #f00;
 }
 main #mainCenter section #itemArea {
   position: relative;
@@ -584,6 +643,9 @@ main #mainCenter section #itemArea .itemMosaic .itemLogo {
 }
 main #mainCenter section #itemArea .itemMosaic .itemLogo svg, main #mainCenter section #itemArea .itemMosaic .itemLogo img {
   height: 42px;
+  max-width: 92%;
+  max-height: 92%;
+  object-fit: contain;
 }
 main #mainCenter section #itemArea .itemMosaic .itemText {
   position: relative;
@@ -726,9 +788,14 @@ main #mainCenter section #searchArea #searchAreaHeader {
 main #mainCenter section #searchArea #searchAreaHeader svg {
   width: 28px;
   height: 28px;
+  cursor: pointer;
 }
 main #mainCenter section #searchArea #searchAreaHeader svg:hover {
   fill: #f00;
+}
+main #mainCenter section #searchArea #searchAreaHeader #searchAreaHeaderLeftTerm {
+  font-style: italic;
+  color: #888;
 }
 main #mainCenter section #searchArea #searchAreaContent {
   position: relative;
@@ -781,6 +848,13 @@ main #mainCenter section #searchArea #searchAreaContent .itemList {
   width: 100%;
   height: 60px;
 }
+main #mainCenter section #searchArea #searchAreaContent .itemList .itemLogo svg, main #mainCenter section #searchArea #searchAreaContent .itemList .itemLogo img {
+  height: 42px;
+  max-width: 92%;
+  min-width: 38px;
+  max-height: 92%;
+  object-fit: contain;
+}
 main #mainCenter section #folderBackground {
   position: fixed;
   width: 500px;
@@ -790,11 +864,188 @@ main #mainCenter section #folderBackground {
 }
 main #mainCenter section #folderBackground svg {
   position: absolute;
-  width: 500px;
-  height: 500px;
+  width: 100%;
+  height: 100%;
   right: 20px;
   bottom: 14px;
   fill: #f2f2f2;
+}
+main #mainCenter section #audioPlayer {
+  position: fixed;
+  width: 100%;
+  height: 77px;
+  bottom: 0px;
+  background-color: #f4f4f4;
+  border-top: 1px solid #ddd;
+  display: flex;
+  flex-direction: column;
+  padding: 8px 12px;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.08);
+}
+main #mainCenter section #audioPlayer #playerContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+main #mainCenter section #audioPlayer #playerHeader {
+  padding: 0 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+main #mainCenter section #audioPlayer #playerHeader p {
+  margin: 0;
+  font-size: 12pt;
+  font-weight: bold;
+  color: #333;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+main #mainCenter section #audioPlayer #playerHeader svg {
+  cursor: pointer;
+}
+main #mainCenter section #audioPlayer #playerHeader svg:hover {
+  fill: #f00;
+}
+main #mainCenter section #audioPlayer #playerControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 4px;
+}
+main #mainCenter section #audioPlayer #playPauseBtn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  transition: background-color 0.2s;
+  flex-shrink: 0;
+}
+main #mainCenter section #audioPlayer #playPauseBtn:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+main #mainCenter section #audioPlayer #playPauseBtn svg {
+  width: 24px;
+  height: 24px;
+  fill: #333;
+  stroke: none;
+}
+main #mainCenter section #audioPlayer #timeDisplay {
+  display: flex;
+  gap: 4px;
+  font-size: 11pt;
+  color: #555;
+  min-width: 80px;
+  text-align: center;
+  flex-shrink: 0;
+}
+main #mainCenter section #audioPlayer #timeDisplay span:first-child::after {
+  content: " / ";
+  color: #999;
+  margin-left: 4px;
+}
+main #mainCenter section #audioPlayer #progressContainer {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+main #mainCenter section #audioPlayer #progressBar {
+  width: 100%;
+  height: 4px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: linear-gradient(to right, #007bff 0%, #007bff 0%, #ddd 0%, #ddd 100%);
+  border-radius: 2px;
+  outline: none;
+}
+main #mainCenter section #audioPlayer #progressBar::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+main #mainCenter section #audioPlayer #progressBar::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+main #mainCenter section #audioPlayer #progressBar::-moz-range-thumb {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s;
+}
+main #mainCenter section #audioPlayer #progressBar::-moz-range-thumb:hover {
+  transform: scale(1.3);
+}
+main #mainCenter section #audioPlayer #progressBar::-moz-range-track {
+  background: transparent;
+  border: none;
+}
+main #mainCenter section #audioPlayer #volumeContainer {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 100px;
+  flex-shrink: 0;
+}
+main #mainCenter section #audioPlayer #volumeContainer .volume-icon {
+  width: 20px;
+  height: 20px;
+  fill: #555;
+  flex-shrink: 0;
+}
+main #mainCenter section #audioPlayer #volumeBar {
+  width: 80px;
+  height: 4px;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  background: #ddd;
+  border-radius: 2px;
+  outline: none;
+}
+main #mainCenter section #audioPlayer #volumeBar::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+main #mainCenter section #audioPlayer #volumeBar::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #007bff;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+main #mainCenter section #audioPlayer #volumeBar::-moz-range-track {
+  background: transparent;
+  border: none;
 }
 main #mainCenter section #folderInfo {
   position: fixed;
@@ -972,20 +1223,145 @@ aside ::selection {
   main #mainCenter section #itemArea .itemMosaic {
     width: 33.33333333%;
   }
+
+  header div#options #searchBar #searchBox {
+    width: 200px;
+  }
 }
 @media screen and (max-width: 1050px) {
   main #mainCenter section #itemArea .itemMosaic {
     width: 50%;
   }
 }
+@media screen and (max-width: 1000px) {
+  header div#headerTitle {
+    padding-right: 20px;
+  }
+
+  header div#options #optSearch {
+    display: block;
+  }
+
+  header div#options #searchBar {
+    display: none;
+  }
+
+  #optDatabase, #optFavorite, #optNotFavorite {
+    display: none !important;
+  }
+
+  header div#options .optDropDown #optMoreDesplFav {
+    display: flex;
+  }
+
+  header div#options {
+    background-color: var(--primary);
+  }
+
+  main #mainCenter section #searchArea #searchAreaContent .item .itemText {
+    min-width: 250px;
+  }
+
+  main #mainCenter section #searchArea #searchAreaContent .item .itemPath {
+    width: 300px;
+  }
+
+  main #mainCenter section #searchArea {
+    margin-top: 55px;
+    height: calc(100% - 55px);
+  }
+
+  main #mainCenter section #searchArea #searchAreaHeader {
+    height: 42px;
+    min-height: 42px;
+    padding: 0px 40px;
+    background-color: rgba(0, 0, 0, 0.06);
+    border-bottom: 1px solid #bbb;
+  }
+
+  main #mainCenter section #searchArea #searchAreaHeader #searchAreaHeaderRight {
+    display: none;
+  }
+}
+@media screen and (max-width: 850px) {
+  main #mainCenter section #searchArea #searchAreaHeader {
+    padding: 0px 40px;
+  }
+}
 @media screen and (max-width: 750px) {
   main #mainCenter section #itemArea .itemMosaic {
     width: 100%;
   }
+
+  #optView {
+    display: none;
+  }
+
+  header div#options {
+    padding-left: 16px;
+  }
+
+  .navItem p {
+    white-space: nowrap;
+  }
+
+  header nav .navSeparator {
+    padding: 8px 0px;
+  }
+
+  main #mainCenter section #folderBackground {
+    width: 350px;
+    height: 350px;
+  }
+
+  main #mainCenter section #searchArea #searchAreaHeader {
+    padding: 0px 20px;
+  }
 }
-@media screen and (max-width: 420px) {
+@media screen and (max-width: 550px) {
+  header div#headerTitle {
+    padding-right: 42px;
+  }
+
+  header div#headerTitle h1 {
+    display: none;
+  }
+
+  header div#options {
+    position: absolute;
+    right: 0px;
+    width: auto;
+    padding-left: 8px;
+    padding-right: 0px;
+  }
+}
+@media screen and (max-width: 500px) {
   main #mainCenter aside {
     margin-left: -320px;
+  }
+
+  header div#headerTitle {
+    padding-right: 28px;
+  }
+
+  header div#headerTitle #headerLogo {
+    left: 14px;
+  }
+
+  #optLaunch {
+    display: none !important;
+  }
+
+  main #mainCenter section #itemArea #emptyFolder {
+    width: 100%;
+    text-align: center;
+    padding: 40px 60px;
+  }
+}
+@media screen and (max-width: 450px) {
+  main #mainCenter section #folderBackground {
+    width: 300px;
+    height: 300px;
   }
 }
 /* ----- settings tab ----- */
@@ -1036,6 +1412,7 @@ aside ::selection {
 #dialogBack .dialog .dialogTitleBar div h2 {
   padding: 0px 14px;
   font-weight: normal;
+  font-size: 16pt;
   display: flex;
   cursor: default;
   align-items: center;
@@ -1066,7 +1443,7 @@ aside ::selection {
   position: relative;
   width: 100%;
   height: 100%;
-  overflow: auto;
+  overflow-x: hidden;
 }
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
   position: relative;
@@ -1106,6 +1483,7 @@ aside ::selection {
   padding: 0px 12px;
   margin: 10px 0px;
   background-color: transparent;
+  cursor: pointer;
 }
 #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem select:focus {
   background-color: #fff;
@@ -1275,14 +1653,15 @@ aside ::selection {
   position: relative;
   width: 100%;
   height: 50px;
-  padding: 4px 20px;
+  padding: 4px 62px 4px 20px;
   box-sizing: border-box;
   border-bottom: 1px solid #f2f2f2;
   display: flex;
+  align-items: center;
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem p {
   min-width: 130px;
-  padding: 12px 40px;
+  padding: 0px 40px;
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem p:last-child {
   color: var(--primary);
@@ -1293,7 +1672,7 @@ aside ::selection {
   width: 30px;
   height: 30px;
   fill: #6f6f6f;
-  padding: 7px 25px;
+  padding: 0px 25px;
   cursor: pointer;
 }
 #dialogBack .dialog #historyBody #historyPaths .historyItem svg:hover {
@@ -1370,8 +1749,45 @@ aside ::selection {
   #dialogBack .dialog {
     width: 100%;
   }
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText {
+    width: 300px;
+  }
+  #dialogBack .dialog #historyBody #historyPaths .historyItem p {
+    padding: 0px 18px;
+  }
+  #dialogBack .dialog #historyBody #historyPaths .historyItem svg {
+    padding: 0px 15px;
+  }
   #dialogBack #imageViewer {
     width: 100%;
+  }
+}
+@media screen and (max-width: 650px) {
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem #settFormStartUp {
+    flex-wrap: wrap;
+  }
+
+  #dialogBack .dialog .dialogBody .dialogBodyCenter #settingsItemStartUp div label {
+    margin: 8px 16px;
+  }
+
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem span {
+    white-space: nowrap;
+  }
+
+  #imageViewerUrl {
+    display: none;
+  }
+
+  #dialogBack .dialog .dialogTitleBar div .settingsTitleIcon {
+    padding-left: 18px;
+  }
+
+  #dialogBack .dialog #historyBody #historyPaths .historyItem p {
+    padding: 0px 10px;
+  }
+  #dialogBack .dialog #historyBody #historyPaths .historyItem svg {
+    padding: 0px 0px;
   }
 }
 @media screen and (max-height: 620px) {
@@ -1383,8 +1799,21 @@ aside ::selection {
     height: 100%;
     margin-top: 0px;
   }
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
+    border-bottom: 1px solid #eee;
+  }
   #dialogBack #imageViewer {
     height: 100%;
+  }
+}
+@media screen and (max-width: 550px) {
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsItem {
+    padding: 14px 12px;
+  }
+
+  #dialogBack .dialog .dialogBody .dialogBodyCenter .settingsInputText {
+    width: 270px;
+    max-width: 90%;
   }
 }
 /* ----- dark mode ----- */
@@ -1402,6 +1831,10 @@ body.darkMode #dialogBack .dialog #textfileViewerBody #textfileViewerCanvas {
 }
 
 body.darkMode header {
+  background-color: var(--darkPrimary);
+}
+
+body.darkMode header div#options {
   background-color: var(--darkPrimary);
 }
 
@@ -1473,6 +1906,37 @@ body.darkMode main #mainCenter section #itemArea .item:hover {
 
 body.darkMode main #mainCenter section #itemArea .itemText {
   color: #bbb;
+}
+
+body.darkMode main #mainCenter section #audioPlayer {
+  background-color: var(--darkSection);
+  border-top: 1px solid var(--darkSeparator);
+}
+
+body.darkMode main #mainCenter section #audioPlayer #playerHeader p {
+  color: #bbb;
+}
+
+body.darkMode main #mainCenter section #audioPlayer #playerHeader svg {
+  fill: #bbb;
+}
+
+body.darkMode main #mainCenter section #audioPlayer #timeDisplay {
+  color: #bbb;
+}
+
+body.darkMode main #mainCenter section #audioPlayer #playPauseBtn svg,
+body.darkMode main #mainCenter section #audioPlayer #volumeContainer .volume-icon {
+  fill: #bbb;
+}
+
+body.darkMode main #mainCenter section #audioPlayer #playPauseBtn:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+body.darkMode main #mainCenter section #audioPlayer #progressBar,
+main #mainCenter section #audioPlayer #volumeBar {
+  background: #777;
 }
 
 body.darkMode main #mainCenter section #folderInfo {
@@ -1706,17 +2170,19 @@ body.darkMode #blocked #blockedBack #loginLang select:focus {
 }
 
 /* ----- scroll ----- */
-::-webkit-scrollbar {
-  width: 10px;
-  height: 10px;
-}
+@media screen and (min-width: 700px) {
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: #aaa;
-}
+  ::-webkit-scrollbar-thumb {
+    background: #aaa;
+  }
 
-::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.05);
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.05);
+  }
 }
 
 /*# sourceMappingURL=main.css.map */

@@ -17,14 +17,15 @@ $langTxt = [
             'pass' => 'contraseña',
             'submit' => 'Continuar',
             'error' => [
-                'WrongUser' => 'Usuario erroneo',
+                'WrongUser' => 'El usuario o la contraseña son erróneos',
                 'AccessGranted' => 'Acceso permitido',
-                'WrongCredentials' => 'Contraseña erronea',
+                'WrongCredentials' => 'El usuario o la contraseña son erróneos',
                 'MissingData' => 'Falta Informacion',
             ],
         ],
         'header' => [
             'headSearch' => 'Buscar ficheros',
+            'headOptSearch' => 'Buscar ficheros',
             'headStartUp' => 'Ejecutar el índice del directorio',
             'headDataBase' => 'Acceder a la base de datos',
             'headFavorite' => 'Añadir a favoritos',
@@ -39,6 +40,8 @@ $langTxt = [
             'headMoreHistoryNext' => 'Adelante',
             'headMoreShowExpl' => 'Mostrar Explorador',
             'headMoreHideExpl' => 'Ocultar Explorador',
+            'headMoreFavorites' => 'Añadir a favoritos',
+            'headMoreNotFavorites' => 'Quitar de favoritos',
             'headMoreSettings' => 'Configuración',
             'headMoreLogout' => 'Cerrar Sesión'
         ],
@@ -111,6 +114,7 @@ $langTxt = [
         ],
         'header' => [
             'headSearch' => 'Search files',
+            'headOptSearch' => 'Search files',
             'headStartUp' => 'Run directory index',
             'headDataBase' => 'Access database',
             'headFavorite' => 'Add to favorites',
@@ -125,6 +129,8 @@ $langTxt = [
             'headMoreHistoryNext' => 'Next',
             'headMoreShowExpl' => 'Show Explorer',
             'headMoreHideExpl' => 'Hide Explorer',
+            'headMoreFavorites' => 'Add to favorites',
+            'headMoreNotFavorites' => 'Remove from favorites',
             'headMoreSettings' => 'Settings',
             'headMoreLogout' => 'Log Out'
         ],
@@ -197,6 +203,7 @@ $langTxt = [
         ],
         'header' => [
             'headSearch' => 'Rechercher des fichers',
+            'headOptSearch' => 'Rechercher des fichers',
             'headStartUp' => 'Exécuter l\'index du répertoire',
             'headDataBase' => 'Accéder à la base de données',
             'headFavorite' => 'Ajouter aux favoris',
@@ -211,6 +218,8 @@ $langTxt = [
             'headMoreHistoryNext' => 'Prochain',
             'headMoreShowExpl' => 'Montrer l\' explorateur',
             'headMoreHideExpl' => 'Chacher l\' explorateur',
+            'headMoreFavorites' => 'Ajouter aux favoris',
+            'headMoreNotFavorites' => 'Supprimer des favoris',
             'headMoreSettings' => 'réglages',
             'headMoreLogout' => 'Se déconnecter'
         ],
